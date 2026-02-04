@@ -119,33 +119,42 @@ export const jumpinAIStudioService = {
         if (!reader) throw new Error('No reader available');
 
         const decoder = new TextDecoder();
-        let buffer = '';
+        let textBuffer = '';
+        let streamDone = false;
 
-        while (true) {
+        while (!streamDone) {
           const { done, value } = await reader.read();
           if (done) break;
 
-          buffer += decoder.decode(value, { stream: true });
-          const lines = buffer.split('\n\n');
-          buffer = lines.pop() || '';
+          textBuffer += decoder.decode(value, { stream: true });
 
-          for (const line of lines) {
-            if (!line.trim() || !line.startsWith('data: ')) continue;
+          let newlineIndex: number;
+          while ((newlineIndex = textBuffer.indexOf('\n')) !== -1) {
+            let line = textBuffer.slice(0, newlineIndex);
+            textBuffer = textBuffer.slice(newlineIndex + 1);
+
+            if (line.endsWith('\r')) line = line.slice(0, -1);
+            const trimmed = line.trim();
+            if (!trimmed || trimmed.startsWith(':')) continue;
+            if (!trimmed.startsWith('data: ')) continue;
+
+            const jsonStr = trimmed.slice(6).trim();
+            if (!jsonStr) continue;
+            if (jsonStr === '[DONE]') {
+              streamDone = true;
+              break;
+            }
 
             try {
-              const jsonStr = line.substring(6);
               const parsed = JSON.parse(jsonStr);
               const { step, type, data } = parsed;
 
               console.log(`📨 Received SSE event: step=${step}, type=${type}`);
 
-              // Handle progress updates for smoother streaming feel
-              if (type === 'progress') {
-                console.log(`⏳ Progress update: ${data.stepName} - ${data.percent}% - ${data.message}`);
-                if (onProgress) {
-                  onProgress(step, type, data);
-                }
-                continue; // Don't process further, just pass to callback
+              // High-frequency streaming events
+              if (type === 'progress' || type === 'delta') {
+                if (onProgress) onProgress(step, type, data);
+                continue;
               }
 
               if (type === 'naming') {

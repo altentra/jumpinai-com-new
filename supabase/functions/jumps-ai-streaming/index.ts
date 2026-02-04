@@ -1,6 +1,7 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.57.4';
-import { callGeminiChatWithRetry } from './gemini-client.ts';
+// NOTE: gemini-client.ts also exists in this folder, but this function implements
+// streaming directly to forward token deltas into our own SSE stream.
 import { StudioFormData, StudioFormSchema, verifyTurnstile } from './validators.ts';
 import { logApiUsage, getLocation } from './logging.ts';
 
@@ -354,7 +355,17 @@ Deno.serve(async (req) => {
           await new Promise(r => setTimeout(r, 800)); // Small delay for UI feedback
           sendProgress(2, 'overview', 20, 'Building strategic framework...');
           
-          const overviewResponse = await callGeminiWithRetry(GOOGLE_GEMINI_API_KEY, 2, formData, '');
+           const overviewResponse = await callGeminiWithRetry(
+             GOOGLE_GEMINI_API_KEY,
+             2,
+             formData,
+             '',
+             3,
+             (delta) => {
+               // Token-by-token visible streaming in the Overview tab
+               sendEvent(2, 'delta', { stepName: 'overview', delta });
+             }
+           );
           console.log('✅ Overview response:', overviewResponse);
           sendEvent(2, 'overview', overviewResponse);
           
@@ -371,7 +382,17 @@ Deno.serve(async (req) => {
           let comprehensivePlan = '';
           let planResponse = null;
           try {
-            planResponse = await callGeminiWithRetry(GOOGLE_GEMINI_API_KEY, 3, formData, overviewContent);
+             planResponse = await callGeminiWithRetry(
+               GOOGLE_GEMINI_API_KEY,
+               3,
+               formData,
+               overviewContent,
+               3,
+               (delta) => {
+                 // Token-by-token visible streaming in the Plan tab
+                 sendEvent(3, 'delta', { stepName: 'plan', delta });
+               }
+             );
             console.log('✅ Step 3 response:', planResponse);
             comprehensivePlan = typeof planResponse === 'string' 
               ? planResponse 
@@ -402,7 +423,17 @@ Deno.serve(async (req) => {
           try {
             // Combine overview and comprehensive plan for Step 4 context
             const fullContext = `${overviewContent}\n\nCOMPREHENSIVE PLAN:\n${comprehensivePlan}`;
-            toolsResponse = await callGeminiWithRetry(GOOGLE_GEMINI_API_KEY, 4, formData, fullContext);
+             toolsResponse = await callGeminiWithRetry(
+               GOOGLE_GEMINI_API_KEY,
+               4,
+               formData,
+               fullContext,
+               3,
+               (delta) => {
+                 // Token-by-token visible streaming in the Tools & Prompts tab
+                 sendEvent(4, 'delta', { stepName: 'tool_prompts', delta });
+               }
+             );
             console.log('✅ Step 4 response:', toolsResponse);
             
             const sent = sendEvent(4, 'tool_prompts', toolsResponse);
@@ -572,7 +603,8 @@ async function callGeminiWithRetry(
   step: number,
   context: StudioFormData,
   overviewContent: string,
-  maxRetries: number = 3
+  maxRetries: number = 3,
+  onDelta?: (delta: string) => void
 ): Promise<any> {
   let lastError: Error | null = null;
   
@@ -581,7 +613,7 @@ async function callGeminiWithRetry(
       console.log(`🔄 Step ${step}: Attempt ${attempt}/${maxRetries}`);
       const startTime = Date.now();
       
-      const result = await callGemini(apiKey, step, context, overviewContent);
+      const result = await callGemini(apiKey, step, context, overviewContent, onDelta);
       
       const duration = Date.now() - startTime;
       console.log(`✅ Step ${step}: Success on attempt ${attempt} (${duration}ms)`);
@@ -617,65 +649,153 @@ async function callGemini(
   apiKey: string,
   step: number,
   context: StudioFormData,
-  overviewContent: string
+  overviewContent: string,
+  onDelta?: (delta: string) => void
 ): Promise<any> {
   const { systemPrompt, userPrompt, expectedTokens } = getStepPrompts(step, context, overviewContent);
   
   console.log(`🚀 Step ${step}: Calling Google Gemini API (model: gemini-3-flash-preview, maxOutputTokens: ${expectedTokens})`);
-  
-  // Use Gemini 3 Flash Preview for fastest, highest-quality responses (February 2026)
-  const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
-  
-  const response = await fetch(geminiUrl, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      systemInstruction: {
-        parts: [{ text: systemPrompt }]
-      },
-      contents: [
-        {
-          role: 'user',
-          parts: [{ text: userPrompt }]
+
+  // If a delta callback is provided, use TRUE SSE streaming endpoint and emit deltas.
+  // This makes the UI visibly update token-by-token instead of only per step.
+  let content = '';
+  if (onDelta) {
+    const geminiStreamUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:streamGenerateContent?key=${apiKey}&alt=sse`;
+
+    const response = await fetch(geminiStreamUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        systemInstruction: { parts: [{ text: systemPrompt }] },
+        contents: [{ role: 'user', parts: [{ text: userPrompt }] }],
+        generationConfig: {
+          temperature: 0.7,
+          topP: 0.95,
+          topK: 40,
+          maxOutputTokens: expectedTokens,
+        },
+        safetySettings: [
+          { category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_NONE' },
+          { category: 'HARM_CATEGORY_HATE_SPEECH', threshold: 'BLOCK_NONE' },
+          { category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', threshold: 'BLOCK_NONE' },
+          { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_NONE' },
+        ],
+      }),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      const truncatedError = errorText.length > 500 ? errorText.substring(0, 500) + '...' : errorText;
+      console.error(`❌ Gemini streaming API error (step ${step}): ${response.status}`);
+      console.error(`Error details: ${truncatedError}`);
+      throw new Error(`Gemini API error: ${response.status}`);
+    }
+
+    const reader = response.body?.getReader();
+    if (!reader) throw new Error('No response body for streaming');
+
+    const decoder = new TextDecoder();
+    let textBuffer = '';
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      textBuffer += decoder.decode(value, { stream: true });
+
+      // Parse SSE line-by-line. Each "data: {json}" line may arrive in fragments.
+      let newlineIndex: number;
+      while ((newlineIndex = textBuffer.indexOf('\n')) !== -1) {
+        let line = textBuffer.slice(0, newlineIndex);
+        textBuffer = textBuffer.slice(newlineIndex + 1);
+
+        if (line.endsWith('\r')) line = line.slice(0, -1);
+        const trimmed = line.trim();
+        if (!trimmed || trimmed.startsWith(':')) continue;
+        if (!trimmed.startsWith('data: ')) continue;
+
+        const jsonStr = trimmed.slice(6).trim();
+        if (!jsonStr || jsonStr === '[DONE]') continue;
+
+        try {
+          const parsed = JSON.parse(jsonStr);
+          const delta = parsed?.candidates?.[0]?.content?.parts?.[0]?.text as string | undefined;
+          if (delta) {
+            content += delta;
+            onDelta(delta);
+          }
+        } catch {
+          // Incomplete JSON; put the line back and wait for more bytes.
+          textBuffer = line + '\n' + textBuffer;
+          break;
         }
-      ],
-      generationConfig: {
-        temperature: 0.7,
-        topP: 0.95,
-        topK: 40,
-        maxOutputTokens: expectedTokens,
-      },
-      safetySettings: [
-        { category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_NONE' },
-        { category: 'HARM_CATEGORY_HATE_SPEECH', threshold: 'BLOCK_NONE' },
-        { category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', threshold: 'BLOCK_NONE' },
-        { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_NONE' },
-      ]
-    }),
-  });
+      }
+    }
 
-  if (!response.ok) {
-    const errorText = await response.text();
-    const truncatedError = errorText.length > 500 ? errorText.substring(0, 500) + '...' : errorText;
-    console.error(`❌ Gemini API error (step ${step}): ${response.status}`);
-    console.error(`Error details: ${truncatedError}`);
-    throw new Error(`Gemini API error: ${response.status}`);
+    // Final flush for any leftover line without trailing newline
+    if (textBuffer.trim()) {
+      for (let raw of textBuffer.split('\n')) {
+        if (!raw) continue;
+        if (raw.endsWith('\r')) raw = raw.slice(0, -1);
+        const trimmed = raw.trim();
+        if (!trimmed || trimmed.startsWith(':')) continue;
+        if (!trimmed.startsWith('data: ')) continue;
+        const jsonStr = trimmed.slice(6).trim();
+        if (!jsonStr || jsonStr === '[DONE]') continue;
+        try {
+          const parsed = JSON.parse(jsonStr);
+          const delta = parsed?.candidates?.[0]?.content?.parts?.[0]?.text as string | undefined;
+          if (delta) {
+            content += delta;
+            onDelta(delta);
+          }
+        } catch {
+          // ignore leftovers
+        }
+      }
+    }
+  } else {
+    // Non-streaming fallback
+    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+
+    const response = await fetch(geminiUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        systemInstruction: { parts: [{ text: systemPrompt }] },
+        contents: [{ role: 'user', parts: [{ text: userPrompt }] }],
+        generationConfig: {
+          temperature: 0.7,
+          topP: 0.95,
+          topK: 40,
+          maxOutputTokens: expectedTokens,
+        },
+        safetySettings: [
+          { category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_NONE' },
+          { category: 'HARM_CATEGORY_HATE_SPEECH', threshold: 'BLOCK_NONE' },
+          { category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', threshold: 'BLOCK_NONE' },
+          { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_NONE' },
+        ],
+      }),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      const truncatedError = errorText.length > 500 ? errorText.substring(0, 500) + '...' : errorText;
+      console.error(`❌ Gemini API error (step ${step}): ${response.status}`);
+      console.error(`Error details: ${truncatedError}`);
+      throw new Error(`Gemini API error: ${response.status}`);
+    }
+
+    const data = await response.json();
+    const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+    if (!text) {
+      console.error(`❌ Step ${step}: No content in Gemini API response`);
+      throw new Error('No content in Gemini API response');
+    }
+    content = text;
   }
 
-  console.log(`✓ Step ${step}: Received response from Gemini API`);
-  
-  const data = await response.json();
-  let content = data.candidates?.[0]?.content?.parts?.[0]?.text;
-
-  if (!content) {
-    console.error(`❌ Step ${step}: No content in Gemini API response`);
-    throw new Error('No content in Gemini API response');
-  }
-  
   console.log(`✓ Step ${step}: Content received (${content.length} characters)`);
-
 
   // Clean and parse JSON more aggressively
   content = content
