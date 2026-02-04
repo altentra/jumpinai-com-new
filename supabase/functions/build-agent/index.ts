@@ -627,7 +627,7 @@ Return ONLY the JSON ${workflowTerm} - no explanations, no markdown code blocks.
   // Generate workflow/agent using Google Gemini
   console.log(`Generating ${platformName} ${buildType}...`);
   
-  const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro:generateContent?key=${geminiApiKey}`;
+  const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-pro:generateContent?key=${geminiApiKey}`;
   
   const workflowResponse = await fetch(geminiUrl, {
     method: 'POST',
