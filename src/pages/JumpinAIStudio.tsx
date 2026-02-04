@@ -457,69 +457,84 @@ const JumpinAIStudio = () => {
           <div className="relative pt-20 sm:pt-24 px-4 sm:px-6 lg:px-8">
             <div className="max-w-4xl mx-auto">
               
-              {/* Clean Header Row */}
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6 sm:mb-10 animate-fade-in">
-                {/* Title - Clean, no icon */}
+              {/* Refined Header Row */}
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8 sm:mb-12 animate-fade-in">
+                {/* Title - Clean typography */}
                 <div>
-                  <h1 className="text-lg sm:text-xl font-semibold text-foreground tracking-tight">
+                  <h1 className="text-xl sm:text-2xl font-bold text-foreground tracking-tight">
                     JumpinAI Studio
                   </h1>
-                  <p className="text-[11px] sm:text-xs text-muted-foreground/70 tracking-wide">
-                    Strategic clarity in 2 minutes
+                  <p className="text-xs sm:text-sm text-muted-foreground/70 mt-1 font-medium">
+                    Your AI adaptation roadmap in minutes
                   </p>
                 </div>
                 
-                {/* Guest Status - Minimal */}
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[11px] font-medium border border-amber-500/25 dark:border-amber-400/15 bg-amber-50/60 dark:bg-amber-950/30 text-amber-600 dark:text-amber-400/90">
+                {/* Guest Status - Premium pill */}
+                <div className="inline-flex items-center gap-2.5 px-5 py-2.5 rounded-full text-xs font-semibold border-2 border-amber-500/30 dark:border-amber-400/20 bg-gradient-to-r from-amber-50/80 to-orange-50/80 dark:from-amber-950/40 dark:to-orange-950/40 text-amber-700 dark:text-amber-400 shadow-lg shadow-amber-500/10">
                   {isLoadingGuestInfo ? (
                     <>
-                      <Loader2 className="w-3 h-3 animate-spin" />
-                      <span>Checking...</span>
+                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      <span>Loading...</span>
                     </>
                   ) : (
                     <>
-                      <div className="w-1.5 h-1.5 rounded-full bg-amber-500 dark:bg-amber-400"></div>
-                      <span>
+                      <div className="relative">
+                        <div className="w-2 h-2 rounded-full bg-amber-500 dark:bg-amber-400"></div>
+                        <div className="absolute inset-0 w-2 h-2 rounded-full bg-amber-500 dark:bg-amber-400 animate-ping opacity-75"></div>
+                      </div>
+                      <span className="tracking-wide">
                         {guestUsageInfo 
-                          ? `${guestUsageInfo.remaining} free jump${guestUsageInfo.remaining !== 1 ? 's' : ''} left` 
-                          : '3 free jumps'}
+                          ? `${guestUsageInfo.remaining} free jump${guestUsageInfo.remaining !== 1 ? 's' : ''} remaining` 
+                          : '3 free jumps available'}
                       </span>
                     </>
                   )}
                 </div>
               </div>
 
-              {/* HERO FORM CARD */}
-              <div className="mb-10 sm:mb-14 lg:mb-16 animate-fade-in-up" style={{ animationDelay: '0.08s' }}>
+              {/* HERO FORM CARD - World-class premium design */}
+              <div className="mb-12 sm:mb-16 lg:mb-20 animate-fade-in-up" style={{ animationDelay: '0.08s' }}>
                 <div className="relative">
-                  {/* Ambient glow */}
-                  <div className="absolute -inset-8 bg-gradient-radial from-primary/6 via-transparent to-transparent rounded-[4rem] blur-3xl"></div>
+                  {/* Multi-layer ambient glow system */}
+                  <div className="absolute -inset-12 bg-gradient-radial from-primary/10 via-primary/5 to-transparent rounded-[5rem] blur-3xl opacity-60"></div>
+                  <div className="absolute -inset-8 bg-gradient-conic from-primary/8 via-accent/6 to-primary/8 rounded-[4rem] blur-2xl opacity-40"></div>
                   
-                  {/* Main card */}
-                  <div className="relative rounded-3xl overflow-hidden 
-                    bg-card dark:bg-zinc-900/90
-                    border border-border/30 dark:border-white/[0.06]
-                    shadow-[0_30px_100px_-25px_rgba(0,0,0,0.15)]
-                    dark:shadow-[0_30px_100px_-25px_rgba(0,0,0,0.5)]">
+                  {/* Main card - Super rounded corners */}
+                  <div className="relative rounded-[40px] sm:rounded-[48px] overflow-hidden 
+                    bg-gradient-to-b from-card via-card to-card/95 dark:from-zinc-900/95 dark:via-zinc-900/90 dark:to-zinc-900/85
+                    border-2 border-border/40 dark:border-white/[0.08]
+                    shadow-[0_40px_120px_-30px_rgba(0,0,0,0.2)]
+                    dark:shadow-[0_40px_120px_-30px_rgba(0,0,0,0.7)]">
                     
-                    {/* Subtle top highlight */}
-                    <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/50 dark:via-white/15 to-transparent"></div>
+                    {/* Premium top highlight */}
+                    <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/70 dark:via-white/20 to-transparent"></div>
+                    
+                    {/* Subtle inner glow at top */}
+                    <div className="absolute top-0 inset-x-[20%] h-32 bg-gradient-to-b from-primary/[0.04] to-transparent rounded-full blur-3xl"></div>
                     
                     {/* Content */}
-                    <div className="relative p-6 sm:p-8 md:p-12 lg:p-14">
+                    <div className="relative p-8 sm:p-12 md:p-16 lg:p-20">
                       
-                      {/* Hero text */}
-                      <div className="text-center mb-10 sm:mb-12">
-                        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-4 tracking-tight">
-                          Create Your <span className="bg-gradient-to-r from-primary via-primary to-primary/80 bg-clip-text text-transparent">Jump in AI</span>
+                      {/* Hero text - Premium typography */}
+                      <div className="text-center mb-12 sm:mb-16">
+                        <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-[3.5rem] font-bold text-foreground mb-5 sm:mb-6 tracking-tight leading-[1.1]">
+                          Create Your{' '}
+                          <span className="relative">
+                            <span className="bg-gradient-to-r from-primary via-primary/90 to-primary/80 bg-clip-text text-transparent">
+                              Jump in AI
+                            </span>
+                            {/* Underline accent */}
+                            <span className="absolute -bottom-2 left-0 right-0 h-1 bg-gradient-to-r from-primary/60 via-primary/40 to-transparent rounded-full"></span>
+                          </span>
                         </h2>
-                        <p className="text-muted-foreground text-sm sm:text-base max-w-lg mx-auto leading-relaxed">
-                          Share what you're building and what's blocking you — we'll craft your personalized roadmap in under 2 minutes.
+                        <p className="text-muted-foreground text-base sm:text-lg md:text-xl max-w-2xl mx-auto leading-relaxed font-medium">
+                          Share your vision and challenges — we'll craft your personalized AI roadmap.
                         </p>
                       </div>
 
-                      <div className="space-y-8">
-                        <div className="grid md:grid-cols-2 gap-6 sm:gap-8">
+                      {/* Form inputs */}
+                      <div className="space-y-10 sm:space-y-12">
+                        <div className="grid md:grid-cols-2 gap-8 sm:gap-10 lg:gap-12">
                           {/* Goals Input */}
                           <StudioTextarea
                             ref={goalsTextareaRef}
@@ -551,46 +566,51 @@ const JumpinAIStudio = () => {
                           />
                         </div>
 
-                        {/* Generate Button Section */}
-                        <div ref={generateButtonRef} className="pt-6 sm:pt-8">
+                        {/* Generate Button Section - Premium CTA */}
+                        <div ref={generateButtonRef} className="pt-8 sm:pt-10">
                           <div className="flex flex-col items-center">
-                            {/* Glassmorphism Button */}
+                            {/* Premium Glassmorphism Button */}
                             <div className="relative group/btn w-full sm:w-auto">
-                              <div className="absolute -inset-1 bg-gradient-to-r from-primary/15 via-accent/10 to-primary/15 rounded-full blur-xl opacity-0 group-hover/btn:opacity-80 transition-opacity duration-500"></div>
+                              {/* Multi-layer button glow */}
+                              <div className="absolute -inset-2 bg-gradient-to-r from-primary/20 via-primary/30 to-primary/20 rounded-full blur-2xl opacity-0 group-hover/btn:opacity-100 transition-all duration-700"></div>
+                              <div className="absolute -inset-1 bg-gradient-to-r from-primary/10 via-accent/10 to-primary/10 rounded-full blur-xl opacity-0 group-hover/btn:opacity-80 transition-all duration-500"></div>
                               
                               <button
                                 onClick={() => handleGenerate()}
                                 disabled={isGenerating}
-                                className="relative w-full sm:w-auto px-14 sm:px-20 md:px-28 py-5 sm:py-6 
-                                  bg-gradient-to-br from-muted/90 via-muted/70 to-muted/90
-                                  dark:from-zinc-800 dark:via-zinc-700/90 dark:to-zinc-800
-                                  backdrop-blur-xl
-                                  text-foreground font-semibold text-base sm:text-lg
+                                className="relative w-full sm:w-auto px-16 sm:px-24 md:px-32 py-6 sm:py-7 
+                                  bg-gradient-to-br from-muted/95 via-muted/80 to-muted/95
+                                  dark:from-zinc-800/95 dark:via-zinc-700/90 dark:to-zinc-800/95
+                                  backdrop-blur-2xl
+                                  text-foreground font-bold text-lg sm:text-xl tracking-wide
                                   rounded-full
-                                  border border-border/60 dark:border-white/10
-                                  transition-all duration-300 
-                                  hover:scale-[1.02] active:scale-[0.98] 
-                                  hover:border-primary/40 dark:hover:border-white/20
-                                  hover:shadow-xl hover:shadow-primary/10
+                                  border-2 border-border/50 dark:border-white/10
+                                  transition-all duration-500 ease-out
+                                  hover:scale-[1.03] active:scale-[0.98] 
+                                  hover:border-primary/50 dark:hover:border-white/25
+                                  hover:shadow-2xl hover:shadow-primary/20
                                   disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100 
-                                  shadow-lg shadow-black/10 dark:shadow-black/40
+                                  shadow-xl shadow-black/10 dark:shadow-black/40
                                   overflow-hidden"
                               >
                                 {/* Shimmer effect */}
-                                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/8 to-transparent -translate-x-full group-hover/btn:translate-x-full transition-transform duration-1000 ease-out rounded-full"></div>
+                                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover/btn:translate-x-full transition-transform duration-1000 ease-out rounded-full"></div>
                                 
                                 {/* Top highlight */}
-                                <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/40 dark:via-white/20 to-transparent"></div>
+                                <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/50 dark:via-white/25 to-transparent"></div>
                                 
-                                <div className="relative z-10 flex items-center justify-center gap-3">
+                                {/* Bottom subtle shadow */}
+                                <div className="absolute inset-x-4 bottom-0 h-px bg-gradient-to-r from-transparent via-black/10 to-transparent"></div>
+                                
+                                <div className="relative z-10 flex items-center justify-center gap-4">
                                   {isGenerating ? (
-                                    <div className="flex flex-col items-center gap-2 min-h-[32px] w-full">
-                                      <div className="flex items-center gap-3">
-                                        <Loader2 className="w-5 h-5 animate-spin" />
-                                        <span className="text-base font-medium">
+                                    <div className="flex flex-col items-center gap-3 min-h-[36px] w-full">
+                                      <div className="flex items-center gap-4">
+                                        <Loader2 className="w-6 h-6 animate-spin" />
+                                        <span className="text-lg font-semibold">
                                           {typeof processingStatus === 'string' ? processingStatus : 'Generating...'}
                                         </span>
-                                        <span className="text-sm opacity-70 font-mono tabular-nums">
+                                        <span className="text-base opacity-70 font-mono tabular-nums bg-muted/50 px-3 py-1 rounded-full">
                                           {formatTime(generationTimer)}
                                         </span>
                                       </div>
@@ -599,14 +619,14 @@ const JumpinAIStudio = () => {
                                           e.stopPropagation();
                                           handleCancel();
                                         }}
-                                        className="text-xs opacity-60 hover:opacity-100 transition-opacity underline underline-offset-2"
+                                        className="text-sm opacity-60 hover:opacity-100 transition-opacity underline underline-offset-4 decoration-dotted"
                                       >
                                         Cancel
                                       </button>
                                     </div>
                                   ) : (
                                     <>
-                                      <Zap className="w-5 h-5 transition-transform duration-300 group-hover/btn:scale-110 group-hover/btn:rotate-6" />
+                                      <Zap className="w-6 h-6 transition-transform duration-500 group-hover/btn:scale-125 group-hover/btn:rotate-12" />
                                       <span>Generate My Jump</span>
                                     </>
                                   )}
@@ -614,18 +634,18 @@ const JumpinAIStudio = () => {
                               </button>
                             </div>
                             
-                            {/* Trust badges - minimal */}
-                            <div className="flex items-center justify-center gap-6 mt-6 text-xs text-muted-foreground/70">
-                              <span className="flex items-center gap-1.5">
-                                <span className="w-1 h-1 rounded-full bg-primary/50"></span>
-                                2 min
+                            {/* Trust badges - Premium minimal */}
+                            <div className="flex items-center justify-center gap-8 mt-8 text-sm text-muted-foreground/60 font-medium">
+                              <span className="flex items-center gap-2.5">
+                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500/70"></span>
+                                ~2 minutes
                               </span>
-                              <span className="flex items-center gap-1.5">
-                                <span className="w-1 h-1 rounded-full bg-primary/50"></span>
+                              <span className="flex items-center gap-2.5">
+                                <span className="w-1.5 h-1.5 rounded-full bg-primary/50"></span>
                                 Personalized
                               </span>
-                              <span className="flex items-center gap-1.5">
-                                <span className="w-1 h-1 rounded-full bg-primary/50"></span>
+                              <span className="flex items-center gap-2.5">
+                                <span className="w-1.5 h-1.5 rounded-full bg-amber-500/70"></span>
                                 Ready-to-use
                               </span>
                             </div>
@@ -637,21 +657,22 @@ const JumpinAIStudio = () => {
                 </div>
               </div>
 
-              {/* Sign Up CTA - Cleaner */}
-              <div className="mb-10 sm:mb-12 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-5 sm:p-6 rounded-2xl border border-amber-500/20 dark:border-amber-400/15 bg-gradient-to-r from-amber-500/5 via-transparent to-amber-500/5 dark:from-amber-500/10 dark:to-orange-500/10">
-                  <p className="text-sm text-muted-foreground text-center sm:text-left">
-                    <span className="text-foreground font-medium">Sign up free</span> to save your Jumps • <span className="text-amber-600 dark:text-amber-400 font-semibold">3 welcome credits</span>
+              {/* Sign Up CTA - Premium redesign */}
+              <div className="mb-12 sm:mb-16 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-5 p-6 sm:p-8 rounded-[32px] border-2 border-amber-500/25 dark:border-amber-400/20 bg-gradient-to-r from-amber-500/[0.06] via-orange-500/[0.04] to-amber-500/[0.06] dark:from-amber-500/[0.12] dark:via-orange-500/[0.08] dark:to-amber-500/[0.12] backdrop-blur-sm shadow-xl shadow-amber-500/5">
+                  <p className="text-base text-muted-foreground text-center sm:text-left font-medium">
+                    <span className="text-foreground font-semibold">Sign up free</span> to save your Jumps and unlock{' '}
+                    <span className="text-amber-600 dark:text-amber-400 font-bold">3 welcome credits</span>
                   </p>
                   <button
                     onClick={() => login('/dashboard/studio')}
-                    className="flex items-center gap-2 px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-300 
-                      bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 
-                      text-white shadow-md shadow-amber-500/20 hover:shadow-lg hover:shadow-amber-500/30 
-                      hover:scale-[1.02] active:scale-[0.98] whitespace-nowrap"
+                    className="flex items-center gap-2.5 px-8 py-3.5 rounded-full text-sm font-bold transition-all duration-500 
+                      bg-gradient-to-r from-amber-500 via-amber-500 to-orange-500 hover:from-amber-400 hover:via-amber-500 hover:to-orange-400 
+                      text-white shadow-lg shadow-amber-500/30 hover:shadow-xl hover:shadow-amber-500/40 
+                      hover:scale-[1.03] active:scale-[0.98] whitespace-nowrap tracking-wide"
                   >
-                    <LogIn className="w-3.5 h-3.5" />
-                    <span>Sign Up</span>
+                    <LogIn className="w-4 h-4" />
+                    <span>Get Started Free</span>
                   </button>
                 </div>
               </div>
