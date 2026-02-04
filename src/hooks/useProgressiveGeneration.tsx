@@ -28,6 +28,8 @@ export type ProgressiveResult = {
     blueprints: any[];
     strategies: any[];
   };
+  // Live token-by-token stream shown in tabs before structured data finishes parsing
+  streaming_content?: Partial<Record<'overview' | 'plan' | 'tool_prompts', string>>;
   processing_status: ProcessingStatus;
   stepTimes?: { [key: string]: number };
 };
@@ -193,6 +195,7 @@ export const useProgressiveGeneration = () => {
           blueprints: [], // Keep for type compatibility but won't be used
           strategies: []  // Keep for type compatibility but won't be used
         },
+        streaming_content: {},
         processing_status: {
           stage: 'Generating',
           progress: 0,
@@ -212,6 +215,25 @@ export const useProgressiveGeneration = () => {
         // Real-time progress callback
         (step: number, type: string, stepData: any) => {
           console.log(`Step ${step} (${type}) completed:`, stepData);
+
+          // Live token-by-token stream updates (visible in tabs while step is running)
+          if (type === 'delta') {
+            const stepName = stepData?.stepName as 'overview' | 'plan' | 'tool_prompts' | undefined;
+            const delta = stepData?.delta as string | undefined;
+            if (stepName && delta) {
+              progressiveResult.streaming_content = {
+                ...(progressiveResult.streaming_content || {}),
+                [stepName]: ((progressiveResult.streaming_content?.[stepName] || '') + delta)
+              };
+              // Keep the current step aligned to the streaming tab
+              progressiveResult.processing_status = {
+                ...progressiveResult.processing_status,
+                currentStep: stepName,
+              };
+              setResult({ ...progressiveResult });
+            }
+            return;
+          }
           
           // Calculate step completion time
           const stepEndTime = Date.now();

@@ -1250,6 +1250,20 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                 </div>
               )}
             </div>
+          ) : result.streaming_content?.overview ? (
+            <Card className="glass backdrop-blur-lg bg-card/80 border border-border rounded-2xl">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm flex items-center gap-2">
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  Streaming overview…
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <pre className="whitespace-pre-wrap break-words text-xs leading-relaxed font-mono text-foreground/80 max-h-[420px] overflow-auto">
+                  {result.streaming_content.overview}
+                </pre>
+              </CardContent>
+            </Card>
           ) : (
             <div className="flex items-center justify-center h-32">
               <Loader2 className="w-6 h-6 animate-spin mr-2" />
@@ -1278,6 +1292,20 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
               onToolPromptGenerated={handleToolPromptGenerated}
               isGenerationComplete={result.processing_status?.isComplete || false}
             />
+          ) : result.streaming_content?.plan ? (
+            <Card className="glass backdrop-blur-lg bg-card/80 border border-border rounded-2xl">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm flex items-center gap-2">
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  Streaming plan…
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <pre className="whitespace-pre-wrap break-words text-xs leading-relaxed font-mono text-foreground/80 max-h-[420px] overflow-auto">
+                  {result.streaming_content.plan}
+                </pre>
+              </CardContent>
+            </Card>
           ) : (
             <div className="flex items-center justify-center h-32">
               <Loader2 className="w-6 h-6 animate-spin mr-2" />
@@ -1298,10 +1326,26 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
 
             if (!toolPrompts || toolPrompts.length === 0) {
               return (
-                <div className="glass backdrop-blur-lg bg-card/80 border border-border rounded-xl flex items-center justify-center h-32 text-muted-foreground">
-                  <Loader2 className="w-6 h-6 animate-spin mr-2" />
-                  Generating tools & prompts...
-                </div>
+                result.streaming_content?.tool_prompts ? (
+                  <Card className="glass backdrop-blur-lg bg-card/80 border border-border rounded-2xl">
+                    <CardHeader className="pb-3">
+                      <CardTitle className="text-sm flex items-center gap-2">
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                        Streaming tools & prompts…
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <pre className="whitespace-pre-wrap break-words text-xs leading-relaxed font-mono text-foreground/80 max-h-[420px] overflow-auto">
+                        {result.streaming_content.tool_prompts}
+                      </pre>
+                    </CardContent>
+                  </Card>
+                ) : (
+                  <div className="glass backdrop-blur-lg bg-card/80 border border-border rounded-xl flex items-center justify-center h-32 text-muted-foreground">
+                    <Loader2 className="w-6 h-6 animate-spin mr-2" />
+                    Generating tools & prompts...
+                  </div>
+                )
               );
             }
 
