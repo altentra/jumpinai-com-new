@@ -188,7 +188,7 @@ const InlineStudioSection = () => {
                         
                         <button
                           onClick={handleGenerate}
-                          disabled={isTransitioning || !isFormValid}
+                          disabled={isTransitioning}
                           className="relative w-full sm:w-auto px-12 sm:px-16 md:px-20 py-4 sm:py-5 
                             bg-zinc-900 dark:bg-zinc-800
                             text-white font-semibold text-base sm:text-lg
@@ -197,7 +197,7 @@ const InlineStudioSection = () => {
                             transition-all duration-300 ease-out
                             hover:scale-[1.02] active:scale-[0.98] 
                             hover:shadow-xl hover:shadow-black/30
-                            disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 
+                            disabled:cursor-not-allowed disabled:hover:scale-100 
                             shadow-lg shadow-black/20
                             overflow-hidden"
                           style={{
