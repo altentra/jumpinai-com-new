@@ -6,29 +6,29 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-// XAI API client with retry logic
-async function callXAIWithRetry(
-  prompt: string,
+// Google Gemini API client with retry logic
+async function callGeminiWithRetry(
+  systemPrompt: string,
+  userPrompt: string,
   apiKey: string,
-  model: string = 'grok-4-fast-non-reasoning',
   maxRetries: number = 3
 ): Promise<string> {
   let lastError: Error | null = null;
   
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
-      console.log(`🔄 Attempt ${attempt}/${maxRetries} calling xAI API...`);
-      const result = await callXAI(prompt, apiKey, model);
-      console.log(`✅ xAI API call succeeded on attempt ${attempt}`);
+      console.log(`🔄 Attempt ${attempt}/${maxRetries} calling Google Gemini API...`);
+      const result = await callGemini(systemPrompt, userPrompt, apiKey);
+      console.log(`✅ Gemini API call succeeded on attempt ${attempt}`);
       return result;
     } catch (error: any) {
       lastError = error;
       const statusCode = error.status || error.statusCode;
       
-      // Retry on 5xx errors (server errors)
-      if (statusCode >= 500 && statusCode < 600 && attempt < maxRetries) {
+      // Retry on 5xx errors (server errors) or rate limits (429)
+      if ((statusCode >= 500 && statusCode < 600 || statusCode === 429) && attempt < maxRetries) {
         const delay = Math.pow(2, attempt) * 1000; // Exponential backoff: 2s, 4s, 8s
-        console.warn(`⚠️ xAI API error ${statusCode} on attempt ${attempt}. Retrying in ${delay}ms...`, {
+        console.warn(`⚠️ Gemini API error ${statusCode} on attempt ${attempt}. Retrying in ${delay}ms...`, {
           error: error.message,
           attempt,
           maxRetries
@@ -38,7 +38,7 @@ async function callXAIWithRetry(
       }
       
       // Don't retry on 4xx errors (client errors) or if max retries reached
-      console.error(`❌ xAI API call failed definitively:`, {
+      console.error(`❌ Gemini API call failed definitively:`, {
         statusCode,
         error: error.message,
         attempt,
@@ -51,44 +51,59 @@ async function callXAIWithRetry(
   throw lastError || new Error('All retry attempts failed');
 }
 
-async function callXAI(prompt: string, apiKey: string, model: string): Promise<string> {
-  const response = await fetch('https://api.x.ai/v1/chat/completions', {
+async function callGemini(systemPrompt: string, userPrompt: string, apiKey: string): Promise<string> {
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+  
+  const response = await fetch(url, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${apiKey}`,
     },
     body: JSON.stringify({
-      messages: [
-        {
-          role: 'system',
-          content: 'You are a helpful AI assistant specialized in creating action plans and providing practical tools and resources.'
-        },
+      systemInstruction: {
+        parts: [{ text: systemPrompt }]
+      },
+      contents: [
         {
           role: 'user',
-          content: prompt
+          parts: [{ text: userPrompt }]
         }
       ],
-      model: model,
-      temperature: 0.7,
+      generationConfig: {
+        temperature: 0.7,
+        maxOutputTokens: 4000,
+      },
+      safetySettings: [
+        { category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_NONE' },
+        { category: 'HARM_CATEGORY_HATE_SPEECH', threshold: 'BLOCK_NONE' },
+        { category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', threshold: 'BLOCK_NONE' },
+        { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_NONE' },
+      ]
     }),
   });
 
   if (!response.ok) {
     const errorText = await response.text();
-    console.error('❌ xAI API error response:', {
+    console.error('❌ Gemini API error response:', {
       status: response.status,
       statusText: response.statusText,
       body: errorText
     });
-    const error: any = new Error(`xAI API error: ${response.status} ${response.statusText}`);
+    const error: any = new Error(`Gemini API error: ${response.status} ${response.statusText}`);
     error.status = response.status;
     error.response = errorText;
     throw error;
   }
 
   const data = await response.json();
-  return data.choices[0].message.content;
+  const content = data.candidates?.[0]?.content?.parts?.[0]?.text;
+  
+  if (!content) {
+    console.error('❌ No content in Gemini response:', data);
+    throw new Error('No content in Gemini API response');
+  }
+  
+  return content;
 }
 
 serve(async (req) => {
@@ -117,10 +132,10 @@ serve(async (req) => {
       existingComboCount
     });
 
-    // Get XAI API key
-    const xaiApiKey = Deno.env.get('XAI_API_KEY');
-    if (!xaiApiKey) {
-      throw new Error('XAI_API_KEY not configured');
+    // Get Google Gemini API key
+    const geminiApiKey = Deno.env.get('GOOGLE_GEMINI_API_KEY');
+    if (!geminiApiKey) {
+      throw new Error('GOOGLE_GEMINI_API_KEY not configured');
     }
 
     // Get Supabase clients
@@ -248,16 +263,16 @@ Return ONLY valid JSON:
 
 Generate ONE combo deeply tailored to executing this specific step. The combo must be PROFESSIONAL GRADE yet CONCISE.`;
 
-    console.log('📤 Calling XAI to generate combo...');
+    console.log('📤 Calling Google Gemini to generate combo...');
     
-    const response = await callXAIWithRetry(
-      `${systemPrompt}\n\n${userPrompt}`,
-      xaiApiKey,
-      'grok-4-fast-non-reasoning',
+    const response = await callGeminiWithRetry(
+      systemPrompt,
+      userPrompt,
+      geminiApiKey,
       3
     );
 
-    console.log('📥 XAI Response received');
+    console.log('📥 Gemini Response received');
 
     // Extract JSON from markdown code blocks if present
     let cleanedResponse = response.trim();

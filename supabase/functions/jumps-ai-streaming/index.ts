@@ -1,6 +1,6 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.57.4';
-import { callXAIWithRetry } from './xai-client.ts';
+import { callGeminiChatWithRetry } from './gemini-client.ts';
 import { StudioFormData, StudioFormSchema, verifyTurnstile } from './validators.ts';
 import { logApiUsage, getLocation } from './logging.ts';
 
@@ -49,9 +49,9 @@ Deno.serve(async (req) => {
       console.log('👤 Guest user detected (no auth header)');
     }
 
-    const XAI_API_KEY = Deno.env.get('XAI_API_KEY');
-    if (!XAI_API_KEY) {
-      throw new Error('XAI_API_KEY not configured');
+    const GOOGLE_GEMINI_API_KEY = Deno.env.get('GOOGLE_GEMINI_API_KEY');
+    if (!GOOGLE_GEMINI_API_KEY) {
+      throw new Error('GOOGLE_GEMINI_API_KEY not configured');
     }
 
     // Parse and validate input
@@ -211,7 +211,7 @@ Deno.serve(async (req) => {
         try {
           // Step 1: Generate JUST the name (quick, 3-5 seconds)
           console.log('📝 Step 1: Generating jump name...');
-          const namingResponse = await callXAIWithRetry(XAI_API_KEY, 1, formData, '');
+          const namingResponse = await callGeminiWithRetry(GOOGLE_GEMINI_API_KEY, 1, formData, '');
           console.log('✅ Naming response:', namingResponse);
           console.log('✅ Naming response jumpName field:', namingResponse?.jumpName);
           
@@ -326,7 +326,7 @@ Deno.serve(async (req) => {
           
           // Step 2: Generate Overview & Plan
           console.log('📊 Step 2: Generating overview...');
-          const overviewResponse = await callXAIWithRetry(XAI_API_KEY, 2, formData, '');
+          const overviewResponse = await callGeminiWithRetry(GOOGLE_GEMINI_API_KEY, 2, formData, '');
           console.log('✅ Overview response:', overviewResponse);
           sendEvent(2, 'overview', overviewResponse);
           
@@ -339,7 +339,7 @@ Deno.serve(async (req) => {
           let comprehensivePlan = '';
           let planResponse = null;
           try {
-            planResponse = await callXAIWithRetry(XAI_API_KEY, 3, formData, overviewContent);
+            planResponse = await callGeminiWithRetry(GOOGLE_GEMINI_API_KEY, 3, formData, overviewContent);
             console.log('✅ Step 3 response:', planResponse);
             comprehensivePlan = typeof planResponse === 'string' 
               ? planResponse 
@@ -364,7 +364,7 @@ Deno.serve(async (req) => {
           try {
             // Combine overview and comprehensive plan for Step 4 context
             const fullContext = `${overviewContent}\n\nCOMPREHENSIVE PLAN:\n${comprehensivePlan}`;
-            toolsResponse = await callXAIWithRetry(XAI_API_KEY, 4, formData, fullContext);
+            toolsResponse = await callGeminiWithRetry(GOOGLE_GEMINI_API_KEY, 4, formData, fullContext);
             console.log('✅ Step 4 response:', toolsResponse);
             
             const sent = sendEvent(4, 'tool_prompts', toolsResponse);
@@ -528,8 +528,8 @@ Deno.serve(async (req) => {
   }
 });
 
-// Retry wrapper with exponential backoff for xAI API calls
-async function callXAIWithRetry(
+// Retry wrapper with exponential backoff for Google Gemini API calls
+async function callGeminiWithRetry(
   apiKey: string,
   step: number,
   context: StudioFormData,
@@ -543,7 +543,7 @@ async function callXAIWithRetry(
       console.log(`🔄 Step ${step}: Attempt ${attempt}/${maxRetries}`);
       const startTime = Date.now();
       
-      const result = await callXAI(apiKey, step, context, overviewContent);
+      const result = await callGemini(apiKey, step, context, overviewContent);
       
       const duration = Date.now() - startTime;
       console.log(`✅ Step ${step}: Success on attempt ${attempt} (${duration}ms)`);
@@ -552,11 +552,12 @@ async function callXAIWithRetry(
     } catch (error: any) {
       lastError = error;
       
-      // Check if it's a retryable error (5xx server errors)
+      // Check if it's a retryable error (5xx server errors or rate limits)
       const isRetryable = error.message?.includes('502') || 
                           error.message?.includes('503') || 
                           error.message?.includes('504') ||
-                          error.message?.includes('500');
+                          error.message?.includes('500') ||
+                          error.message?.includes('429');
       
       if (!isRetryable || attempt === maxRetries) {
         console.error(`❌ Step ${step}: Failed after ${attempt} attempt(s) - ${error.message}`);
@@ -574,7 +575,7 @@ async function callXAIWithRetry(
   throw lastError || new Error(`Failed after ${maxRetries} retries`);
 }
 
-async function callXAI(
+async function callGemini(
   apiKey: string,
   step: number,
   context: StudioFormData,
@@ -582,42 +583,57 @@ async function callXAI(
 ): Promise<any> {
   const { systemPrompt, userPrompt, expectedTokens } = getStepPrompts(step, context, overviewContent);
   
-  console.log(`🚀 Step ${step}: Calling xAI API (model: grok-4-fast-non-reasoning, max_tokens: ${expectedTokens})`);
+  console.log(`🚀 Step ${step}: Calling Google Gemini API (model: gemini-2.5-flash, maxOutputTokens: ${expectedTokens})`);
   
-  const response = await fetch('https://api.x.ai/v1/chat/completions', {
+  // Use Gemini 2.5 Flash for fast, high-quality responses
+  const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+  
+  const response = await fetch(geminiUrl, {
     method: 'POST',
     headers: {
-      'Authorization': `Bearer ${apiKey}`,
       'Content-Type': 'application/json',
     },
-      body: JSON.stringify({
-        model: 'grok-4-fast-non-reasoning',
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: userPrompt }
-        ],
+    body: JSON.stringify({
+      systemInstruction: {
+        parts: [{ text: systemPrompt }]
+      },
+      contents: [
+        {
+          role: 'user',
+          parts: [{ text: userPrompt }]
+        }
+      ],
+      generationConfig: {
         temperature: 0.7,
-        max_tokens: expectedTokens,
-        stream: false, // Ensure non-streaming for simpler response handling
-      }),
+        topP: 0.95,
+        topK: 40,
+        maxOutputTokens: expectedTokens,
+      },
+      safetySettings: [
+        { category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_NONE' },
+        { category: 'HARM_CATEGORY_HATE_SPEECH', threshold: 'BLOCK_NONE' },
+        { category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', threshold: 'BLOCK_NONE' },
+        { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_NONE' },
+      ]
+    }),
   });
 
   if (!response.ok) {
     const errorText = await response.text();
     const truncatedError = errorText.length > 500 ? errorText.substring(0, 500) + '...' : errorText;
-    console.error(`❌ xAI API error (step ${step}): ${response.status}`);
+    console.error(`❌ Gemini API error (step ${step}): ${response.status}`);
     console.error(`Error details: ${truncatedError}`);
-    throw new Error(`xAI API error: ${response.status}`);
+    throw new Error(`Gemini API error: ${response.status}`);
   }
 
-  console.log(`✓ Step ${step}: Received response from xAI API`);
+  console.log(`✓ Step ${step}: Received response from Gemini API`);
   
   const data = await response.json();
-  let content = data.choices?.[0]?.message?.content;
+  let content = data.candidates?.[0]?.content?.parts?.[0]?.text;
 
   if (!content) {
-    console.error(`❌ Step ${step}: No content in API response`);
-    throw new Error('No content in API response');
+    console.error(`❌ Step ${step}: No content in Gemini API response`);
+    throw new Error('No content in Gemini API response');
   }
   
   console.log(`✓ Step ${step}: Content received (${content.length} characters)`);
