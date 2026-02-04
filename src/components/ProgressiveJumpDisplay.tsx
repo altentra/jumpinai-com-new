@@ -703,7 +703,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
           </TabsList>
         </div>
 
-        <TabsContent value="overview" className="mt-0" style={{ overflow: 'visible', maxHeight: 'none', height: 'auto', display: 'block' }}>
+        <TabsContent value="overview" forceMount className={`mt-0 ${activeTab !== 'overview' ? 'hidden' : ''}`} style={{ overflow: 'visible', maxHeight: 'none', height: 'auto' }}>
           {result.comprehensive_plan ? (
             <div ref={overviewContentRef} className="space-y-6">
               {/* Route Exploration Breadcrumb - shows when we're in an alternative route */}
@@ -1404,15 +1404,10 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                 </div>
               )}
             </div>
-          ) : (
-            <div className="flex items-center justify-center h-32">
-              <Loader2 className="w-6 h-6 animate-spin text-blue-500 mr-2" />
-              <span className="text-muted-foreground">Generating strategic overview...</span>
-            </div>
-          )}
+          ) : null}
         </TabsContent>
 
-        <TabsContent value="plan" forceMount className="mt-0" style={{ overflow: 'visible', maxHeight: 'none', height: 'auto', display: 'block' }}>
+        <TabsContent value="plan" forceMount className={`mt-0 ${activeTab !== 'plan' ? 'hidden' : ''}`} style={{ overflow: 'visible', maxHeight: 'none', height: 'auto' }}>
           <div ref={planContentRef}>
             {/* Use JumpPlanDisplay for BOTH final AND streaming states - just with different data sources */}
             {(result.structured_plan?.phases || result.streaming_parsed?.plan?.phases?.length) ? (
@@ -1442,16 +1437,11 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                 onToolPromptGenerated={handleToolPromptGenerated}
                 isGenerationComplete={result.processing_status?.isComplete || false}
               />
-            ) : (
-              <div className="flex items-center justify-center h-32">
-                <Loader2 className="w-6 h-6 animate-spin text-blue-500 mr-2" />
-                <span className="text-muted-foreground">Creating implementation plan...</span>
-              </div>
-            )}
+            ) : null}
           </div>
         </TabsContent>
 
-        <TabsContent value="toolPrompts" forceMount className="mt-0" style={{ overflow: 'visible', maxHeight: 'none', height: 'auto', display: 'block' }}>
+        <TabsContent value="toolPrompts" forceMount className={`mt-0 ${activeTab !== 'toolPrompts' ? 'hidden' : ''}`} style={{ overflow: 'visible', maxHeight: 'none', height: 'auto' }}>
           {(() => {
             console.log('🔍 Tools & Prompts Tab - Checking data:', {
               hasComponents: !!result.components,
@@ -1490,12 +1480,7 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
                 );
               }
 
-              return (
-                <div className="flex items-center justify-center h-32">
-                  <Loader2 className="w-6 h-6 animate-spin text-blue-500 mr-2" />
-                  <span className="text-muted-foreground">Generating tools & prompts...</span>
-                </div>
-              );
+              return null;
             }
 
             // Validate and map combos with original indices preserved
