@@ -540,24 +540,29 @@ const JumpinAIStudio = () => {
                 </div>
               </div>
 
-              {/* HERO FORM CARD - Compact premium design */}
+              {/* HERO FORM CARD - Premium Glassmorphism (synced with InlineStudioSection) */}
               <div className="mb-10 sm:mb-14 animate-fade-in-up" style={{ animationDelay: '0.08s' }}>
                 <div className="relative">
-                  {/* Subtle ambient glow */}
-                  <div className="absolute -inset-6 bg-primary/[0.06] rounded-[3rem] blur-2xl opacity-50"></div>
+                  {/* Multi-layer ambient glow behind card */}
+                  <div className="absolute -inset-8 bg-gradient-to-br from-amber-500/[0.08] via-primary/[0.06] to-violet-500/[0.08] rounded-[4rem] blur-3xl opacity-70"></div>
+                  <div className="absolute -inset-4 bg-primary/[0.04] rounded-[3rem] blur-xl opacity-50"></div>
                   
-                  {/* Main card */}
-                  <div className="relative rounded-[28px] sm:rounded-[36px] overflow-hidden 
-                    bg-card dark:bg-zinc-900/95
-                    border border-border/50 dark:border-white/[0.08]
-                    shadow-[0_25px_80px_-20px_rgba(0,0,0,0.15)]
-                    dark:shadow-[0_25px_80px_-20px_rgba(0,0,0,0.5)]">
+                  {/* Card with glassmorphism */}
+                  <div className="relative rounded-[32px] sm:rounded-[40px] overflow-hidden 
+                    bg-white/70 dark:bg-zinc-900/70
+                    backdrop-blur-2xl
+                    border border-white/40 dark:border-white/[0.12]
+                    shadow-[0_32px_100px_-20px_rgba(0,0,0,0.15),0_0_0_1px_rgba(255,255,255,0.1)_inset]
+                    dark:shadow-[0_32px_100px_-20px_rgba(0,0,0,0.6),0_0_0_1px_rgba(255,255,255,0.05)_inset]">
                     
-                    {/* Premium top highlight */}
-                    <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/50 dark:via-white/15 to-transparent"></div>
+                    {/* Premium top highlight - rainbow shimmer */}
+                    <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/80 dark:via-white/30 to-transparent"></div>
                     
-                    {/* Content - Tighter padding */}
-                    <div className="relative p-6 sm:p-8 md:p-10 lg:p-12">
+                    {/* Subtle inner glow */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-white/50 via-transparent to-transparent dark:from-white/5 pointer-events-none"></div>
+                    
+                    {/* Content */}
+                    <div className="relative p-8 sm:p-10 md:p-12 lg:p-14">
                       
                       {/* Hero text - Premium typography */}
                       <div className="text-center mb-10 sm:mb-12">
@@ -606,7 +611,7 @@ const JumpinAIStudio = () => {
                           />
                         </div>
 
-                        {/* Generate Button - Compact CTA */}
+                        {/* Generate Button - Matches InlineStudioSection exactly */}
                         <div ref={generateButtonRef} className="pt-4 sm:pt-6">
                           <div className="flex flex-col items-center">
                             <div className="relative group/btn w-full sm:w-auto">
