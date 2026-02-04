@@ -37,7 +37,7 @@ export const StudioTextarea = forwardRef<HTMLTextAreaElement, StudioTextareaProp
           border: 'border-amber-500/60',
           indicator: 'bg-amber-500',
           label: 'text-amber-600 dark:text-amber-400',
-          bg: 'bg-amber-50/50 dark:bg-amber-950/30',
+          bg: 'bg-amber-50/80 dark:bg-amber-950/40',
           shadow: 'shadow-[0_4px_20px_-4px_rgba(245,158,11,0.25)]'
         };
       case 'listening':
@@ -46,26 +46,26 @@ export const StudioTextarea = forwardRef<HTMLTextAreaElement, StudioTextareaProp
           border: 'border-emerald-500/60',
           indicator: 'bg-emerald-500 animate-pulse',
           label: 'text-emerald-600 dark:text-emerald-400',
-          bg: 'bg-emerald-50/50 dark:bg-emerald-950/30',
+          bg: 'bg-emerald-50/80 dark:bg-emerald-950/40',
           shadow: 'shadow-[0_4px_20px_-4px_rgba(16,185,129,0.25)]'
         };
       case 'focused':
         return {
-          ring: 'ring-2 ring-primary/40',
-          border: 'border-primary/50',
-          indicator: 'bg-primary',
-          label: 'text-primary',
-          bg: 'bg-white dark:bg-zinc-800/90',
-          shadow: 'shadow-[0_4px_20px_-4px_rgba(var(--primary),0.2)]'
+          ring: 'ring-2 ring-blue-500/50',
+          border: 'border-blue-500/60',
+          indicator: 'bg-blue-500',
+          label: 'text-blue-600 dark:text-blue-400',
+          bg: 'bg-blue-50/50 dark:bg-zinc-800',
+          shadow: 'shadow-[0_4px_20px_-4px_rgba(59,130,246,0.25)]'
         };
       default:
         return {
           ring: '',
-          border: 'border-zinc-300 dark:border-zinc-600',
+          border: 'border-zinc-400/80 dark:border-zinc-500',
           indicator: 'bg-zinc-400 dark:bg-zinc-500',
           label: 'text-foreground',
-          bg: 'bg-white dark:bg-zinc-800/90',
-          shadow: 'shadow-[0_2px_8px_-2px_rgba(0,0,0,0.08),inset_0_1px_0_rgba(255,255,255,0.6)] dark:shadow-[0_2px_8px_-2px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.05)]'
+          bg: 'bg-zinc-100/90 dark:bg-zinc-800',
+          shadow: 'shadow-[0_2px_8px_-2px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.8)] dark:shadow-[0_2px_8px_-2px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.05)]'
         };
     }
   }, [inputState]);
