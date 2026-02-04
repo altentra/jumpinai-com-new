@@ -15,6 +15,8 @@ import { StudioTextarea } from '@/components/studio/StudioTextarea';
 import { markJumpAsUsingSTT } from '@/services/sttTrackingService';
 import type { AlternativeRoute, RouteExplorationHistory } from '@/types/alternativeRoutes';
 
+const TURNSTILE_TEST_SITE_KEY = '1x00000000000000000000AA';
+
 // Interface for state passed from landing page inline studio
 interface IncomingStudioState {
   goals?: string;
@@ -127,6 +129,22 @@ const JumpinAIStudio = () => {
   const generateButtonRef = useRef<HTMLDivElement>(null);
   const goalsTextareaRef = useRef<HTMLTextAreaElement>(null);
   const challengesTextareaRef = useRef<HTMLTextAreaElement>(null);
+
+  // Turnstile can fail on preview/staging domains due to Cloudflare domain restrictions.
+  // Use Turnstile's official test key in Lovable preview/local environments so guests aren't blocked.
+  const turnstileSiteKey = useMemo(() => {
+    const host = typeof window !== 'undefined' ? window.location.hostname : '';
+    const isPreviewHost =
+      host.includes('lovable.app') ||
+      host.includes('lovableproject.com') ||
+      host.includes('lovable.dev') ||
+      host === 'localhost' ||
+      host === '127.0.0.1';
+
+    const configured = import.meta.env.VITE_TURNSTILE_SITE_KEY;
+    if (isPreviewHost) return TURNSTILE_TEST_SITE_KEY;
+    return configured || TURNSTILE_TEST_SITE_KEY;
+  }, []);
 
   // Helper function to format time
   const formatTime = useCallback((seconds: number) => {
@@ -432,7 +450,7 @@ const JumpinAIStudio = () => {
       <div className="hidden">
         <Turnstile
           ref={turnstileRef}
-          siteKey={import.meta.env.VITE_TURNSTILE_SITE_KEY || "1x00000000000000000000AA"}
+          siteKey={turnstileSiteKey}
           onSuccess={(token) => {
             setTurnstileToken(token);
             turnstileErrorShownRef.current = false;
@@ -448,7 +466,7 @@ const JumpinAIStudio = () => {
             // Token expired, reset to get a fresh one
             console.log('⏰ Turnstile token expired, resetting...');
             setTurnstileToken(null);
-            turnstileRef.current?.reset();
+            // Let Turnstile handle refreshExpired='auto' to avoid reset loops.
           }}
           options={{
             theme: 'light',
@@ -458,7 +476,7 @@ const JumpinAIStudio = () => {
         />
       </div>
     );
-  }, [isLoading, isAuthenticated]);
+  }, [isLoading, isAuthenticated, turnstileSiteKey]);
 
   // Redirect authenticated users to dashboard studio - AFTER all hooks
   if (!isLoading && isAuthenticated) {
