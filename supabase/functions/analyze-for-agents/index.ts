@@ -22,12 +22,12 @@ serve(async (req) => {
   }
 
   try {
-    const XAI_API_KEY = Deno.env.get('XAI_API_KEY');
+    const GOOGLE_GEMINI_API_KEY = Deno.env.get('GOOGLE_GEMINI_API_KEY');
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     
-    if (!XAI_API_KEY) {
-      throw new Error('XAI_API_KEY not configured');
+    if (!GOOGLE_GEMINI_API_KEY) {
+      throw new Error('GOOGLE_GEMINI_API_KEY not configured');
     }
 
     // Get auth token and verify user
@@ -137,38 +137,53 @@ Respond with a JSON object in this exact format:
 
 Focus on practical, immediately implementable opportunities. Prioritize by impact and feasibility. Return ONLY the JSON object, no additional text.`;
 
-    console.log('🤖 Calling xAI API for analysis...');
+    console.log('🤖 Calling Google Gemini API for analysis...');
 
-    const response = await fetch('https://api.x.ai/v1/chat/completions', {
+    // Call Google Gemini API
+    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GOOGLE_GEMINI_API_KEY}`;
+    
+    const response = await fetch(geminiUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${XAI_API_KEY}`,
       },
       body: JSON.stringify({
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: userPrompt }
+        systemInstruction: {
+          parts: [{ text: systemPrompt }]
+        },
+        contents: [
+          {
+            role: 'user',
+            parts: [{ text: userPrompt }]
+          }
         ],
-        model: 'grok-4-fast-non-reasoning',
-        temperature: 0.7,
+        generationConfig: {
+          temperature: 0.7,
+          maxOutputTokens: 8192,
+        },
+        safetySettings: [
+          { category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_NONE' },
+          { category: 'HARM_CATEGORY_HATE_SPEECH', threshold: 'BLOCK_NONE' },
+          { category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', threshold: 'BLOCK_NONE' },
+          { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_NONE' },
+        ]
       }),
     });
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('❌ xAI API error:', response.status, errorText);
-      throw new Error(`xAI API error: ${response.status}`);
+      console.error('❌ Gemini API error:', response.status, errorText);
+      throw new Error(`Gemini API error: ${response.status}`);
     }
 
     const data = await response.json();
-    const content = data.choices?.[0]?.message?.content;
+    const content = data.candidates?.[0]?.content?.parts?.[0]?.text;
 
     if (!content) {
-      throw new Error('No content in xAI response');
+      throw new Error('No content in Gemini response');
     }
 
-    console.log('✅ Received response from xAI');
+    console.log('✅ Received response from Google Gemini');
 
     // Parse the JSON response
     let analysisResult;

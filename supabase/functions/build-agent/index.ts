@@ -538,7 +538,7 @@ const salvageJson = (raw: string): any => {
 
 // Generate workflow or AI agent for a specific platform
 async function generateWorkflow(
-  xaiApiKey: string,
+  geminiApiKey: string,
   platform: 'n8n' | 'make',
   opportunity: AgentBuildRequest['opportunity'],
   jump: AgentBuildRequest['jump'],
@@ -624,35 +624,47 @@ Generate a complete, working ${platformName} ${workflowTerm} that:
 
 Return ONLY the JSON ${workflowTerm} - no explanations, no markdown code blocks.`;
 
-  // Generate workflow/agent
+  // Generate workflow/agent using Google Gemini
   console.log(`Generating ${platformName} ${buildType}...`);
-  const workflowResponse = await fetch('https://api.x.ai/v1/chat/completions', {
+  
+  const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro:generateContent?key=${geminiApiKey}`;
+  
+  const workflowResponse = await fetch(geminiUrl, {
     method: 'POST',
     headers: {
-      'Authorization': `Bearer ${xaiApiKey}`,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      // Using grok-4-1-fast-reasoning for higher quality structured JSON output
-      // Reasoning model produces more accurate and complete workflow/agent JSON
-      model: 'grok-4-1-fast-reasoning',
-      messages: [
-        { role: 'system', content: systemPrompt },
-        { role: 'user', content: userPrompt }
+      systemInstruction: {
+        parts: [{ text: systemPrompt }]
+      },
+      contents: [
+        {
+          role: 'user',
+          parts: [{ text: userPrompt }]
+        }
       ],
-      temperature: isAIAgent ? 0.3 : 0.2, // Lower temp for more consistent JSON output
-      max_tokens: isAIAgent ? 16000 : 10000, // More tokens for complete JSON structures
+      generationConfig: {
+        temperature: isAIAgent ? 0.3 : 0.2, // Lower temp for more consistent JSON output
+        maxOutputTokens: isAIAgent ? 16000 : 10000, // More tokens for complete JSON structures
+      },
+      safetySettings: [
+        { category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_NONE' },
+        { category: 'HARM_CATEGORY_HATE_SPEECH', threshold: 'BLOCK_NONE' },
+        { category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', threshold: 'BLOCK_NONE' },
+        { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_NONE' },
+      ]
     }),
   });
 
   if (!workflowResponse.ok) {
     const errorText = await workflowResponse.text();
-    console.error(`${platformName} API error:`, workflowResponse.status, errorText);
-    throw new Error(`AI API error for ${platformName}: ${workflowResponse.status}`);
+    console.error(`${platformName} Gemini API error:`, workflowResponse.status, errorText);
+    throw new Error(`Gemini API error for ${platformName}: ${workflowResponse.status}`);
   }
 
   const workflowData = await workflowResponse.json();
-  let workflowJson = workflowData.choices?.[0]?.message?.content || '';
+  let workflowJson = workflowData.candidates?.[0]?.content?.parts?.[0]?.text || '';
 
   console.log(`Raw ${platformName} response length:`, workflowJson.length);
 
@@ -685,7 +697,7 @@ Return ONLY the JSON ${workflowTerm} - no explanations, no markdown code blocks.
   const fileExt = 'json';
   const filename = `${opportunity.title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${platform}-${typePrefix}.${fileExt}`;
 
-  // Generate instructions
+  // Generate instructions using Google Gemini
   console.log(`Generating ${platformName} setup instructions...`);
   
   const instructionsPrompt = `Generate detailed setup instructions for this ${platformName} ${workflowTerm}:
@@ -715,20 +727,31 @@ Create personalized, beginner-friendly setup instructions for ${platformName}. B
 
 Return ONLY the JSON object, no markdown.`;
 
-  const instructionsResponse = await fetch('https://api.x.ai/v1/chat/completions', {
+  const instructionsResponse = await fetch(geminiUrl, {
     method: 'POST',
     headers: {
-      'Authorization': `Bearer ${xaiApiKey}`,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      model: 'grok-4-1-fast-reasoning', // Using reasoning model for higher quality instructions
-      messages: [
-        { role: 'system', content: instructionsSystemPrompt },
-        { role: 'user', content: instructionsPrompt }
+      systemInstruction: {
+        parts: [{ text: instructionsSystemPrompt }]
+      },
+      contents: [
+        {
+          role: 'user',
+          parts: [{ text: instructionsPrompt }]
+        }
       ],
-      temperature: 0.3,
-      max_tokens: 3000,
+      generationConfig: {
+        temperature: 0.3,
+        maxOutputTokens: 3000,
+      },
+      safetySettings: [
+        { category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_NONE' },
+        { category: 'HARM_CATEGORY_HATE_SPEECH', threshold: 'BLOCK_NONE' },
+        { category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', threshold: 'BLOCK_NONE' },
+        { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_NONE' },
+      ]
     }),
   });
 
@@ -736,7 +759,7 @@ Return ONLY the JSON object, no markdown.`;
 
   if (instructionsResponse.ok) {
     const instructionsData = await instructionsResponse.json();
-    const instructionsContent = instructionsData.choices?.[0]?.message?.content || '';
+    const instructionsContent = instructionsData.candidates?.[0]?.content?.parts?.[0]?.text || '';
     
     detailedInstructions = salvageJson(instructionsContent);
     
@@ -771,10 +794,10 @@ Deno.serve(async (req) => {
   try {
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
-    const xaiApiKey = Deno.env.get('XAI_API_KEY');
+    const geminiApiKey = Deno.env.get('GOOGLE_GEMINI_API_KEY');
 
-    if (!xaiApiKey) {
-      throw new Error('XAI_API_KEY not configured');
+    if (!geminiApiKey) {
+      throw new Error('GOOGLE_GEMINI_API_KEY not configured');
     }
 
     // Get auth token from request
@@ -834,11 +857,11 @@ Deno.serve(async (req) => {
     } = {};
 
     if (platform === 'n8n' || platform === 'both') {
-      results.n8n = await generateWorkflow(xaiApiKey, 'n8n', opportunity, jump, automationType);
+      results.n8n = await generateWorkflow(geminiApiKey, 'n8n', opportunity, jump, automationType);
     }
 
     if (platform === 'make' || platform === 'both') {
-      results.make = await generateWorkflow(xaiApiKey, 'make', opportunity, jump, automationType);
+      results.make = await generateWorkflow(geminiApiKey, 'make', opportunity, jump, automationType);
     }
 
     // Save agent(s) to database
