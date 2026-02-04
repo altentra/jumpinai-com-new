@@ -222,6 +222,23 @@ export const useProgressiveGeneration = () => {
           const taskName = stepNames[type] || `Processing ${type}...`;
           const progress = stepProgress[type] || Math.min(100, (step / 8) * 100);
           
+          // Handle progress updates (micro-streaming feel)
+          if (type === 'progress') {
+            const { stepName, percent, message } = stepData;
+            console.log(`⏳ Micro-progress: ${stepName} - ${percent}%`);
+            
+            progressiveResult.processing_status = {
+              stage: 'Generating',
+              progress: percent,
+              currentTask: message || `Processing ${stepName}...`,
+              isComplete: false,
+              currentStep: stepName
+            };
+            setProcessingStatus(progressiveResult.processing_status);
+            setResult({ ...progressiveResult });
+            return; // Don't process further for progress events
+          }
+          
           // Update progressive result with new data
           if (type === 'naming') {
             // STEP 1: Name complete - show it and start overview

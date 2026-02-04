@@ -533,59 +533,50 @@ const ProgressiveJumpDisplay: React.FC<ProgressiveJumpDisplayProps> = ({
     return `${seconds}s`;
   };
 
-  // Color-coded icon configuration for each tab
-  const TAB_CONFIG = {
-    overview: {
-      icon: Compass,
-      color: 'text-blue-500',
-      bgColor: 'bg-blue-500/15',
-      borderColor: 'border-blue-500/40',
-    },
-    plan: {
-      icon: Target,
-      color: 'text-amber-500',
-      bgColor: 'bg-amber-500/15',
-      borderColor: 'border-amber-500/40',
-    },
-    tool_prompts: {
-      icon: Wrench,
-      color: 'text-rose-500',
-      bgColor: 'bg-rose-500/15',
-      borderColor: 'border-rose-500/40',
-    },
+  // STATUS-BASED colors (not step-type colors)
+  // Blue = Active/Spinning, Green = Complete, Grey = Pending
+  const STATUS_COLORS = {
+    active: 'text-blue-500',
+    complete: 'text-emerald-500',
+    pending: 'text-muted-foreground/50',
+  };
+
+  // Tab icons (the color is determined by STATUS, not step type)
+  const TAB_ICONS = {
+    overview: Compass,
+    plan: Target,
+    tool_prompts: Wrench,
   };
 
   const getStatusIcon = (stepName: string, hasContent: boolean) => {
     const currentStep = result.processing_status?.currentStep;
     const isComplete = result.processing_status?.isComplete;
     
-    // Get the config for this step
-    const config = TAB_CONFIG[stepName as keyof typeof TAB_CONFIG];
-    const Icon = config?.icon || Clock;
-    const colorClass = config?.color || 'text-primary';
+    // Get the icon for this step
+    const Icon = TAB_ICONS[stepName as keyof typeof TAB_ICONS] || Clock;
     
     // Determine if this step is complete
     const stepOrder = ['naming', 'overview', 'plan', 'tool_prompts', 'complete'];
     const currentStepIndex = currentStep ? stepOrder.indexOf(currentStep) : -1;
     const thisStepIndex = stepOrder.indexOf(stepName);
     
-    // If generation is complete, all steps get checkmark (with step's color)
+    // If generation is complete, all steps get GREEN checkmark
     if (isComplete && hasContent) {
-      return <CheckCircle className={`w-4 h-4 ${colorClass}`} />;
+      return <CheckCircle className={`w-4 h-4 ${STATUS_COLORS.complete}`} />;
     }
     
-    // If current step is past this step and we have content, it's complete
+    // If current step is past this step and we have content, it's complete = GREEN
     if (currentStepIndex > thisStepIndex && hasContent) {
-      return <CheckCircle className={`w-4 h-4 ${colorClass}`} />;
+      return <CheckCircle className={`w-4 h-4 ${STATUS_COLORS.complete}`} />;
     }
     
-    // If this is the current step, show spinning
+    // If this is the current step, show BLUE spinning
     if (currentStep === stepName) {
-      return <Loader2 className={`w-4 h-4 ${colorClass} animate-spin`} />;
+      return <Loader2 className={`w-4 h-4 ${STATUS_COLORS.active} animate-spin`} />;
     }
     
-    // Otherwise, show the step icon in muted
-    return <Icon className="w-4 h-4 text-muted-foreground/50" />;
+    // Otherwise, show GREY pending icon
+    return <Icon className={`w-4 h-4 ${STATUS_COLORS.pending}`} />;
   };
 
   // Add null safety checks

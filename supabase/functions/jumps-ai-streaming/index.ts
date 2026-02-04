@@ -217,8 +217,18 @@ Deno.serve(async (req) => {
             return true;
           } catch (error) {
             console.error('Error sending event:', error);
-            // Don't mark as closed - this might be a temporary issue
             return false;
+          }
+        };
+        
+        // Helper to send progress updates during generation (simulates streaming feel)
+        const sendProgress = (step: number, stepName: string, percent: number, message: string) => {
+          if (isClosed) return;
+          try {
+            const progressMessage = `data: ${JSON.stringify({ step, type: 'progress', data: { stepName, percent, message } })}\n\n`;
+            controller.enqueue(encoder.encode(progressMessage));
+          } catch (error) {
+            console.error('Error sending progress:', error);
           }
         };
 
@@ -338,8 +348,12 @@ Deno.serve(async (req) => {
           
           sendEvent(1, 'naming', namingWithMeta);
           
-          // Step 2: Generate Overview & Plan
+          // Step 2: Generate Overview & Plan with progress updates
           console.log('📊 Step 2: Generating overview...');
+          sendProgress(2, 'overview', 10, 'Analyzing your goals and challenges...');
+          await new Promise(r => setTimeout(r, 800)); // Small delay for UI feedback
+          sendProgress(2, 'overview', 20, 'Building strategic framework...');
+          
           const overviewResponse = await callGeminiWithRetry(GOOGLE_GEMINI_API_KEY, 2, formData, '');
           console.log('✅ Overview response:', overviewResponse);
           sendEvent(2, 'overview', overviewResponse);
@@ -348,8 +362,12 @@ Deno.serve(async (req) => {
             ? overviewResponse 
             : JSON.stringify(overviewResponse);
 
-          // Step 3: Generate comprehensive plan
+          // Step 3: Generate comprehensive plan with progress updates
           console.log('🔧 Step 3: Generating Comprehensive Plan...');
+          sendProgress(3, 'plan', 35, 'Designing implementation phases...');
+          await new Promise(r => setTimeout(r, 600));
+          sendProgress(3, 'plan', 45, 'Creating action milestones...');
+          
           let comprehensivePlan = '';
           let planResponse = null;
           try {
@@ -372,8 +390,14 @@ Deno.serve(async (req) => {
             });
           }
 
-          // Step 4: Generate tools & prompts (needs BOTH overview and comprehensive plan)
+          // Step 4: Generate tools & prompts with progress updates
           console.log('🔧 Step 4: Generating Tools & Prompts...');
+          sendProgress(4, 'tool_prompts', 65, 'Selecting optimal AI tools...');
+          await new Promise(r => setTimeout(r, 600));
+          sendProgress(4, 'tool_prompts', 75, 'Crafting custom prompts...');
+          await new Promise(r => setTimeout(r, 400));
+          sendProgress(4, 'tool_prompts', 85, 'Finalizing recommendations...');
+          
           let toolsResponse = null;
           try {
             // Combine overview and comprehensive plan for Step 4 context
