@@ -1,6 +1,14 @@
 import { useState, useCallback } from 'react';
 import { jumpinAIStudioService, type StudioFormData, type GenerationResult } from '@/services/jumpinAIStudioService';
 import { toast } from 'sonner';
+import {
+  parseStreamingOverview,
+  parseStreamingPlan,
+  parseStreamingToolPrompts,
+  type ParsedOverview,
+  type ParsedPlan,
+  type ParsedToolPrompts,
+} from '@/utils/progressiveJsonParser';
 
 export type ProcessingStatus = {
   stage: string;
@@ -28,8 +36,14 @@ export type ProgressiveResult = {
     blueprints: any[];
     strategies: any[];
   };
-  // Live token-by-token stream shown in tabs before structured data finishes parsing
+  // Raw streaming content (JSON fragments)
   streaming_content?: Partial<Record<'overview' | 'plan' | 'tool_prompts', string>>;
+  // Progressively parsed frames ready for UI rendering
+  streaming_parsed?: {
+    overview?: ParsedOverview;
+    plan?: ParsedPlan;
+    tool_prompts?: ParsedToolPrompts;
+  };
   processing_status: ProcessingStatus;
   stepTimes?: { [key: string]: number };
 };
@@ -196,6 +210,7 @@ export const useProgressiveGeneration = () => {
           strategies: []  // Keep for type compatibility but won't be used
         },
         streaming_content: {},
+        streaming_parsed: {},
         processing_status: {
           stage: 'Generating',
           progress: 0,
@@ -221,10 +236,31 @@ export const useProgressiveGeneration = () => {
             const stepName = stepData?.stepName as 'overview' | 'plan' | 'tool_prompts' | undefined;
             const delta = stepData?.delta as string | undefined;
             if (stepName && delta) {
+              // Accumulate raw JSON
+              const newRaw = (progressiveResult.streaming_content?.[stepName] || '') + delta;
               progressiveResult.streaming_content = {
                 ...(progressiveResult.streaming_content || {}),
-                [stepName]: ((progressiveResult.streaming_content?.[stepName] || '') + delta)
+                [stepName]: newRaw
               };
+
+              // Parse frames progressively so UI can render them immediately
+              if (stepName === 'overview') {
+                progressiveResult.streaming_parsed = {
+                  ...progressiveResult.streaming_parsed,
+                  overview: parseStreamingOverview(newRaw),
+                };
+              } else if (stepName === 'plan') {
+                progressiveResult.streaming_parsed = {
+                  ...progressiveResult.streaming_parsed,
+                  plan: parseStreamingPlan(newRaw),
+                };
+              } else if (stepName === 'tool_prompts') {
+                progressiveResult.streaming_parsed = {
+                  ...progressiveResult.streaming_parsed,
+                  tool_prompts: parseStreamingToolPrompts(newRaw),
+                };
+              }
+
               // Keep the current step aligned to the streaming tab
               progressiveResult.processing_status = {
                 ...progressiveResult.processing_status,
