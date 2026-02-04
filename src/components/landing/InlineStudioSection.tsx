@@ -190,8 +190,7 @@ const InlineStudioSection = () => {
                           onClick={handleGenerate}
                           disabled={isTransitioning || !isFormValid}
                           className="relative w-full sm:w-auto px-12 sm:px-16 md:px-20 py-4 sm:py-5 
-                            bg-gradient-to-br from-zinc-800 via-zinc-900 to-black
-                            dark:from-zinc-700 dark:via-zinc-800 dark:to-zinc-900
+                            bg-zinc-900 dark:bg-zinc-800
                             text-white font-semibold text-base sm:text-lg
                             rounded-full
                             border border-white/10
@@ -201,6 +200,9 @@ const InlineStudioSection = () => {
                             disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 
                             shadow-lg shadow-black/20
                             overflow-hidden"
+                          style={{
+                            background: 'linear-gradient(to bottom right, #27272a, #18181b, #000000)',
+                          }}
                         >
                           {/* Shimmer effect */}
                           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700 rounded-full"></div>
