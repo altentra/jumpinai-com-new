@@ -28,32 +28,29 @@ export const StudioTextarea = forwardRef<HTMLTextAreaElement, StudioTextareaProp
   const [inputState, setInputState] = useState<InputState>('idle');
   const [isFocused, setIsFocused] = useState(false);
 
-  // Determine the border/ring color based on state - simplified and refined
+  // Determine the border/ring color based on state - refined and premium
   const getStateStyles = useCallback(() => {
     switch (inputState) {
       case 'connecting':
         return {
-          ring: 'ring-2 ring-amber-500/40',
-          border: 'border-amber-500/50',
-          glow: '',
+          ring: 'ring-2 ring-amber-500/50',
+          border: 'border-amber-500/60',
           indicator: 'bg-amber-500',
           label: 'text-amber-600 dark:text-amber-400',
-          bg: 'bg-background'
+          bg: 'bg-amber-50/30 dark:bg-amber-950/20'
         };
       case 'listening':
         return {
-          ring: 'ring-2 ring-emerald-500/40',
-          border: 'border-emerald-500/50',
-          glow: '',
+          ring: 'ring-2 ring-emerald-500/50',
+          border: 'border-emerald-500/60',
           indicator: 'bg-emerald-500 animate-pulse',
           label: 'text-emerald-600 dark:text-emerald-400',
-          bg: 'bg-background'
+          bg: 'bg-emerald-50/30 dark:bg-emerald-950/20'
         };
       case 'focused':
         return {
-          ring: 'ring-2 ring-primary/30',
-          border: 'border-primary/40',
-          glow: '',
+          ring: 'ring-2 ring-primary/40',
+          border: 'border-primary/50',
           indicator: 'bg-primary',
           label: 'text-primary',
           bg: 'bg-background'
@@ -61,11 +58,10 @@ export const StudioTextarea = forwardRef<HTMLTextAreaElement, StudioTextareaProp
       default:
         return {
           ring: '',
-          border: 'border-border/60',
-          glow: '',
-          indicator: 'bg-muted-foreground/30',
-          label: 'text-muted-foreground',
-          bg: 'bg-muted/30'
+          border: 'border-border dark:border-white/10',
+          indicator: 'bg-muted-foreground/40',
+          label: 'text-foreground',
+          bg: 'bg-muted/40 dark:bg-zinc-800/50'
         };
     }
   }, [inputState]);
@@ -103,27 +99,28 @@ export const StudioTextarea = forwardRef<HTMLTextAreaElement, StudioTextareaProp
   }, [onChange, onSttUsed, onSttDuration]);
 
   return (
-    <div className="group/input space-y-2.5">
-      {/* Label with state indicator */}
+    <div className="group/input space-y-3">
+      {/* Label - Premium typography */}
       <label className={cn(
-        "flex items-center gap-2 text-sm font-medium transition-colors duration-200",
+        "flex items-center gap-2.5 text-sm font-semibold tracking-wide transition-colors duration-200",
         stateStyles.label
       )}>
         {/* State indicator dot */}
         <span className={cn(
-          "w-1.5 h-1.5 rounded-full transition-all duration-200",
+          "w-2 h-2 rounded-full transition-all duration-200",
           stateStyles.indicator
         )} />
-        <span>{label}</span>
+        <span className="uppercase text-xs tracking-[0.15em]">{label}</span>
       </label>
 
-      {/* Input container - cleaner, simpler */}
+      {/* Input container */}
       <div className="relative">
         <div className={cn(
           "relative rounded-2xl overflow-hidden transition-all duration-200",
           "border",
           stateStyles.ring,
-          stateStyles.border
+          stateStyles.border,
+          "shadow-sm"
         )}>
           <textarea
             ref={ref}
@@ -136,14 +133,14 @@ export const StudioTextarea = forwardRef<HTMLTextAreaElement, StudioTextareaProp
             onBlur={handleBlur}
             placeholder={placeholder}
             className={cn(
-              "relative w-full min-h-[140px] sm:min-h-[160px] p-4 sm:p-5 pb-14",
+              "relative w-full min-h-[180px] sm:min-h-[200px] p-5 sm:p-6 pb-16",
               "rounded-xl",
               stateStyles.bg,
-              // Placeholder - HIGH visibility
-              "placeholder:text-foreground/40 dark:placeholder:text-foreground/35",
-              "placeholder:font-normal",
-              // Text styling
-              "text-foreground text-[15px] sm:text-base leading-relaxed",
+              // Placeholder - HIGH visibility with good contrast
+              "placeholder:text-foreground/50 dark:placeholder:text-foreground/40",
+              "placeholder:font-medium",
+              // Text styling - excellent readability
+              "text-foreground text-[15px] sm:text-base leading-[1.75] font-medium",
               "resize-none",
               "transition-colors duration-200",
               "focus:outline-none",
@@ -152,20 +149,20 @@ export const StudioTextarea = forwardRef<HTMLTextAreaElement, StudioTextareaProp
           />
 
           {/* STT Button */}
-          <div className="absolute bottom-3 right-3 z-10">
+          <div className="absolute bottom-4 right-4 z-10">
             <SpeechToTextButton
               onTranscription={handleTranscription}
               onStateChange={handleSttStateChange}
             />
           </div>
 
-          {/* State badge - subtle */}
+          {/* State badge */}
           {inputState !== 'idle' && inputState !== 'focused' && (
             <div className={cn(
-              "absolute top-3 right-3 px-2.5 py-1 rounded-full text-[10px] font-medium",
+              "absolute top-4 right-4 px-3 py-1.5 rounded-full text-[11px] font-semibold uppercase tracking-wide",
               "transition-all duration-200 animate-fade-in z-10",
-              inputState === 'connecting' && "bg-amber-500/15 text-amber-600 dark:text-amber-400",
-              inputState === 'listening' && "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400"
+              inputState === 'connecting' && "bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-400",
+              inputState === 'listening' && "bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400"
             )}>
               {inputState === 'connecting' && 'Connecting...'}
               {inputState === 'listening' && '● Recording'}
