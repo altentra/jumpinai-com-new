@@ -60,12 +60,12 @@ export const StudioTextarea = forwardRef<HTMLTextAreaElement, StudioTextareaProp
         };
       default:
         return {
-          ring: '',
-          border: 'border-zinc-400 dark:border-zinc-600',
+          ring: 'ring-1 ring-black/[0.04] dark:ring-white/[0.06]',
+          border: 'border-zinc-300/70 dark:border-zinc-700/80',
           indicator: 'bg-zinc-400 dark:bg-zinc-500',
-          label: 'text-foreground',
+          label: 'text-foreground/80',
           bg: 'bg-zinc-200 dark:bg-zinc-900',
-          shadow: 'shadow-[0_2px_8px_-2px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.8)] dark:shadow-[0_2px_8px_-2px_rgba(0,0,0,0.5),inset_0_1px_0_rgba(255,255,255,0.03)]'
+          shadow: 'shadow-[0_1px_3px_rgba(0,0,0,0.05),0_4px_12px_-2px_rgba(0,0,0,0.08),inset_0_1px_0_rgba(255,255,255,0.7),inset_0_-1px_0_rgba(0,0,0,0.03)] dark:shadow-[0_1px_3px_rgba(0,0,0,0.2),0_4px_12px_-2px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.04),inset_0_-1px_0_rgba(0,0,0,0.2)]'
         };
     }
   }, [inputState]);
