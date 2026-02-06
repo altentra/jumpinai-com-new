@@ -40,158 +40,166 @@ const Hero = () => {
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-12 sm:pt-14 lg:pt-12">
-      {/* === NEXT-LEVEL CINEMATIC AI HERO === */}
+      {/* === WORLD-CLASS OPTIMISTIC AI HERO === */}
       
-      {/* Deep Cosmic Foundation */}
-      <div className="absolute inset-0 bg-gradient-to-b from-slate-50 via-slate-100/80 to-white dark:from-[#000000] dark:via-[#030014] dark:to-[#0a0118]"></div>
+      {/* Luminous Foundation - Warm & Optimistic */}
+      <div className="absolute inset-0 bg-gradient-to-br from-amber-50/80 via-slate-50 to-cyan-50/60 dark:from-[#0c0a09] dark:via-[#0f172a] dark:to-[#0c1220]"></div>
       
-      {/* Animated Morphing Blob 1 - Primary Violet/Magenta */}
+      {/* Primary Gradient Flow - Golden Warmth */}
       <div 
-        className="absolute top-[-20%] left-[-10%] w-[70%] h-[70%] opacity-70 dark:opacity-50"
+        className="absolute inset-0"
         style={{
-          background: 'radial-gradient(ellipse at center, rgba(139, 92, 246, 0.5) 0%, rgba(168, 85, 247, 0.3) 30%, rgba(192, 38, 211, 0.15) 60%, transparent 80%)',
-          filter: 'blur(60px)',
-          animation: 'morph-1 25s ease-in-out infinite',
-          borderRadius: '60% 40% 30% 70% / 60% 30% 70% 40%'
+          background: 'linear-gradient(135deg, rgba(251, 191, 36, 0.15) 0%, rgba(245, 158, 11, 0.08) 25%, transparent 50%, rgba(6, 182, 212, 0.06) 75%, rgba(34, 211, 238, 0.08) 100%)',
+          animation: 'gradient-flow 20s ease-in-out infinite'
         }}
       ></div>
       
-      {/* Animated Morphing Blob 2 - Electric Cyan/Blue */}
+      {/* Secondary Gradient Flow - Teal Accent */}
       <div 
-        className="absolute top-[10%] right-[-15%] w-[65%] h-[65%] opacity-60 dark:opacity-45"
+        className="absolute inset-0"
         style={{
-          background: 'radial-gradient(ellipse at center, rgba(6, 182, 212, 0.45) 0%, rgba(59, 130, 246, 0.3) 35%, rgba(99, 102, 241, 0.15) 65%, transparent 85%)',
-          filter: 'blur(70px)',
-          animation: 'morph-2 30s ease-in-out infinite',
-          borderRadius: '40% 60% 70% 30% / 40% 50% 60% 50%'
+          background: 'linear-gradient(-45deg, rgba(20, 184, 166, 0.1) 0%, transparent 40%, transparent 60%, rgba(251, 191, 36, 0.08) 100%)',
+          animation: 'gradient-flow-reverse 25s ease-in-out infinite'
         }}
       ></div>
       
-      {/* Animated Morphing Blob 3 - Warm Amber/Rose */}
+      {/* Radial Glow - Top Left Golden */}
       <div 
-        className="absolute bottom-[-15%] left-[20%] w-[55%] h-[55%] opacity-55 dark:opacity-35"
+        className="absolute -top-[20%] -left-[10%] w-[60%] h-[60%]"
         style={{
-          background: 'radial-gradient(ellipse at center, rgba(251, 146, 60, 0.4) 0%, rgba(244, 63, 94, 0.25) 40%, rgba(236, 72, 153, 0.12) 70%, transparent 90%)',
+          background: 'radial-gradient(ellipse at center, rgba(251, 191, 36, 0.2) 0%, rgba(245, 158, 11, 0.1) 30%, transparent 60%)',
           filter: 'blur(80px)',
-          animation: 'morph-3 20s ease-in-out infinite',
-          borderRadius: '50% 50% 30% 70% / 50% 70% 30% 50%'
+          animation: 'glow-pulse-1 12s ease-in-out infinite'
         }}
       ></div>
       
-      {/* Animated Morphing Blob 4 - Deep Emerald Accent */}
+      {/* Radial Glow - Top Right Cyan */}
       <div 
-        className="absolute bottom-[20%] right-[5%] w-[40%] h-[40%] opacity-45 dark:opacity-30"
+        className="absolute -top-[10%] -right-[15%] w-[50%] h-[50%]"
         style={{
-          background: 'radial-gradient(ellipse at center, rgba(16, 185, 129, 0.4) 0%, rgba(20, 184, 166, 0.2) 50%, transparent 80%)',
+          background: 'radial-gradient(ellipse at center, rgba(6, 182, 212, 0.18) 0%, rgba(20, 184, 166, 0.08) 40%, transparent 65%)',
+          filter: 'blur(70px)',
+          animation: 'glow-pulse-2 15s ease-in-out infinite'
+        }}
+      ></div>
+      
+      {/* Radial Glow - Bottom Center Warm */}
+      <div 
+        className="absolute bottom-[-10%] left-[25%] w-[50%] h-[40%]"
+        style={{
+          background: 'radial-gradient(ellipse at center, rgba(251, 146, 60, 0.12) 0%, rgba(251, 191, 36, 0.06) 50%, transparent 70%)',
           filter: 'blur(60px)',
-          animation: 'morph-4 22s ease-in-out infinite',
-          borderRadius: '70% 30% 50% 50% / 30% 60% 40% 70%'
+          animation: 'glow-pulse-3 18s ease-in-out infinite'
         }}
       ></div>
       
-      {/* Central Spotlight - Dramatic Focus */}
-      <div 
-        className="absolute top-[15%] left-[35%] w-[50%] h-[50%] opacity-40 dark:opacity-25"
-        style={{
-          background: 'radial-gradient(ellipse at center, rgba(255, 255, 255, 0.15) 0%, transparent 60%)',
-          filter: 'blur(40px)',
-          animation: 'spotlight-pulse 8s ease-in-out infinite'
-        }}
-      ></div>
-      
-      {/* Aurora Wave Layer 1 */}
-      <div 
-        className="absolute inset-0 opacity-50 dark:opacity-35"
-        style={{
-          background: 'linear-gradient(125deg, transparent 0%, rgba(139, 92, 246, 0.12) 20%, rgba(59, 130, 246, 0.15) 40%, rgba(6, 182, 212, 0.12) 60%, rgba(16, 185, 129, 0.08) 80%, transparent 100%)',
-          animation: 'aurora-wave-1 18s ease-in-out infinite'
-        }}
-      ></div>
-      
-      {/* Aurora Wave Layer 2 */}
-      <div 
-        className="absolute inset-0 opacity-40 dark:opacity-25"
-        style={{
-          background: 'linear-gradient(-45deg, transparent 0%, rgba(236, 72, 153, 0.1) 25%, rgba(168, 85, 247, 0.12) 50%, rgba(99, 102, 241, 0.1) 75%, transparent 100%)',
-          animation: 'aurora-wave-2 22s ease-in-out infinite'
-        }}
-      ></div>
-      
-      {/* Floating Particles Layer */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {/* Particle 1 */}
-        <div className="absolute w-2 h-2 rounded-full bg-violet-400/60 dark:bg-violet-400/40" style={{ top: '15%', left: '20%', animation: 'particle-float-1 15s ease-in-out infinite', filter: 'blur(1px)' }}></div>
-        {/* Particle 2 */}
-        <div className="absolute w-1.5 h-1.5 rounded-full bg-cyan-400/70 dark:bg-cyan-400/50" style={{ top: '25%', left: '70%', animation: 'particle-float-2 18s ease-in-out infinite', filter: 'blur(0.5px)' }}></div>
-        {/* Particle 3 */}
-        <div className="absolute w-3 h-3 rounded-full bg-amber-400/50 dark:bg-amber-400/30" style={{ top: '60%', left: '15%', animation: 'particle-float-3 20s ease-in-out infinite', filter: 'blur(1px)' }}></div>
-        {/* Particle 4 */}
-        <div className="absolute w-2 h-2 rounded-full bg-rose-400/55 dark:bg-rose-400/35" style={{ top: '70%', left: '80%', animation: 'particle-float-4 16s ease-in-out infinite', filter: 'blur(1px)' }}></div>
-        {/* Particle 5 */}
-        <div className="absolute w-1 h-1 rounded-full bg-blue-400/80 dark:bg-blue-400/60" style={{ top: '40%', left: '50%', animation: 'particle-float-5 14s ease-in-out infinite' }}></div>
-        {/* Particle 6 */}
-        <div className="absolute w-2.5 h-2.5 rounded-full bg-emerald-400/45 dark:bg-emerald-400/30" style={{ top: '85%', left: '40%', animation: 'particle-float-6 22s ease-in-out infinite', filter: 'blur(1px)' }}></div>
-        {/* Particle 7 */}
-        <div className="absolute w-1.5 h-1.5 rounded-full bg-purple-400/65 dark:bg-purple-400/45" style={{ top: '10%', left: '85%', animation: 'particle-float-7 19s ease-in-out infinite', filter: 'blur(0.5px)' }}></div>
-        {/* Particle 8 */}
-        <div className="absolute w-2 h-2 rounded-full bg-pink-400/50 dark:bg-pink-400/35" style={{ top: '50%', left: '8%', animation: 'particle-float-8 17s ease-in-out infinite', filter: 'blur(1px)' }}></div>
+      {/* === ANIMATED DOT MATRIX === */}
+      <div className="absolute inset-0 overflow-hidden">
+        <svg className="absolute inset-0 w-full h-full" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            {/* Gradient for dots */}
+            <linearGradient id="dot-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="rgb(251, 191, 36)" stopOpacity="0.6">
+                <animate attributeName="stop-opacity" values="0.6;0.9;0.6" dur="4s" repeatCount="indefinite" />
+              </stop>
+              <stop offset="50%" stopColor="rgb(20, 184, 166)" stopOpacity="0.5">
+                <animate attributeName="stop-opacity" values="0.5;0.8;0.5" dur="4s" repeatCount="indefinite" begin="0.5s" />
+              </stop>
+              <stop offset="100%" stopColor="rgb(6, 182, 212)" stopOpacity="0.6">
+                <animate attributeName="stop-opacity" values="0.6;0.9;0.6" dur="4s" repeatCount="indefinite" begin="1s" />
+              </stop>
+            </linearGradient>
+            
+            {/* Dot pattern */}
+            <pattern id="dot-matrix" width="40" height="40" patternUnits="userSpaceOnUse">
+              <circle cx="20" cy="20" r="1" fill="url(#dot-gradient)">
+                <animate attributeName="r" values="1;1.5;1" dur="3s" repeatCount="indefinite" />
+              </circle>
+            </pattern>
+            
+            {/* Flowing wave mask */}
+            <mask id="wave-mask">
+              <rect width="100%" height="100%" fill="white" />
+              <rect x="-100%" y="0" width="100%" height="100%" fill="black">
+                <animate attributeName="x" values="-100%;200%" dur="20s" repeatCount="indefinite" />
+              </rect>
+            </mask>
+          </defs>
+          
+          {/* Main dot grid */}
+          <rect 
+            width="100%" 
+            height="100%" 
+            fill="url(#dot-matrix)" 
+            className="opacity-[0.15] dark:opacity-[0.25]"
+          />
+          
+          {/* Animated connection lines */}
+          <g className="opacity-[0.06] dark:opacity-[0.1]" stroke="url(#dot-gradient)" strokeWidth="0.5" fill="none">
+            <path d="M0,200 Q400,150 800,200 T1600,200">
+              <animate attributeName="d" 
+                values="M0,200 Q400,150 800,200 T1600,200;M0,200 Q400,250 800,200 T1600,200;M0,200 Q400,150 800,200 T1600,200" 
+                dur="8s" repeatCount="indefinite" />
+            </path>
+            <path d="M0,400 Q400,350 800,400 T1600,400">
+              <animate attributeName="d" 
+                values="M0,400 Q400,350 800,400 T1600,400;M0,400 Q400,450 800,400 T1600,400;M0,400 Q400,350 800,400 T1600,400" 
+                dur="10s" repeatCount="indefinite" />
+            </path>
+            <path d="M0,600 Q400,550 800,600 T1600,600">
+              <animate attributeName="d" 
+                values="M0,600 Q400,550 800,600 T1600,600;M0,600 Q400,650 800,600 T1600,600;M0,600 Q400,550 800,600 T1600,600" 
+                dur="12s" repeatCount="indefinite" />
+            </path>
+          </g>
+        </svg>
       </div>
       
-      {/* Neural Grid - Subtle Tech Pattern */}
-      <svg className="absolute inset-0 w-full h-full opacity-[0.025] dark:opacity-[0.05]" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <linearGradient id="neural-line-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="rgb(139, 92, 246)" stopOpacity="0.8" />
-            <stop offset="50%" stopColor="rgb(6, 182, 212)" stopOpacity="0.6" />
-            <stop offset="100%" stopColor="rgb(59, 130, 246)" stopOpacity="0.8" />
-          </linearGradient>
-          <pattern id="hex-pattern" width="60" height="52" patternUnits="userSpaceOnUse" patternTransform="scale(2)">
-            <path d="M30 0 L60 15 L60 37 L30 52 L0 37 L0 15 Z" fill="none" stroke="url(#neural-line-gradient)" strokeWidth="0.3" />
-          </pattern>
-        </defs>
-        <rect width="100%" height="100%" fill="url(#hex-pattern)" />
-      </svg>
+      {/* Flowing Gradient Ribbon - Top */}
+      <div 
+        className="absolute top-[10%] left-0 right-0 h-[1px] opacity-40 dark:opacity-30"
+        style={{
+          background: 'linear-gradient(90deg, transparent 0%, rgba(251, 191, 36, 0.8) 20%, rgba(20, 184, 166, 0.6) 50%, rgba(6, 182, 212, 0.8) 80%, transparent 100%)',
+          animation: 'ribbon-flow 8s ease-in-out infinite',
+          filter: 'blur(1px)'
+        }}
+      ></div>
       
-      {/* Cinematic Light Rays */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-30 dark:opacity-20">
-        <div 
-          className="absolute top-0 left-1/4 w-[2px] h-full"
-          style={{
-            background: 'linear-gradient(180deg, transparent 0%, rgba(139, 92, 246, 0.3) 30%, rgba(139, 92, 246, 0.5) 50%, rgba(139, 92, 246, 0.3) 70%, transparent 100%)',
-            animation: 'ray-1 12s ease-in-out infinite',
-            filter: 'blur(2px)'
-          }}
-        ></div>
-        <div 
-          className="absolute top-0 right-1/3 w-[1px] h-full"
-          style={{
-            background: 'linear-gradient(180deg, transparent 0%, rgba(6, 182, 212, 0.25) 40%, rgba(6, 182, 212, 0.4) 50%, rgba(6, 182, 212, 0.25) 60%, transparent 100%)',
-            animation: 'ray-2 15s ease-in-out infinite',
-            filter: 'blur(1.5px)'
-          }}
-        ></div>
-      </div>
+      {/* Flowing Gradient Ribbon - Middle */}
+      <div 
+        className="absolute top-[45%] left-0 right-0 h-[1px] opacity-25 dark:opacity-20"
+        style={{
+          background: 'linear-gradient(90deg, transparent 0%, rgba(6, 182, 212, 0.6) 30%, rgba(251, 191, 36, 0.8) 70%, transparent 100%)',
+          animation: 'ribbon-flow-reverse 10s ease-in-out infinite',
+          filter: 'blur(1px)'
+        }}
+      ></div>
       
-      {/* Horizontal Sweep Light */}
+      {/* Shimmer Sweep */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div 
+          className="absolute inset-0"
           style={{
-            position: 'absolute',
-            top: '0',
-            left: '0',
-            width: '100%',
-            height: '100%',
-            background: 'linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.04) 48%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0.04) 52%, transparent 100%)',
-            animation: 'sweep-light 10s ease-in-out infinite'
+            background: 'linear-gradient(105deg, transparent 0%, transparent 40%, rgba(255, 255, 255, 0.08) 45%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.08) 55%, transparent 60%, transparent 100%)',
+            animation: 'shimmer-sweep 6s ease-in-out infinite'
           }}
         ></div>
       </div>
       
-      {/* Premium Vignette - Cinematic Depth */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_50%_45%,transparent_0%,rgba(0,0,0,0.01)_50%,rgba(0,0,0,0.06)_100%)] dark:bg-[radial-gradient(ellipse_60%_50%_at_50%_45%,transparent_0%,rgba(0,0,0,0.2)_50%,rgba(0,0,0,0.6)_100%)]"></div>
+      {/* Subtle Radial Highlight - Center Focus */}
+      <div 
+        className="absolute top-[20%] left-[30%] w-[40%] h-[40%]"
+        style={{
+          background: 'radial-gradient(ellipse at center, rgba(255, 255, 255, 0.1) 0%, transparent 50%)',
+          animation: 'center-glow 10s ease-in-out infinite'
+        }}
+      ></div>
       
-      {/* Film Grain - Premium Texture */}
-      <div className="absolute inset-0 opacity-[0.012] dark:opacity-[0.025] mix-blend-overlay pointer-events-none">
+      {/* Premium Vignette - Soft Focus */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_70%_60%_at_50%_40%,transparent_0%,rgba(0,0,0,0.015)_60%,rgba(0,0,0,0.04)_100%)] dark:bg-[radial-gradient(ellipse_70%_60%_at_50%_40%,transparent_0%,rgba(0,0,0,0.15)_50%,rgba(0,0,0,0.4)_100%)]"></div>
+      
+      {/* Ultra-Fine Noise Texture */}
+      <div className="absolute inset-0 opacity-[0.02] dark:opacity-[0.04] mix-blend-overlay pointer-events-none">
         <div className="absolute inset-0" style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
           backgroundSize: '128px 128px'
@@ -200,84 +208,41 @@ const Hero = () => {
       
       {/* Keyframe Animations */}
       <style>{`
-        @keyframes morph-1 {
-          0%, 100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; transform: translate(0, 0) rotate(0deg) scale(1); }
-          25% { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; transform: translate(20px, -30px) rotate(5deg) scale(1.05); }
-          50% { border-radius: 50% 60% 30% 60% / 30% 40% 70% 50%; transform: translate(-20px, 20px) rotate(-5deg) scale(0.95); }
-          75% { border-radius: 40% 30% 60% 50% / 60% 50% 40% 60%; transform: translate(15px, 15px) rotate(3deg) scale(1.02); }
+        @keyframes gradient-flow {
+          0%, 100% { opacity: 1; transform: translateX(0) translateY(0); }
+          50% { opacity: 0.8; transform: translateX(20px) translateY(-10px); }
         }
-        @keyframes morph-2 {
-          0%, 100% { border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; transform: translate(0, 0) rotate(0deg) scale(1); }
-          33% { border-radius: 70% 30% 50% 50% / 30% 60% 40% 70%; transform: translate(-30px, 25px) rotate(-8deg) scale(1.08); }
-          66% { border-radius: 50% 50% 30% 70% / 50% 70% 30% 50%; transform: translate(25px, -20px) rotate(6deg) scale(0.92); }
+        @keyframes gradient-flow-reverse {
+          0%, 100% { opacity: 1; transform: translateX(0) translateY(0); }
+          50% { opacity: 0.7; transform: translateX(-25px) translateY(15px); }
         }
-        @keyframes morph-3 {
-          0%, 100% { border-radius: 50% 50% 30% 70% / 50% 70% 30% 50%; transform: translate(0, 0) rotate(0deg); }
-          50% { border-radius: 30% 70% 50% 50% / 70% 30% 50% 50%; transform: translate(35px, -25px) rotate(10deg); }
+        @keyframes glow-pulse-1 {
+          0%, 100% { opacity: 1; transform: scale(1) translate(0, 0); }
+          50% { opacity: 0.7; transform: scale(1.1) translate(10px, 5px); }
         }
-        @keyframes morph-4 {
-          0%, 100% { border-radius: 70% 30% 50% 50% / 30% 60% 40% 70%; transform: translate(0, 0) scale(1); }
-          50% { border-radius: 40% 60% 30% 70% / 60% 40% 50% 60%; transform: translate(-25px, 30px) scale(1.1); }
+        @keyframes glow-pulse-2 {
+          0%, 100% { opacity: 1; transform: scale(1) translate(0, 0); }
+          50% { opacity: 0.6; transform: scale(1.15) translate(-15px, 10px); }
         }
-        @keyframes spotlight-pulse {
-          0%, 100% { opacity: 0.4; transform: scale(1); }
-          50% { opacity: 0.6; transform: scale(1.1); }
+        @keyframes glow-pulse-3 {
+          0%, 100% { opacity: 1; transform: scale(1); }
+          50% { opacity: 0.5; transform: scale(1.2); }
         }
-        @keyframes aurora-wave-1 {
-          0%, 100% { transform: translateX(0) translateY(0) skewX(0deg); opacity: 0.5; }
-          50% { transform: translateX(30px) translateY(-20px) skewX(3deg); opacity: 0.7; }
+        @keyframes ribbon-flow {
+          0%, 100% { transform: translateX(-30%) scaleX(1); opacity: 0.4; }
+          50% { transform: translateX(30%) scaleX(1.2); opacity: 0.6; }
         }
-        @keyframes aurora-wave-2 {
-          0%, 100% { transform: translateX(0) translateY(0) skewX(0deg); opacity: 0.4; }
-          50% { transform: translateX(-40px) translateY(25px) skewX(-4deg); opacity: 0.55; }
+        @keyframes ribbon-flow-reverse {
+          0%, 100% { transform: translateX(20%) scaleX(1); opacity: 0.25; }
+          50% { transform: translateX(-20%) scaleX(1.1); opacity: 0.4; }
         }
-        @keyframes particle-float-1 {
-          0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.6; }
-          25% { transform: translate(40px, -30px) scale(1.2); opacity: 0.9; }
-          50% { transform: translate(20px, -60px) scale(0.8); opacity: 0.5; }
-          75% { transform: translate(-20px, -30px) scale(1.1); opacity: 0.8; }
+        @keyframes shimmer-sweep {
+          0% { transform: translateX(-100%) rotate(-5deg); }
+          100% { transform: translateX(200%) rotate(-5deg); }
         }
-        @keyframes particle-float-2 {
-          0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.7; }
-          50% { transform: translate(-50px, 40px) scale(1.3); opacity: 1; }
-        }
-        @keyframes particle-float-3 {
-          0%, 100% { transform: translate(0, 0); opacity: 0.5; }
-          33% { transform: translate(30px, -50px); opacity: 0.8; }
-          66% { transform: translate(60px, -20px); opacity: 0.4; }
-        }
-        @keyframes particle-float-4 {
-          0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.55; }
-          50% { transform: translate(-40px, -60px) scale(1.4); opacity: 0.9; }
-        }
-        @keyframes particle-float-5 {
-          0%, 100% { transform: translate(0, 0); opacity: 0.8; }
-          25% { transform: translate(20px, 30px); opacity: 1; }
-          75% { transform: translate(-30px, -20px); opacity: 0.6; }
-        }
-        @keyframes particle-float-6 {
-          0%, 100% { transform: translate(0, 0); opacity: 0.45; }
-          50% { transform: translate(45px, -35px); opacity: 0.7; }
-        }
-        @keyframes particle-float-7 {
-          0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.65; }
-          50% { transform: translate(-35px, 50px) scale(1.2); opacity: 1; }
-        }
-        @keyframes particle-float-8 {
-          0%, 100% { transform: translate(0, 0); opacity: 0.5; }
-          50% { transform: translate(30px, -45px); opacity: 0.85; }
-        }
-        @keyframes ray-1 {
-          0%, 100% { opacity: 0.3; transform: translateX(0) scaleY(1); }
-          50% { opacity: 0.6; transform: translateX(20px) scaleY(1.1); }
-        }
-        @keyframes ray-2 {
-          0%, 100% { opacity: 0.25; transform: translateX(0); }
-          50% { opacity: 0.5; transform: translateX(-15px); }
-        }
-        @keyframes sweep-light {
-          0% { transform: translateX(-120%); }
-          100% { transform: translateX(120%); }
+        @keyframes center-glow {
+          0%, 100% { opacity: 0.8; transform: scale(1); }
+          50% { opacity: 1; transform: scale(1.15); }
         }
       `}</style>
       
