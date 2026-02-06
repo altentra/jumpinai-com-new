@@ -122,60 +122,75 @@ const InlineStudioSection = () => {
       className="relative py-20 sm:py-24 lg:py-32 overflow-hidden"
     >
       {/* Smooth Black Transition from Hero */}
-      <div className="absolute -top-32 inset-x-0 h-40 bg-gradient-to-b from-transparent via-black/50 to-black pointer-events-none z-10"></div>
+      <div className="absolute -top-32 inset-x-0 h-40 bg-gradient-to-b from-transparent via-black/40 to-black/20 pointer-events-none z-10"></div>
       
-      {/* Premium Dark Background System */}
+      {/* Premium Background System - Matching Hero Style */}
       <div className="absolute inset-0">
-        {/* Deep black base */}
-        <div className="absolute inset-0 bg-gradient-to-br from-zinc-950 via-black to-zinc-950 dark:from-black dark:via-[#050508] dark:to-black"></div>
+        {/* Base gradient - matches Hero */}
+        <div className="absolute inset-0 bg-gradient-to-br from-amber-50/70 via-slate-50/90 to-cyan-50/50 dark:from-[#0f0d0a] dark:via-[#0c1420] dark:to-[#0a1018]"></div>
         
-        {/* Subtle color hints - very muted */}
+        {/* Primary Gradient Flow - Golden Warmth */}
         <div 
           className="absolute inset-0"
           style={{
-            background: 'linear-gradient(135deg, rgba(251, 191, 36, 0.04) 0%, transparent 30%, transparent 70%, rgba(6, 182, 212, 0.03) 100%)',
+            background: 'linear-gradient(135deg, rgba(251, 191, 36, 0.2) 0%, rgba(245, 158, 11, 0.12) 25%, transparent 50%, rgba(6, 182, 212, 0.08) 75%, rgba(34, 211, 238, 0.12) 100%)',
           }}
         ></div>
         
-        {/* Very subtle radial glow - Golden */}
+        {/* Secondary Gradient Flow - Teal Accent */}
         <div 
-          className="absolute -top-[10%] -left-[10%] w-[50%] h-[50%]"
+          className="absolute inset-0"
           style={{
-            background: 'radial-gradient(ellipse at center, rgba(251, 191, 36, 0.06) 0%, transparent 50%)',
+            background: 'linear-gradient(-45deg, rgba(20, 184, 166, 0.12) 0%, transparent 40%, transparent 60%, rgba(251, 191, 36, 0.1) 100%)',
+          }}
+        ></div>
+        
+        {/* Radial Glow - Top Left Golden */}
+        <div 
+          className="absolute -top-[15%] -left-[10%] w-[55%] h-[55%]"
+          style={{
+            background: 'radial-gradient(ellipse at center, rgba(251, 191, 36, 0.25) 0%, rgba(245, 158, 11, 0.12) 30%, transparent 60%)',
             filter: 'blur(80px)',
-            animation: 'glow-pulse-1 12s ease-in-out infinite'
           }}
         ></div>
         
-        {/* Very subtle radial glow - Cyan */}
+        {/* Radial Glow - Top Right Cyan */}
         <div 
-          className="absolute -top-[5%] -right-[10%] w-[40%] h-[40%]"
+          className="absolute -top-[10%] -right-[10%] w-[45%] h-[45%]"
           style={{
-            background: 'radial-gradient(ellipse at center, rgba(6, 182, 212, 0.05) 0%, transparent 50%)',
+            background: 'radial-gradient(ellipse at center, rgba(6, 182, 212, 0.2) 0%, rgba(20, 184, 166, 0.1) 40%, transparent 65%)',
             filter: 'blur(70px)',
-            animation: 'glow-pulse-2 15s ease-in-out infinite'
           }}
         ></div>
         
-        {/* Subtle Dot Matrix - very low opacity for depth */}
+        {/* Radial Glow - Bottom Center Warm */}
+        <div 
+          className="absolute bottom-[-10%] left-[20%] w-[60%] h-[50%]"
+          style={{
+            background: 'radial-gradient(ellipse at center, rgba(251, 146, 60, 0.15) 0%, rgba(251, 191, 36, 0.08) 50%, transparent 70%)',
+            filter: 'blur(60px)',
+          }}
+        ></div>
+        
+        {/* Animated Dot Matrix */}
         <div className="absolute inset-0 overflow-hidden">
           <svg className="absolute inset-0 w-full h-full" xmlns="http://www.w3.org/2000/svg">
             <defs>
               <linearGradient id="inline-dot-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="rgb(251, 191, 36)" stopOpacity="0.5" />
-                <stop offset="50%" stopColor="rgb(20, 184, 166)" stopOpacity="0.4" />
-                <stop offset="100%" stopColor="rgb(6, 182, 212)" stopOpacity="0.5" />
+                <stop offset="0%" stopColor="rgb(251, 191, 36)" stopOpacity="0.8" />
+                <stop offset="50%" stopColor="rgb(20, 184, 166)" stopOpacity="0.7" />
+                <stop offset="100%" stopColor="rgb(6, 182, 212)" stopOpacity="0.8" />
               </linearGradient>
-              <pattern id="inline-dot-matrix" width="60" height="60" patternUnits="userSpaceOnUse">
-                <circle cx="30" cy="30" r="0.8" fill="url(#inline-dot-gradient)" />
+              <pattern id="inline-dot-matrix" width="40" height="40" patternUnits="userSpaceOnUse">
+                <circle cx="20" cy="20" r="1.2" fill="url(#inline-dot-gradient)" />
               </pattern>
             </defs>
-            <rect width="100%" height="100%" fill="url(#inline-dot-matrix)" className="opacity-[0.08] dark:opacity-[0.12]" />
+            <rect width="100%" height="100%" fill="url(#inline-dot-matrix)" className="opacity-[0.15] dark:opacity-[0.25]" />
           </svg>
         </div>
         
-        {/* Deep vignette for focus on card */}
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_50%_50%,transparent_0%,rgba(0,0,0,0.4)_70%,rgba(0,0,0,0.7)_100%)]"></div>
+        {/* SIMPLE BLACK OVERLAY TO DARKEN - 15% opacity */}
+        <div className="absolute inset-0 bg-black/[0.15] dark:bg-black/[0.20]"></div>
       </div>
       
       {/* Keyframe Animations */}
