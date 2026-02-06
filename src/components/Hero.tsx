@@ -40,98 +40,231 @@ const Hero = () => {
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-12 sm:pt-14 lg:pt-12">
-      {/* === EPIC PREMIUM BACKGROUND === */}
+      {/* === WORLD-CLASS AI HERO BACKGROUND === */}
       
-      {/* Base Layer - Deep premium foundation */}
-      <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-gray-100 to-stone-100 dark:from-[#030712] dark:via-[#0a0f1a] dark:to-[#0f172a]"></div>
+      {/* Deep Space Foundation */}
+      <div className="absolute inset-0 bg-gradient-to-b from-slate-100 via-slate-50 to-white dark:from-[#000000] dark:via-[#020617] dark:to-[#0a0a0f]"></div>
       
-      {/* Primary Radial Glow - Top Left Golden Orb (enhanced warm yellow) */}
-      <div className="absolute -top-[30%] -left-[20%] w-[80%] h-[80%] rounded-full bg-gradient-radial from-yellow-400/48 via-amber-500/28 to-transparent dark:from-yellow-500/30 dark:via-amber-600/16 dark:to-transparent blur-3xl"></div>
+      {/* Animated Aurora Layer 1 - Primary Flow */}
+      <div 
+        className="absolute inset-0 opacity-60 dark:opacity-40"
+        style={{
+          background: 'linear-gradient(135deg, transparent 0%, rgba(99, 102, 241, 0.15) 25%, rgba(168, 85, 247, 0.2) 50%, rgba(236, 72, 153, 0.15) 75%, transparent 100%)',
+          filter: 'blur(80px)',
+          animation: 'aurora-drift 15s ease-in-out infinite alternate'
+        }}
+      ></div>
       
-      {/* Secondary Radial Glow - Top Right Purple/Blue Orb */}
-      <div className="absolute -top-[20%] -right-[15%] w-[70%] h-[70%] rounded-full bg-gradient-radial from-violet-500/34 via-indigo-600/17 to-transparent dark:from-violet-600/22 dark:via-indigo-700/10 dark:to-transparent blur-3xl"></div>
+      {/* Animated Aurora Layer 2 - Secondary Flow */}
+      <div 
+        className="absolute inset-0 opacity-50 dark:opacity-30"
+        style={{
+          background: 'linear-gradient(-45deg, transparent 0%, rgba(6, 182, 212, 0.18) 30%, rgba(34, 211, 238, 0.15) 50%, rgba(59, 130, 246, 0.2) 70%, transparent 100%)',
+          filter: 'blur(100px)',
+          animation: 'aurora-drift 20s ease-in-out infinite alternate-reverse'
+        }}
+      ></div>
       
-      {/* Tertiary Radial Glow - Bottom Center Emerald/Teal Orb */}
-      <div className="absolute -bottom-[25%] left-[20%] w-[60%] h-[60%] rounded-full bg-gradient-radial from-emerald-400/27 via-teal-500/14 to-transparent dark:from-emerald-500/17 dark:via-teal-600/8 dark:to-transparent blur-3xl"></div>
+      {/* Floating Orb 1 - Top Left - Gold/Amber */}
+      <div 
+        className="absolute -top-[10%] -left-[5%] w-[50%] h-[50%] rounded-full opacity-70 dark:opacity-50"
+        style={{
+          background: 'radial-gradient(circle at center, rgba(251, 191, 36, 0.4) 0%, rgba(245, 158, 11, 0.2) 40%, transparent 70%)',
+          filter: 'blur(60px)',
+          animation: 'orb-float-1 12s ease-in-out infinite'
+        }}
+      ></div>
       
-      {/* Accent Glow - Center-Right Blue Accent */}
-      <div className="absolute top-[30%] right-[10%] w-[40%] h-[40%] rounded-full bg-gradient-radial from-blue-500/22 via-sky-500/12 to-transparent dark:from-blue-600/14 dark:via-sky-600/7 dark:to-transparent blur-2xl"></div>
+      {/* Floating Orb 2 - Top Right - Violet/Purple */}
+      <div 
+        className="absolute -top-[5%] -right-[10%] w-[45%] h-[45%] rounded-full opacity-60 dark:opacity-40"
+        style={{
+          background: 'radial-gradient(circle at center, rgba(139, 92, 246, 0.45) 0%, rgba(124, 58, 237, 0.2) 40%, transparent 70%)',
+          filter: 'blur(70px)',
+          animation: 'orb-float-2 14s ease-in-out infinite'
+        }}
+      ></div>
       
-      {/* NEW: Warm Golden Center Glow - Positive energy */}
-      <div className="absolute top-[20%] left-[30%] w-[50%] h-[50%] rounded-full bg-gradient-radial from-yellow-300/20 via-amber-400/10 to-transparent dark:from-yellow-400/12 dark:via-amber-500/6 dark:to-transparent blur-3xl"></div>
+      {/* Floating Orb 3 - Center - Cyan/Blue */}
+      <div 
+        className="absolute top-[30%] left-[40%] w-[35%] h-[35%] rounded-full opacity-50 dark:opacity-35"
+        style={{
+          background: 'radial-gradient(circle at center, rgba(34, 211, 238, 0.35) 0%, rgba(6, 182, 212, 0.15) 50%, transparent 70%)',
+          filter: 'blur(80px)',
+          animation: 'orb-float-3 18s ease-in-out infinite'
+        }}
+      ></div>
       
-      {/* Premium Mesh Gradient Overlay (enhanced yellow) */}
-      <div className="absolute inset-0 bg-[conic-gradient(from_180deg_at_50%_50%,rgba(253,224,71,0.10)_0deg,rgba(251,191,36,0.08)_45deg,rgba(139,92,246,0.066)_120deg,rgba(59,130,246,0.066)_200deg,rgba(16,185,129,0.066)_280deg,rgba(253,224,71,0.10)_360deg)] dark:bg-[conic-gradient(from_180deg_at_50%_50%,rgba(253,224,71,0.05)_0deg,rgba(251,191,36,0.04)_45deg,rgba(139,92,246,0.034)_120deg,rgba(59,130,246,0.034)_200deg,rgba(16,185,129,0.034)_280deg,rgba(253,224,71,0.05)_360deg)]"></div>
+      {/* Floating Orb 4 - Bottom Left - Rose/Pink */}
+      <div 
+        className="absolute bottom-[10%] left-[5%] w-[40%] h-[40%] rounded-full opacity-50 dark:opacity-30"
+        style={{
+          background: 'radial-gradient(circle at center, rgba(244, 63, 94, 0.3) 0%, rgba(236, 72, 153, 0.15) 50%, transparent 70%)',
+          filter: 'blur(90px)',
+          animation: 'orb-float-4 16s ease-in-out infinite'
+        }}
+      ></div>
       
-      {/* Sophisticated Diagonal Flow - Premium 45deg (boosted yellow/gold start) */}
-      <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(253,224,71,0.42)_0%,rgba(250,204,21,0.36)_10%,rgba(251,146,60,0.28)_20%,rgba(244,63,94,0.18)_35%,rgba(168,85,247,0.22)_50%,rgba(99,102,241,0.18)_65%,rgba(59,130,246,0.15)_80%,rgba(20,184,166,0.12)_95%,transparent_100%)] dark:bg-[linear-gradient(135deg,rgba(253,224,71,0.16)_0%,rgba(250,204,21,0.12)_10%,rgba(251,146,60,0.09)_20%,rgba(244,63,94,0.055)_35%,rgba(168,85,247,0.08)_50%,rgba(99,102,241,0.06)_65%,rgba(59,130,246,0.05)_80%,rgba(20,184,166,0.04)_95%,transparent_100%)]"></div>
+      {/* Floating Orb 5 - Bottom Right - Emerald */}
+      <div 
+        className="absolute bottom-[5%] right-[10%] w-[30%] h-[30%] rounded-full opacity-40 dark:opacity-25"
+        style={{
+          background: 'radial-gradient(circle at center, rgba(16, 185, 129, 0.35) 0%, rgba(52, 211, 153, 0.15) 50%, transparent 70%)',
+          filter: 'blur(70px)',
+          animation: 'orb-float-5 20s ease-in-out infinite'
+        }}
+      ></div>
       
-      {/* Premium Vignette Effect */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_50%,transparent_40%,rgba(15,23,42,0.05)_100%)] dark:bg-[radial-gradient(ellipse_80%_80%_at_50%_50%,transparent_30%,rgba(0,0,0,0.36)_100%)]"></div>
+      {/* Neural Network Grid - Animated Pulse */}
+      <div className="absolute inset-0 opacity-[0.04] dark:opacity-[0.08]">
+        <div 
+          className="absolute inset-0"
+          style={{ 
+            backgroundImage: `
+              radial-gradient(circle at 1px 1px, rgba(139, 92, 246, 0.8) 1px, transparent 1px)
+            `,
+            backgroundSize: '50px 50px',
+            animation: 'grid-pulse 4s ease-in-out infinite'
+          }}
+        ></div>
+      </div>
       
-      {/* Subtle Animated Shimmer - Horizontal Light Sweep */}
+      {/* Animated Mesh Lines - AI Neural Pattern */}
+      <svg className="absolute inset-0 w-full h-full opacity-[0.03] dark:opacity-[0.06]" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="mesh-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="rgb(139, 92, 246)" />
+            <stop offset="50%" stopColor="rgb(59, 130, 246)" />
+            <stop offset="100%" stopColor="rgb(6, 182, 212)" />
+          </linearGradient>
+        </defs>
+        <pattern id="neural-pattern" width="100" height="100" patternUnits="userSpaceOnUse">
+          <path d="M50 0 L50 100 M0 50 L100 50 M0 0 L100 100 M100 0 L0 100" stroke="url(#mesh-gradient)" strokeWidth="0.5" fill="none" opacity="0.5" />
+          <circle cx="50" cy="50" r="3" fill="url(#mesh-gradient)" opacity="0.6">
+            <animate attributeName="r" values="3;5;3" dur="3s" repeatCount="indefinite" />
+            <animate attributeName="opacity" values="0.6;1;0.6" dur="3s" repeatCount="indefinite" />
+          </circle>
+          <circle cx="0" cy="0" r="2" fill="url(#mesh-gradient)" opacity="0.4" />
+          <circle cx="100" cy="0" r="2" fill="url(#mesh-gradient)" opacity="0.4" />
+          <circle cx="0" cy="100" r="2" fill="url(#mesh-gradient)" opacity="0.4" />
+          <circle cx="100" cy="100" r="2" fill="url(#mesh-gradient)" opacity="0.4" />
+        </pattern>
+        <rect width="100%" height="100%" fill="url(#neural-pattern)" />
+      </svg>
+      
+      {/* Horizontal Light Beam - Animated Sweep */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/[0.03] to-transparent dark:via-white/[0.015] translate-x-[-100%] animate-[shimmer_8s_ease-in-out_infinite]"></div>
+        <div 
+          className="absolute top-0 left-0 w-full h-full"
+          style={{
+            background: 'linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.03) 45%, rgba(255, 255, 255, 0.08) 50%, rgba(255, 255, 255, 0.03) 55%, transparent 100%)',
+            animation: 'light-sweep 8s ease-in-out infinite'
+          }}
+        ></div>
       </div>
       
-      {/* Premium Glass Grain Texture */}
-      <div className="absolute inset-0 opacity-[0.012] dark:opacity-[0.04] mix-blend-overlay">
+      {/* Premium Vignette - Depth Focus */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_70%_50%_at_50%_50%,transparent_0%,rgba(0,0,0,0.02)_70%,rgba(0,0,0,0.08)_100%)] dark:bg-[radial-gradient(ellipse_70%_50%_at_50%_50%,transparent_0%,rgba(0,0,0,0.15)_60%,rgba(0,0,0,0.5)_100%)]"></div>
+      
+      {/* Subtle Noise Texture - Premium Feel */}
+      <div className="absolute inset-0 opacity-[0.015] dark:opacity-[0.03] mix-blend-overlay pointer-events-none">
         <div className="absolute inset-0" style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
-          backgroundSize: '256px 256px'
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
+          backgroundSize: '200px 200px'
         }}></div>
       </div>
       
-      {/* Ultra-Fine Tech Grid */}
-      <div className="absolute inset-0 opacity-[0.015] dark:opacity-[0.04]">
-        <div className="absolute inset-0" style={{ 
-          backgroundImage: `linear-gradient(rgba(99, 102, 241, 0.15) 1px, transparent 1px), linear-gradient(90deg, rgba(99, 102, 241, 0.15) 1px, transparent 1px)`,
-          backgroundSize: '60px 60px'
-        }}></div>
-      </div>
+      {/* Inline Keyframe Animations */}
+      <style>{`
+        @keyframes aurora-drift {
+          0% { transform: translateX(-5%) translateY(-5%) rotate(-2deg) scale(1); }
+          100% { transform: translateX(5%) translateY(5%) rotate(2deg) scale(1.05); }
+        }
+        @keyframes orb-float-1 {
+          0%, 100% { transform: translate(0, 0) scale(1); }
+          33% { transform: translate(30px, 20px) scale(1.05); }
+          66% { transform: translate(-20px, 30px) scale(0.95); }
+        }
+        @keyframes orb-float-2 {
+          0%, 100% { transform: translate(0, 0) scale(1); }
+          33% { transform: translate(-25px, 35px) scale(0.95); }
+          66% { transform: translate(35px, -25px) scale(1.05); }
+        }
+        @keyframes orb-float-3 {
+          0%, 100% { transform: translate(0, 0) scale(1); }
+          50% { transform: translate(40px, -30px) scale(1.1); }
+        }
+        @keyframes orb-float-4 {
+          0%, 100% { transform: translate(0, 0) scale(1); }
+          33% { transform: translate(20px, -40px) scale(1.05); }
+          66% { transform: translate(-30px, -20px) scale(0.95); }
+        }
+        @keyframes orb-float-5 {
+          0%, 100% { transform: translate(0, 0) scale(1); }
+          50% { transform: translate(-35px, 25px) scale(1.08); }
+        }
+        @keyframes grid-pulse {
+          0%, 100% { opacity: 0.04; }
+          50% { opacity: 0.08; }
+        }
+        @keyframes light-sweep {
+          0% { transform: translateX(-100%); }
+          100% { transform: translateX(100%); }
+        }
+      `}</style>
       
-      {/* Enhanced Curved Bottom Arc Feature */}
-      <div className="absolute bottom-0 left-0 right-0 h-40 opacity-70 dark:opacity-80">
+      {/* Enhanced Curved Bottom Arc - Flowing Wave */}
+      <div className="absolute bottom-0 left-0 right-0 h-48 opacity-80 dark:opacity-90">
         <svg
           className="absolute bottom-0 w-full h-full"
-          viewBox="0 0 1200 150"
+          viewBox="0 0 1440 200"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
+          preserveAspectRatio="none"
         >
-          {/* Main jump curve */}
+          {/* Animated wave paths */}
           <path
-            d="M0 150L80 135C160 120 320 90 480 75C640 60 800 60 960 75C1120 90 1280 120 1360 135L1440 150V150H1360C1280 150 1120 150 960 150C800 150 640 150 480 150C320 150 160 150 80 150H0Z"
-            fill={`url(#${isDark ? 'jumpGradientDark' : 'jumpGradient'})`}
-            className="drop-shadow-lg"
-          />
-          {/* Secondary curve for depth */}
+            d="M0 200L48 185C96 170 192 140 288 125C384 110 480 110 576 120C672 130 768 150 864 155C960 160 1056 150 1152 135C1248 120 1344 100 1392 90L1440 80V200H1392C1344 200 1248 200 1152 200C1056 200 960 200 864 200C768 200 672 200 576 200C480 200 384 200 288 200C192 200 96 200 48 200H0Z"
+            fill={`url(#${isDark ? 'waveGradientDark' : 'waveGradient'})`}
+          >
+            <animate attributeName="d" dur="10s" repeatCount="indefinite" values="
+              M0 200L48 185C96 170 192 140 288 125C384 110 480 110 576 120C672 130 768 150 864 155C960 160 1056 150 1152 135C1248 120 1344 100 1392 90L1440 80V200H1392C1344 200 1248 200 1152 200C1056 200 960 200 864 200C768 200 672 200 576 200C480 200 384 200 288 200C192 200 96 200 48 200H0Z;
+              M0 200L48 175C96 160 192 130 288 120C384 100 480 100 576 115C672 125 768 145 864 150C960 155 1056 145 1152 130C1248 115 1344 95 1392 85L1440 75V200H1392C1344 200 1248 200 1152 200C1056 200 960 200 864 200C768 200 672 200 576 200C480 200 384 200 288 200C192 200 96 200 48 200H0Z;
+              M0 200L48 185C96 170 192 140 288 125C384 110 480 110 576 120C672 130 768 150 864 155C960 160 1056 150 1152 135C1248 120 1344 100 1392 90L1440 80V200H1392C1344 200 1248 200 1152 200C1056 200 960 200 864 200C768 200 672 200 576 200C480 200 384 200 288 200C192 200 96 200 48 200H0Z
+            " />
+          </path>
           <path
-            d="M0 150L100 140C200 130 400 110 600 100C800 90 1000 90 1100 95L1200 100V150H1100C1000 150 800 150 600 150C400 150 200 150 100 150H0Z"
-            fill={`url(#${isDark ? 'jumpGradient2Dark' : 'jumpGradient2'})`}
-            opacity="0.7"
-          />
+            d="M0 200L60 190C120 180 240 160 360 150C480 140 600 140 720 145C840 150 960 160 1080 165C1200 170 1320 170 1380 170L1440 170V200H1380C1320 200 1200 200 1080 200C960 200 840 200 720 200C600 200 480 200 360 200C240 200 120 200 60 200H0Z"
+            fill={`url(#${isDark ? 'waveGradient2Dark' : 'waveGradient2'})`}
+            opacity="0.6"
+          >
+            <animate attributeName="d" dur="8s" repeatCount="indefinite" values="
+              M0 200L60 190C120 180 240 160 360 150C480 140 600 140 720 145C840 150 960 160 1080 165C1200 170 1320 170 1380 170L1440 170V200H1380C1320 200 1200 200 1080 200C960 200 840 200 720 200C600 200 480 200 360 200C240 200 120 200 60 200H0Z;
+              M0 200L60 185C120 170 240 150 360 145C480 135 600 135 720 140C840 145 960 155 1080 160C1200 165 1320 165 1380 165L1440 165V200H1380C1320 200 1200 200 1080 200C960 200 840 200 720 200C600 200 480 200 360 200C240 200 120 200 60 200H0Z;
+              M0 200L60 190C120 180 240 160 360 150C480 140 600 140 720 145C840 150 960 160 1080 165C1200 170 1320 170 1380 170L1440 170V200H1380C1320 200 1200 200 1080 200C960 200 840 200 720 200C600 200 480 200 360 200C240 200 120 200 60 200H0Z
+            " />
+          </path>
           <defs>
-            <linearGradient id="jumpGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="rgb(71 85 105)" stopOpacity="0.65" />
-              <stop offset="30%" stopColor="rgb(100 116 139)" stopOpacity="0.85" />
-              <stop offset="70%" stopColor="rgb(100 116 139)" stopOpacity="0.8" />
-              <stop offset="100%" stopColor="rgb(71 85 105)" stopOpacity="0.6" />
+            <linearGradient id="waveGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="rgb(241 245 249)" stopOpacity="0.9" />
+              <stop offset="50%" stopColor="rgb(248 250 252)" stopOpacity="0.95" />
+              <stop offset="100%" stopColor="rgb(241 245 249)" stopOpacity="0.9" />
             </linearGradient>
-            <linearGradient id="jumpGradientDark" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="rgb(15 23 42)" stopOpacity="0.8" />
+            <linearGradient id="waveGradientDark" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="rgb(15 23 42)" stopOpacity="0.95" />
               <stop offset="30%" stopColor="rgb(30 41 59)" stopOpacity="0.9" />
-              <stop offset="70%" stopColor="rgb(51 65 85)" stopOpacity="0.8" />
-              <stop offset="100%" stopColor="rgb(30 41 59)" stopOpacity="0.6" />
+              <stop offset="70%" stopColor="rgb(30 41 59)" stopOpacity="0.9" />
+              <stop offset="100%" stopColor="rgb(15 23 42)" stopOpacity="0.95" />
             </linearGradient>
-            <linearGradient id="jumpGradient2" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="rgb(100 116 139)" stopOpacity="0.5" />
-              <stop offset="50%" stopColor="rgb(148 163 184)" stopOpacity="0.7" />
-              <stop offset="100%" stopColor="rgb(100 116 139)" stopOpacity="0.45" />
+            <linearGradient id="waveGradient2" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="rgb(226 232 240)" stopOpacity="0.7" />
+              <stop offset="50%" stopColor="rgb(241 245 249)" stopOpacity="0.8" />
+              <stop offset="100%" stopColor="rgb(226 232 240)" stopOpacity="0.7" />
             </linearGradient>
-            <linearGradient id="jumpGradient2Dark" x1="0%" y1="0%" x2="100%" y2="0%">
+            <linearGradient id="waveGradient2Dark" x1="0%" y1="0%" x2="100%" y2="0%">
               <stop offset="0%" stopColor="rgb(51 65 85)" stopOpacity="0.6" />
-              <stop offset="50%" stopColor="rgb(71 85 105)" stopOpacity="0.8" />
-              <stop offset="100%" stopColor="rgb(55 65 81)" stopOpacity="0.5" />
+              <stop offset="50%" stopColor="rgb(71 85 105)" stopOpacity="0.7" />
+              <stop offset="100%" stopColor="rgb(51 65 85)" stopOpacity="0.6" />
             </linearGradient>
           </defs>
         </svg>
