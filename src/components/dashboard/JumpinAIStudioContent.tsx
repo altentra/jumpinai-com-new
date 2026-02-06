@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Loader2, LogIn, Zap } from 'lucide-react';
+import { Loader2, Zap } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useCredits } from '@/hooks/useCredits';
 import { jumpinAIStudioService, type StudioFormData } from '@/services/jumpinAIStudioService';
@@ -347,169 +347,177 @@ const JumpinAIStudioContent = () => {
 
   return (
     <div className="relative min-h-screen">
-      {/* Premium Ambient Background with enhanced depth */}
+      {/* Premium Background System - Same as guest studio */}
+      <div className="fixed inset-0 bg-gradient-to-br from-muted/60 via-background to-muted/40 dark:from-background dark:via-background dark:to-muted/30"></div>
+      
+      {/* Subtle noise texture for premium feel */}
+      <div className="fixed inset-0 opacity-[0.015] dark:opacity-[0.03] pointer-events-none" style={{backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 400 400\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E")'}}></div>
+      
+      {/* Premium ambient orbs */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        {/* Base gradient layer for contrast */}
-        <div className="absolute inset-0 bg-gradient-to-b from-background via-background to-muted/30"></div>
-        
-        {/* Primary ambient orb - top right with stronger presence */}
-        <div className="absolute -top-20 -right-20 w-[32rem] h-[32rem] rounded-full">
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/25 via-primary/10 to-transparent blur-[80px] animate-pulse" style={{animationDuration: '6s'}}></div>
-        </div>
-        
-        {/* Secondary ambient orb - bottom left */}
-        <div className="absolute -bottom-32 -left-32 w-[36rem] h-[36rem] rounded-full">
-          <div className="absolute inset-0 bg-gradient-to-tr from-accent/20 via-secondary/10 to-transparent blur-[100px] animate-pulse" style={{animationDuration: '8s', animationDelay: '2s'}}></div>
-        </div>
-        
-        {/* Center glow for focus */}
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[60rem] h-[40rem] rounded-full">
-          <div className="absolute inset-0 bg-gradient-radial from-primary/8 via-transparent to-transparent blur-[120px]"></div>
-        </div>
-        
-        {/* Refined dot grid pattern */}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,hsl(var(--foreground)/0.03)_1px,transparent_1px)] bg-[length:32px_32px] dark:bg-[radial-gradient(circle_at_50%_50%,hsl(var(--foreground)/0.02)_1px,transparent_1px)]"></div>
+        <div className="absolute top-[-15%] right-[5%] w-[700px] h-[700px] bg-primary/[0.12] dark:bg-primary/[0.08] rounded-full blur-[150px] animate-pulse" style={{animationDuration: '10s'}}></div>
+        <div className="absolute bottom-[-10%] left-[-5%] w-[600px] h-[600px] bg-accent/[0.08] dark:bg-accent/[0.05] rounded-full blur-[130px] animate-pulse" style={{animationDuration: '12s', animationDelay: '3s'}}></div>
+        <div className="absolute top-[30%] left-[40%] w-[500px] h-[500px] bg-secondary/[0.06] rounded-full blur-[100px]"></div>
       </div>
+      
+      {/* Refined grid pattern */}
+      <div className="fixed inset-0 bg-[linear-gradient(hsl(var(--foreground)/0.02)_1px,transparent_1px),linear-gradient(90deg,hsl(var(--foreground)/0.02)_1px,transparent_1px)] bg-[size:60px_60px] dark:bg-[linear-gradient(hsl(var(--foreground)/0.015)_1px,transparent_1px),linear-gradient(90deg,hsl(var(--foreground)/0.015)_1px,transparent_1px)] pointer-events-none"></div>
       
       <div className="relative pt-8 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto">
-          {/* Premium Hero Section with enhanced typography */}
-          <div className="text-center mb-10 sm:mb-12 lg:mb-14 animate-fade-in-up">
-            {/* Main Title with premium styling */}
-            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-foreground mb-4">
-              <span className="bg-gradient-to-br from-foreground via-foreground to-foreground/70 bg-clip-text">
-                Create Your <span className="bg-gradient-to-r from-primary via-primary to-primary/80 bg-clip-text text-transparent">Jump in AI</span>
-              </span>
-            </h1>
-            
-            {/* Refined subtitle */}
-            <p className="text-sm sm:text-base md:text-lg text-muted-foreground max-w-xl mx-auto leading-relaxed">
-              Share what you're building and what's blocking you — we'll craft your personalized AI implementation roadmap.
-            </p>
-          </div>
-
-          {/* Premium Form Card with elevated design */}
-          <div className="mb-10 sm:mb-14 lg:mb-16 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
-            <div className="relative group">
-              {/* Premium shadow layer */}
-              <div className="absolute -inset-1 bg-gradient-to-b from-primary/10 via-border/30 to-border/10 rounded-3xl blur-sm opacity-60 group-hover:opacity-80 transition-opacity duration-500"></div>
+          
+          {/* HERO FORM CARD - Premium Glassmorphism (matches guest studio exactly) */}
+          <div className="mb-10 sm:mb-14 animate-fade-in-up" style={{ animationDelay: '0.08s' }}>
+            <div className="relative">
+              {/* Multi-layer ambient glow behind card */}
+              <div className="absolute -inset-8 bg-gradient-to-br from-amber-500/[0.08] via-primary/[0.06] to-violet-500/[0.08] rounded-[4rem] blur-3xl opacity-70"></div>
+              <div className="absolute -inset-4 bg-primary/[0.04] rounded-[3rem] blur-xl opacity-50"></div>
               
-              {/* Outer glow ring */}
-              <div className="absolute -inset-px bg-gradient-to-b from-border/80 via-border/40 to-border/60 rounded-2xl sm:rounded-3xl"></div>
-              
-              {/* Main card with premium glass effect */}
-              <div className="relative rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10 bg-card dark:bg-card/80 backdrop-blur-xl border-0 overflow-hidden shadow-2xl shadow-black/5 dark:shadow-black/20">
-                {/* Premium inner glow at top */}
-                <div className="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-primary/[0.04] to-transparent pointer-events-none"></div>
+              {/* Card with glassmorphism */}
+              <div className="relative rounded-[32px] sm:rounded-[40px] overflow-hidden 
+                bg-white/70 dark:bg-zinc-900/70
+                backdrop-blur-2xl
+                border border-white/40 dark:border-white/[0.12]
+                shadow-[0_32px_100px_-20px_rgba(0,0,0,0.15),0_0_0_1px_rgba(255,255,255,0.1)_inset]
+                dark:shadow-[0_32px_100px_-20px_rgba(0,0,0,0.6),0_0_0_1px_rgba(255,255,255,0.05)_inset]">
                 
-                {/* Highlight line at top */}
-                <div className="absolute top-0 inset-x-8 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent"></div>
+                {/* Premium top highlight - rainbow shimmer */}
+                <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/80 dark:via-white/30 to-transparent"></div>
                 
-                {/* Corner accents */}
-                <div className="absolute top-4 left-4 w-8 h-8 border-l-2 border-t-2 border-primary/20 rounded-tl-lg pointer-events-none"></div>
-                <div className="absolute top-4 right-4 w-8 h-8 border-r-2 border-t-2 border-primary/20 rounded-tr-lg pointer-events-none"></div>
+                {/* Subtle inner glow */}
+                <div className="absolute inset-0 bg-gradient-to-br from-white/50 via-transparent to-transparent dark:from-white/5 pointer-events-none"></div>
                 
-                <div className="relative z-10 space-y-8 sm:space-y-10">
-                  {/* Premium input fields grid */}
-                  <div className="grid md:grid-cols-2 gap-6 sm:gap-8">
-                    {/* Goals Input */}
-                    <StudioTextarea
-                      ref={goalsTextareaRef}
-                      label="What are you building?"
-                      value={formData.goals}
-                      onChange={(value) => setFormData(prev => ({ ...prev, goals: value }))}
-                      onTyped={() => setGoalsTyped(true)}
-                      onSttUsed={() => {
-                        setSttUsed(true);
-                        setGoalsUsedStt(true);
-                      }}
-                      onSttDuration={(seconds) => setGoalsSttDuration(prev => prev + seconds)}
-                      placeholder="Describe your goals, project, or what you want to achieve with AI..."
-                    />
-                    
-                    {/* Challenges Input */}
-                    <StudioTextarea
-                      ref={challengesTextareaRef}
-                      label="What's in your way?"
-                      value={formData.challenges}
-                      onChange={(value) => setFormData(prev => ({ ...prev, challenges: value }))}
-                      onTyped={() => setChallengesTyped(true)}
-                      onSttUsed={() => {
-                        setSttUsed(true);
-                        setChallengesUsedStt(true);
-                      }}
-                      onSttDuration={(seconds) => setChallengesSttDuration(prev => prev + seconds)}
-                      placeholder="What obstacles, challenges, or frustrations are you facing..."
-                    />
+                {/* Content */}
+                <div className="relative p-8 sm:p-10 md:p-12 lg:p-14">
+                  
+                  {/* Hero text - Premium typography (inside the card) */}
+                  <div className="text-center mb-10 sm:mb-12">
+                    <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[2.75rem] font-bold text-foreground mb-4 tracking-tight leading-[1.15]">
+                      Create Your{' '}
+                      <span className="bg-gradient-to-r from-primary via-primary/90 to-primary/80 bg-clip-text text-transparent">
+                        Jump in AI
+                      </span>
+                    </h2>
+                    <p className="text-muted-foreground text-sm sm:text-base md:text-lg max-w-xl mx-auto font-medium">
+                      Share your vision and challenges — we'll craft your personalized AI implementation roadmap.
+                    </p>
                   </div>
 
-                  {/* Premium Generate Button */}
-                  <div ref={generateButtonRef} className="pt-4">
-                    <div className="relative w-full max-w-xl mx-auto">
-                      {/* Button glow effect */}
-                      <div className="absolute -inset-2 bg-gradient-to-r from-primary/20 via-primary/30 to-primary/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-60 transition-opacity duration-700"></div>
+                  {/* Form inputs */}
+                  <div className="space-y-8 sm:space-y-10">
+                    <div className="grid md:grid-cols-2 gap-6 sm:gap-8 lg:gap-10">
+                      {/* Goals Input */}
+                      <StudioTextarea
+                        ref={goalsTextareaRef}
+                        label="What are you building?"
+                        value={formData.goals}
+                        onChange={(value) => setFormData(prev => ({ ...prev, goals: value }))}
+                        onTyped={() => setGoalsTyped(true)}
+                        onSttUsed={() => {
+                          setSttUsed(true);
+                          setGoalsUsedStt(true);
+                        }}
+                        onSttDuration={(seconds) => setGoalsSttDuration(prev => prev + seconds)}
+                        placeholder="Describe your goals, project, or what you want to achieve with AI..."
+                      />
                       
-                      <button
-                        onClick={() => handleGenerate()}
-                        disabled={isGenerating}
-                        className="relative w-full px-8 sm:px-12 py-5 sm:py-6 rounded-xl sm:rounded-2xl bg-primary text-primary-foreground font-semibold transition-all duration-300 hover:shadow-xl hover:shadow-primary/20 hover:scale-[1.02] disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:shadow-none group/btn overflow-hidden"
-                      >
-                        {/* Button shine effect */}
-                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700 ease-out"></div>
-                        
-                        {/* Top highlight */}
-                        <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent"></div>
-                        
-                        <div className="relative z-10 flex items-center justify-center gap-3">
-                          {isGenerating ? (
-                            <div className="flex items-center gap-4 w-full justify-center">
-                              <div className="relative">
-                                <Loader2 className="w-5 h-5 animate-spin" />
-                              </div>
-                              <div className="text-center flex-1">
-                                <div className="font-semibold text-sm sm:text-base">{processingStatus.stage}</div>
-                                <div className="text-xs sm:text-sm opacity-80 mt-1 flex items-center justify-center gap-2">
-                                  <span>{processingStatus.currentTask}</span>
-                                  {generationTimer > 0 && (
-                                    <span className="px-2 py-0.5 bg-white/20 rounded-full text-xs font-medium">
+                      {/* Challenges Input */}
+                      <StudioTextarea
+                        ref={challengesTextareaRef}
+                        label="What's in your way?"
+                        value={formData.challenges}
+                        onChange={(value) => setFormData(prev => ({ ...prev, challenges: value }))}
+                        onTyped={() => setChallengesTyped(true)}
+                        onSttUsed={() => {
+                          setSttUsed(true);
+                          setChallengesUsedStt(true);
+                        }}
+                        onSttDuration={(seconds) => setChallengesSttDuration(prev => prev + seconds)}
+                        placeholder="What obstacles, challenges, or frustrations are you facing..."
+                      />
+                    </div>
+
+                    {/* Generate Button - Dark glassmorphic style (matches guest studio exactly) */}
+                    <div ref={generateButtonRef} className="pt-4 sm:pt-6">
+                      <div className="flex flex-col items-center">
+                        <div className="relative group/btn w-full sm:w-auto">
+                          {/* Subtle hover glow */}
+                          <div className="absolute -inset-1 bg-primary/15 rounded-full blur-xl opacity-0 group-hover/btn:opacity-100 transition-opacity duration-500"></div>
+                          
+                          <button
+                            onClick={() => handleGenerate()}
+                            disabled={isGenerating}
+                            className="relative w-full sm:w-auto px-12 sm:px-16 md:px-20 py-4 sm:py-5 
+                              text-white font-semibold text-base sm:text-lg
+                              rounded-full
+                              border border-white/10
+                              transition-all duration-300 ease-out
+                              hover:scale-[1.02] active:scale-[0.98] 
+                              hover:shadow-xl hover:shadow-black/30
+                              disabled:cursor-not-allowed disabled:hover:scale-100 
+                              shadow-lg shadow-black/20
+                              overflow-hidden"
+                            style={{
+                              background: 'linear-gradient(to bottom right, #27272a, #18181b, #000000)',
+                            }}
+                          >
+                            {/* Shimmer effect */}
+                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700 rounded-full"></div>
+                            
+                            {/* Top highlight */}
+                            <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent"></div>
+                            
+                            {/* Bottom subtle shadow */}
+                            <div className="absolute inset-x-4 bottom-0 h-px bg-gradient-to-r from-transparent via-black/10 to-transparent"></div>
+                            
+                            <div className="relative z-10 flex items-center justify-center gap-4 text-white">
+                              {isGenerating ? (
+                                <div className="flex flex-col items-center gap-3 min-h-[36px] w-full">
+                                  <div className="flex items-center gap-4">
+                                    <Loader2 className="w-6 h-6 animate-spin text-white" />
+                                    <span className="text-lg font-semibold text-white">
+                                      {typeof processingStatus === 'string' ? processingStatus : 'Generating...'}
+                                    </span>
+                                    <span className="text-base opacity-70 font-mono tabular-nums bg-white/10 px-3 py-1 rounded-full text-white">
                                       {formatTime(generationTimer)}
                                     </span>
-                                  )}
+                                  </div>
+                                  <button
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      handleCancel();
+                                    }}
+                                    className="text-sm text-white/60 hover:text-white transition-opacity underline underline-offset-4 decoration-dotted"
+                                  >
+                                    Cancel
+                                  </button>
                                 </div>
-                              </div>
+                              ) : (
+                                <>
+                                  <Zap className="w-6 h-6 text-white transition-transform duration-500 group-hover/btn:scale-125 group-hover/btn:rotate-12" />
+                                  <span className="text-white">Generate My Jump</span>
+                                </>
+                              )}
                             </div>
-                          ) : (
-                            <>
-                              <Zap className="w-5 h-5" />
-                              <span className="text-base sm:text-lg font-semibold tracking-wide">
-                                Generate My Jump
-                              </span>
-                            </>
-                          )}
+                          </button>
                         </div>
-                      </button>
-                      
-                      {/* Cancel Button */}
-                      {isGenerating && (
-                        <button
-                          onClick={handleCancel}
-                          className="mt-4 w-full sm:w-auto sm:absolute sm:left-full sm:ml-6 sm:top-1/2 sm:-translate-y-1/2 sm:mt-0 px-6 py-3 rounded-xl border border-border hover:border-border/80 bg-card/50 hover:bg-card text-muted-foreground hover:text-foreground text-sm font-medium transition-all duration-200 shadow-sm"
-                        >
-                          Cancel
-                        </button>
-                      )}
-                    </div>
-                    
-                    {/* Trust indicators */}
-                    <div className="flex items-center justify-center gap-6 mt-6 text-xs text-muted-foreground">
-                      <span className="flex items-center gap-1.5">
-                        <div className="w-1.5 h-1.5 rounded-full bg-green-500"></div>
-                        2-minute generation
-                      </span>
-                      <span className="flex items-center gap-1.5">
-                        <div className="w-1.5 h-1.5 rounded-full bg-green-500"></div>
-                        Personalized roadmap
-                      </span>
+                        
+                        {/* Trust badges - Premium minimal (matches guest studio) */}
+                        <div className="flex items-center justify-center gap-8 mt-8 text-sm text-muted-foreground/60 font-medium">
+                          <span className="flex items-center gap-2.5">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500/70"></span>
+                            ~2 minutes
+                          </span>
+                          <span className="flex items-center gap-2.5">
+                            <span className="w-1.5 h-1.5 rounded-full bg-primary/50"></span>
+                            Personalized
+                          </span>
+                          <span className="flex items-center gap-2.5">
+                            <span className="w-1.5 h-1.5 rounded-full bg-amber-500/70"></span>
+                            Ready-to-use
+                          </span>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
