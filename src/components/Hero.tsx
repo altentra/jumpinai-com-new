@@ -155,33 +155,32 @@ const Hero = () => {
         </svg>
       </div>
       
-      {/* Flowing Gradient Ribbon - Top */}
-      <div 
-        className="absolute top-[10%] left-0 right-0 h-[1px] opacity-40 dark:opacity-30"
-        style={{
-          background: 'linear-gradient(90deg, transparent 0%, rgba(251, 191, 36, 0.8) 20%, rgba(20, 184, 166, 0.6) 50%, rgba(6, 182, 212, 0.8) 80%, transparent 100%)',
-          animation: 'ribbon-flow 8s ease-in-out infinite',
-          filter: 'blur(1px)'
-        }}
-      ></div>
-      
-      {/* Flowing Gradient Ribbon - Middle */}
-      <div 
-        className="absolute top-[45%] left-0 right-0 h-[1px] opacity-25 dark:opacity-20"
-        style={{
-          background: 'linear-gradient(90deg, transparent 0%, rgba(6, 182, 212, 0.6) 30%, rgba(251, 191, 36, 0.8) 70%, transparent 100%)',
-          animation: 'ribbon-flow-reverse 10s ease-in-out infinite',
-          filter: 'blur(1px)'
-        }}
-      ></div>
-      
-      {/* Shimmer Sweep */}
+      {/* Elegant Breathing Aurora */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        {/* Top aurora band */}
         <div 
-          className="absolute inset-0"
+          className="absolute top-0 left-[10%] right-[10%] h-[50%]"
           style={{
-            background: 'linear-gradient(105deg, transparent 0%, transparent 40%, rgba(255, 255, 255, 0.08) 45%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.08) 55%, transparent 60%, transparent 100%)',
-            animation: 'shimmer-sweep 6s ease-in-out infinite'
+            background: 'radial-gradient(ellipse 80% 50% at 50% 0%, rgba(251, 191, 36, 0.08) 0%, transparent 70%)',
+            animation: 'aurora-breathe 8s ease-in-out infinite'
+          }}
+        ></div>
+        
+        {/* Right side subtle glow */}
+        <div 
+          className="absolute top-[20%] right-0 w-[30%] h-[60%]"
+          style={{
+            background: 'radial-gradient(ellipse 50% 80% at 100% 50%, rgba(6, 182, 212, 0.06) 0%, transparent 70%)',
+            animation: 'aurora-breathe 10s ease-in-out infinite 2s'
+          }}
+        ></div>
+        
+        {/* Left side subtle glow */}
+        <div 
+          className="absolute top-[30%] left-0 w-[25%] h-[50%]"
+          style={{
+            background: 'radial-gradient(ellipse 50% 80% at 0% 50%, rgba(20, 184, 166, 0.05) 0%, transparent 70%)',
+            animation: 'aurora-breathe 12s ease-in-out infinite 1s'
           }}
         ></div>
       </div>
@@ -228,17 +227,9 @@ const Hero = () => {
           0%, 100% { opacity: 1; transform: scale(1); }
           50% { opacity: 0.5; transform: scale(1.2); }
         }
-        @keyframes ribbon-flow {
-          0%, 100% { transform: translateX(-30%) scaleX(1); opacity: 0.4; }
-          50% { transform: translateX(30%) scaleX(1.2); opacity: 0.6; }
-        }
-        @keyframes ribbon-flow-reverse {
-          0%, 100% { transform: translateX(20%) scaleX(1); opacity: 0.25; }
-          50% { transform: translateX(-20%) scaleX(1.1); opacity: 0.4; }
-        }
-        @keyframes shimmer-sweep {
-          0% { transform: translateX(-100%) rotate(-5deg); }
-          100% { transform: translateX(200%) rotate(-5deg); }
+        @keyframes aurora-breathe {
+          0%, 100% { opacity: 1; transform: scale(1); }
+          50% { opacity: 0.6; transform: scale(1.05); }
         }
         @keyframes center-glow {
           0%, 100% { opacity: 0.8; transform: scale(1); }
