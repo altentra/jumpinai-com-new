@@ -121,8 +121,8 @@ const InlineStudioSection = () => {
       ref={elementRef as React.RefObject<HTMLElement>}
       className="relative py-20 sm:py-24 lg:py-32 overflow-hidden"
     >
-      {/* Smooth Black Transition from Hero */}
-      <div className="absolute -top-32 inset-x-0 h-40 bg-gradient-to-b from-transparent via-black/40 to-black/20 pointer-events-none z-10"></div>
+      {/* Smooth Black Transition from Hero - Large and smooth */}
+      <div className="absolute -top-48 inset-x-0 h-64 bg-gradient-to-b from-transparent via-black/60 to-black pointer-events-none z-10"></div>
       
       {/* Premium Background System - Matching Hero Style */}
       <div className="absolute inset-0">
