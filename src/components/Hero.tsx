@@ -191,21 +191,22 @@ const Hero = () => {
       
       {/* Keyframe Animations */}
       <style>{`
+        /* NOTE: keep hero "alive" but avoid lateral movement that creates edge banding */
         @keyframes gradient-flow {
-          0%, 100% { opacity: 1; transform: translateX(0) translateY(0); }
-          50% { opacity: 0.8; transform: translateX(20px) translateY(-10px); }
+          0%, 100% { opacity: 1; transform: none; }
+          50% { opacity: 0.8; transform: none; }
         }
         @keyframes gradient-flow-reverse {
-          0%, 100% { opacity: 1; transform: translateX(0) translateY(0); }
-          50% { opacity: 0.7; transform: translateX(-25px) translateY(15px); }
+          0%, 100% { opacity: 1; transform: none; }
+          50% { opacity: 0.7; transform: none; }
         }
         @keyframes glow-pulse-1 {
-          0%, 100% { opacity: 1; transform: scale(1) translate(0, 0); }
-          50% { opacity: 0.7; transform: scale(1.1) translate(10px, 5px); }
+          0%, 100% { opacity: 1; transform: scale(1); }
+          50% { opacity: 0.7; transform: scale(1.1); }
         }
         @keyframes glow-pulse-2 {
-          0%, 100% { opacity: 1; transform: scale(1) translate(0, 0); }
-          50% { opacity: 0.6; transform: scale(1.15) translate(-15px, 10px); }
+          0%, 100% { opacity: 1; transform: scale(1); }
+          50% { opacity: 0.6; transform: scale(1.15); }
         }
         @keyframes glow-pulse-3 {
           0%, 100% { opacity: 1; transform: scale(1); }
