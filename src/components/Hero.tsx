@@ -167,14 +167,6 @@ const Hero = () => {
           }}
         ></div>
         
-        {/* Left side subtle glow */}
-        <div 
-          className="absolute top-[30%] left-0 w-[25%] h-[50%]"
-          style={{
-            background: 'radial-gradient(ellipse 50% 80% at 0% 50%, rgba(20, 184, 166, 0.05) 0%, transparent 70%)',
-            animation: 'aurora-breathe 12s ease-in-out infinite 1s'
-          }}
-        ></div>
       </div>
       
       {/* Subtle Radial Highlight - Center Focus */}
