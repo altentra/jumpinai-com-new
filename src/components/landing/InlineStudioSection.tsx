@@ -121,11 +121,12 @@ const InlineStudioSection = () => {
       ref={elementRef as React.RefObject<HTMLElement>}
       className="relative py-20 sm:py-24 lg:py-32 overflow-hidden"
     >
-      {/* Smooth Black Transition from Hero - Ultra-smooth multi-stop gradient */}
-      <div 
+      {/* Smooth Black Transition from Hero - Black strip with feathered top+bottom edges */}
+      <div
         className="absolute -top-64 inset-x-0 h-96 pointer-events-none z-10"
         style={{
-          background: 'linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.03) 15%, rgba(0,0,0,0.08) 30%, rgba(0,0,0,0.18) 45%, rgba(0,0,0,0.35) 60%, rgba(0,0,0,0.55) 75%, rgba(0,0,0,0.75) 88%, rgba(0,0,0,0.85) 100%)'
+          background:
+            'linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.25) 12%, rgba(0,0,0,0.75) 28%, rgba(0,0,0,0.92) 40%, rgba(0,0,0,0.92) 60%, rgba(0,0,0,0.75) 72%, rgba(0,0,0,0.25) 88%, transparent 100%)',
         }}
       ></div>
       
