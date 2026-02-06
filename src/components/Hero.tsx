@@ -168,7 +168,7 @@ const Hero = () => {
                   textShadow: '0 4px 20px rgba(0, 0, 0, 0.25), 0 8px 40px rgba(251, 191, 36, 0.3), 0 2px 4px rgba(0, 0, 0, 0.15)' 
                 }}
               >
-                AI Adaptation Studio
+                Start Using AI.
               </span>
               <span 
                 className="block gradient-text-primary mt-2 pb-1"
@@ -176,13 +176,13 @@ const Hero = () => {
                   textShadow: '0 4px 20px rgba(0, 0, 0, 0.25), 0 8px 40px rgba(59, 130, 246, 0.3), 0 2px 4px rgba(0, 0, 0, 0.15)' 
                 }}
               >
-                that Clarifies and Builds Your Path Forward
+                In Your Best Way Possible.
               </span>
             </h1>
             
             {/* Body Text */}
             <p className="text-sm sm:text-base md:text-lg text-muted-foreground mb-8 sm:mb-10 max-w-4xl mx-auto lg:mx-0 leading-relaxed font-light px-4 lg:px-0">
-              AI is advancing fast, and effective adaptation demands clarity. JumpinAI delivers implementation plans designed around your goals, with clear steps, tailored prompts, and the right tools. Then it analyzes your strategy for automation opportunities and builds ready-to-deploy AI agents—taking you from vision to execution with confidence.
+              Clarify your AI strategy with a roadmap designed for your specific goals. Get tool-prompt combinations perfectly crafted for each step. Deploy workflows for predictable processes or intelligent AI agents for complex decisions. Build your unstoppable competitive advantage in the new era of AI.
             </p>
             
             {/* Call to Action Button */}
