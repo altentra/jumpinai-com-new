@@ -115,15 +115,7 @@ const Hero = () => {
               <circle cx="20" cy="20" r="1" fill="url(#dot-gradient)">
                 <animate attributeName="r" values="1;1.5;1" dur="3s" repeatCount="indefinite" />
               </circle>
-            </pattern>
-            
-            {/* Flowing wave mask */}
-            <mask id="wave-mask">
-              <rect width="100%" height="100%" fill="white" />
-              <rect x="-100%" y="0" width="100%" height="100%" fill="black">
-                <animate attributeName="x" values="-100%;200%" dur="20s" repeatCount="indefinite" />
-              </rect>
-            </mask>
+          </pattern>
           </defs>
           
           {/* Main dot grid */}
