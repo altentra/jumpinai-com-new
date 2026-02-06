@@ -189,8 +189,8 @@ const InlineStudioSection = () => {
           </svg>
         </div>
         
-        {/* SIMPLE BLACK OVERLAY TO DARKEN - 15% opacity */}
-        <div className="absolute inset-0 bg-black/[0.15] dark:bg-black/[0.20]"></div>
+        {/* SIMPLE BLACK OVERLAY TO DARKEN - 30% opacity */}
+        <div className="absolute inset-0 bg-black/[0.30] dark:bg-black/[0.30]"></div>
       </div>
       
       {/* Keyframe Animations */}
