@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { Sparkles, GitBranch, Wrench, ArrowRight, ChevronDown, Route, Compass, Bot, Workflow, Zap, Target, Cog, Play, Brain, Settings, CheckCircle2, Clock, Shield, Download } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Navigation from "@/components/Navigation";
@@ -253,6 +254,17 @@ const Index = () => {
 
   return (
     <div className="min-h-screen scroll-snap-container overflow-x-hidden bg-gradient-to-br from-background via-background/90 to-primary/5 dark:bg-gradient-to-br dark:from-black dark:via-gray-950/90 dark:to-gray-900/60">
+      <Helmet>
+        <title>JumpinAI – Start Using AI. In Your Best Way Possible.</title>
+        <meta property="og:title" content="JumpinAI – Start Using AI. In Your Best Way Possible." />
+        <meta property="og:description" content="JumpinAI is an AI Adaptation Studio helping entrepreneurs and small businesses clarify AI strategy with customized roadmaps, expertly crafted tool-prompt combinations, seamlessly integrated workflows, and intelligent AI agents. Build your competitive advantage." />
+        <meta property="og:image" content="https://jumpinai.com/logo.jpg" />
+        <meta property="og:url" content="https://jumpinai.com/" />
+        <meta name="twitter:title" content="JumpinAI – Start Using AI. In Your Best Way Possible." />
+        <meta name="twitter:description" content="JumpinAI is an AI Adaptation Studio helping entrepreneurs & small businesses navigate AI adoption with clarity and confidence. Customized roadmaps, tool-prompt combinations, workflows & AI agents." />
+        <meta name="twitter:image" content="https://jumpinai.com/logo.jpg" />
+        <link rel="canonical" href="https://jumpinai.com/" />
+      </Helmet>
       {/* Enhanced floating background elements - positioned to not interfere with hero */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none opacity-30 dark:opacity-100">
         <div className="absolute -top-40 -right-40 w-96 h-96 bg-gradient-to-br from-primary/20 to-primary/5 dark:bg-gradient-to-br dark:from-gray-800/30 dark:to-gray-700/15 rounded-full blur-3xl"></div>
