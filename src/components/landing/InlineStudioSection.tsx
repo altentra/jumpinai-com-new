@@ -121,168 +121,72 @@ const InlineStudioSection = () => {
       ref={elementRef as React.RefObject<HTMLElement>}
       className="relative py-20 sm:py-24 lg:py-32 overflow-hidden"
     >
-      {/* Premium Background System - Matching Hero Style (Slightly Deeper) */}
+      {/* Smooth Black Transition from Hero */}
+      <div className="absolute -top-32 inset-x-0 h-40 bg-gradient-to-b from-transparent via-black/50 to-black pointer-events-none z-10"></div>
+      
+      {/* Premium Dark Background System */}
       <div className="absolute inset-0">
-        {/* Base gradient - matches Hero but slightly deeper */}
-        <div className="absolute inset-0 bg-gradient-to-br from-amber-50/70 via-slate-50/90 to-cyan-50/50 dark:from-[#0f0d0a] dark:via-[#0c1420] dark:to-[#0a1018]"></div>
+        {/* Deep black base */}
+        <div className="absolute inset-0 bg-gradient-to-br from-zinc-950 via-black to-zinc-950 dark:from-black dark:via-[#050508] dark:to-black"></div>
         
-        {/* Primary Gradient Flow - Golden Warmth (visible!) */}
+        {/* Subtle color hints - very muted */}
         <div 
           className="absolute inset-0"
           style={{
-            background: 'linear-gradient(135deg, rgba(251, 191, 36, 0.2) 0%, rgba(245, 158, 11, 0.12) 25%, transparent 50%, rgba(6, 182, 212, 0.08) 75%, rgba(34, 211, 238, 0.12) 100%)',
-            animation: 'gradient-flow 20s ease-in-out infinite'
+            background: 'linear-gradient(135deg, rgba(251, 191, 36, 0.04) 0%, transparent 30%, transparent 70%, rgba(6, 182, 212, 0.03) 100%)',
           }}
         ></div>
         
-        {/* Secondary Gradient Flow - Teal Accent */}
+        {/* Very subtle radial glow - Golden */}
         <div 
-          className="absolute inset-0"
+          className="absolute -top-[10%] -left-[10%] w-[50%] h-[50%]"
           style={{
-            background: 'linear-gradient(-45deg, rgba(20, 184, 166, 0.12) 0%, transparent 40%, transparent 60%, rgba(251, 191, 36, 0.1) 100%)',
-            animation: 'gradient-flow-reverse 25s ease-in-out infinite'
-          }}
-        ></div>
-        
-        {/* Radial Glow - Top Left Golden (BRIGHT) */}
-        <div 
-          className="absolute -top-[15%] -left-[10%] w-[55%] h-[55%]"
-          style={{
-            background: 'radial-gradient(ellipse at center, rgba(251, 191, 36, 0.25) 0%, rgba(245, 158, 11, 0.12) 30%, transparent 60%)',
+            background: 'radial-gradient(ellipse at center, rgba(251, 191, 36, 0.06) 0%, transparent 50%)',
             filter: 'blur(80px)',
             animation: 'glow-pulse-1 12s ease-in-out infinite'
           }}
         ></div>
         
-        {/* Radial Glow - Top Right Cyan */}
+        {/* Very subtle radial glow - Cyan */}
         <div 
-          className="absolute -top-[10%] -right-[10%] w-[45%] h-[45%]"
+          className="absolute -top-[5%] -right-[10%] w-[40%] h-[40%]"
           style={{
-            background: 'radial-gradient(ellipse at center, rgba(6, 182, 212, 0.2) 0%, rgba(20, 184, 166, 0.1) 40%, transparent 65%)',
+            background: 'radial-gradient(ellipse at center, rgba(6, 182, 212, 0.05) 0%, transparent 50%)',
             filter: 'blur(70px)',
             animation: 'glow-pulse-2 15s ease-in-out infinite'
           }}
         ></div>
         
-        {/* Radial Glow - Bottom Center Warm */}
-        <div 
-          className="absolute bottom-[-10%] left-[20%] w-[60%] h-[50%]"
-          style={{
-            background: 'radial-gradient(ellipse at center, rgba(251, 146, 60, 0.15) 0%, rgba(251, 191, 36, 0.08) 50%, transparent 70%)',
-            filter: 'blur(60px)',
-            animation: 'glow-pulse-3 18s ease-in-out infinite'
-          }}
-        ></div>
-        
-        {/* Animated Dot Matrix - HIGH VISIBILITY */}
+        {/* Subtle Dot Matrix - very low opacity for depth */}
         <div className="absolute inset-0 overflow-hidden">
           <svg className="absolute inset-0 w-full h-full" xmlns="http://www.w3.org/2000/svg">
             <defs>
-              {/* Gradient for dots - BRIGHTER */}
               <linearGradient id="inline-dot-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="rgb(251, 191, 36)" stopOpacity="0.8">
-                  <animate attributeName="stop-opacity" values="0.8;1;0.8" dur="4s" repeatCount="indefinite" />
-                </stop>
-                <stop offset="50%" stopColor="rgb(20, 184, 166)" stopOpacity="0.7">
-                  <animate attributeName="stop-opacity" values="0.7;0.9;0.7" dur="4s" repeatCount="indefinite" begin="0.5s" />
-                </stop>
-                <stop offset="100%" stopColor="rgb(6, 182, 212)" stopOpacity="0.8">
-                  <animate attributeName="stop-opacity" values="0.8;1;0.8" dur="4s" repeatCount="indefinite" begin="1s" />
-                </stop>
+                <stop offset="0%" stopColor="rgb(251, 191, 36)" stopOpacity="0.5" />
+                <stop offset="50%" stopColor="rgb(20, 184, 166)" stopOpacity="0.4" />
+                <stop offset="100%" stopColor="rgb(6, 182, 212)" stopOpacity="0.5" />
               </linearGradient>
-              
-              {/* Dot pattern - LARGER dots, tighter spacing */}
-              <pattern id="inline-dot-matrix" width="40" height="40" patternUnits="userSpaceOnUse">
-                <circle cx="20" cy="20" r="1.5" fill="url(#inline-dot-gradient)">
-                  <animate attributeName="r" values="1.5;2;1.5" dur="3s" repeatCount="indefinite" />
-                </circle>
+              <pattern id="inline-dot-matrix" width="60" height="60" patternUnits="userSpaceOnUse">
+                <circle cx="30" cy="30" r="0.8" fill="url(#inline-dot-gradient)" />
               </pattern>
             </defs>
-            
-            {/* Main dot grid - MUCH MORE VISIBLE */}
-            <rect 
-              width="100%" 
-              height="100%" 
-              fill="url(#inline-dot-matrix)" 
-              className="opacity-[0.2] dark:opacity-[0.35]"
-            />
-            
-            {/* Animated connection lines - MORE VISIBLE */}
-            <g className="opacity-[0.08] dark:opacity-[0.15]" stroke="url(#inline-dot-gradient)" strokeWidth="0.8" fill="none">
-              <path d="M0,100 Q400,70 800,100 T1600,100">
-                <animate attributeName="d" 
-                  values="M0,100 Q400,70 800,100 T1600,100;M0,100 Q400,130 800,100 T1600,100;M0,100 Q400,70 800,100 T1600,100" 
-                  dur="10s" repeatCount="indefinite" />
-              </path>
-              <path d="M0,200 Q400,170 800,200 T1600,200">
-                <animate attributeName="d" 
-                  values="M0,200 Q400,170 800,200 T1600,200;M0,200 Q400,230 800,200 T1600,200;M0,200 Q400,170 800,200 T1600,200" 
-                  dur="12s" repeatCount="indefinite" />
-              </path>
-              <path d="M0,300 Q400,270 800,300 T1600,300">
-                <animate attributeName="d" 
-                  values="M0,300 Q400,270 800,300 T1600,300;M0,300 Q400,330 800,300 T1600,300;M0,300 Q400,270 800,300 T1600,300" 
-                  dur="14s" repeatCount="indefinite" />
-              </path>
-            </g>
+            <rect width="100%" height="100%" fill="url(#inline-dot-matrix)" className="opacity-[0.08] dark:opacity-[0.12]" />
           </svg>
         </div>
         
-        {/* Elegant Breathing Aurora - BRIGHTER */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div 
-            className="absolute top-0 left-[10%] right-[10%] h-[50%]"
-            style={{
-              background: 'radial-gradient(ellipse 80% 50% at 50% 0%, rgba(251, 191, 36, 0.12) 0%, transparent 70%)',
-              animation: 'aurora-breathe 8s ease-in-out infinite'
-            }}
-          ></div>
-          <div 
-            className="absolute top-[20%] right-0 w-[30%] h-[60%]"
-            style={{
-              background: 'radial-gradient(ellipse 50% 80% at 100% 50%, rgba(6, 182, 212, 0.1) 0%, transparent 70%)',
-              animation: 'aurora-breathe 10s ease-in-out infinite 2s'
-            }}
-          ></div>
-        </div>
-        
-        {/* Soft Vignette - LIGHTER */}
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_70%_at_50%_50%,transparent_0%,rgba(0,0,0,0.01)_70%,rgba(0,0,0,0.03)_100%)] dark:bg-[radial-gradient(ellipse_80%_70%_at_50%_50%,transparent_0%,rgba(0,0,0,0.08)_60%,rgba(0,0,0,0.15)_100%)]"></div>
-        
-        {/* Ultra-Fine Noise Texture */}
-        <div className="absolute inset-0 opacity-[0.02] dark:opacity-[0.03] mix-blend-overlay pointer-events-none">
-          <div className="absolute inset-0" style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
-            backgroundSize: '128px 128px'
-          }}></div>
-        </div>
+        {/* Deep vignette for focus on card */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_50%_50%,transparent_0%,rgba(0,0,0,0.4)_70%,rgba(0,0,0,0.7)_100%)]"></div>
       </div>
       
       {/* Keyframe Animations */}
       <style>{`
-        @keyframes gradient-flow {
-          0%, 100% { opacity: 1; transform: translateX(0) translateY(0); }
-          50% { opacity: 0.8; transform: translateX(20px) translateY(-10px); }
-        }
-        @keyframes gradient-flow-reverse {
-          0%, 100% { opacity: 1; transform: translateX(0) translateY(0); }
-          50% { opacity: 0.7; transform: translateX(-25px) translateY(15px); }
-        }
         @keyframes glow-pulse-1 {
-          0%, 100% { opacity: 1; transform: scale(1) translate(0, 0); }
-          50% { opacity: 0.7; transform: scale(1.1) translate(10px, 5px); }
-        }
-        @keyframes glow-pulse-2 {
-          0%, 100% { opacity: 1; transform: scale(1) translate(0, 0); }
-          50% { opacity: 0.6; transform: scale(1.15) translate(-15px, 10px); }
-        }
-        @keyframes glow-pulse-3 {
-          0%, 100% { opacity: 1; transform: scale(1); }
-          50% { opacity: 0.5; transform: scale(1.2); }
-        }
-        @keyframes aurora-breathe {
           0%, 100% { opacity: 1; transform: scale(1); }
           50% { opacity: 0.6; transform: scale(1.05); }
+        }
+        @keyframes glow-pulse-2 {
+          0%, 100% { opacity: 1; transform: scale(1); }
+          50% { opacity: 0.5; transform: scale(1.08); }
         }
       `}</style>
       
