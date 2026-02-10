@@ -144,7 +144,7 @@ export const StudioTextarea = forwardRef<HTMLTextAreaElement, StudioTextareaProp
               "placeholder:text-foreground/50 dark:placeholder:text-foreground/40",
               "placeholder:font-medium",
               // Text styling - excellent readability
-              "text-foreground text-[15px] sm:text-base leading-[1.75] font-medium",
+              "text-foreground text-base leading-[1.75] font-medium",
               "resize-none",
               "transition-colors duration-200",
               "focus:outline-none",

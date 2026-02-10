@@ -248,17 +248,21 @@ const InlineStudioSection = () => {
             
             {/* Card with glassmorphism */}
             <div className="relative rounded-[32px] sm:rounded-[40px] overflow-hidden 
-              bg-white/70 dark:bg-zinc-900/70
+              bg-gradient-to-br from-white/75 via-zinc-50/70 to-white/65 
+              dark:from-zinc-900/80 dark:via-zinc-800/60 dark:to-zinc-900/75
               backdrop-blur-2xl
-              border border-white/40 dark:border-white/[0.12]
-              shadow-[0_32px_100px_-20px_rgba(0,0,0,0.15),0_0_0_1px_rgba(255,255,255,0.1)_inset]
-              dark:shadow-[0_32px_100px_-20px_rgba(0,0,0,0.6),0_0_0_1px_rgba(255,255,255,0.05)_inset]">
+              border border-zinc-300/50 dark:border-zinc-600/30
+              shadow-[0_8px_32px_-4px_rgba(0,0,0,0.08),0_32px_80px_-12px_rgba(0,0,0,0.12),0_0_0_1px_rgba(255,255,255,0.15)_inset,0_2px_0_rgba(255,255,255,0.2)_inset]
+              dark:shadow-[0_8px_32px_-4px_rgba(0,0,0,0.3),0_32px_80px_-12px_rgba(0,0,0,0.5),0_0_0_1px_rgba(255,255,255,0.06)_inset,0_2px_0_rgba(255,255,255,0.03)_inset]">
               
-              {/* Premium top highlight - rainbow shimmer */}
-              <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/80 dark:via-white/30 to-transparent"></div>
+              {/* Premium top highlight - refined shimmer */}
+              <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-amber-200/40 dark:via-amber-500/20 to-transparent"></div>
               
-              {/* Subtle inner glow */}
-              <div className="absolute inset-0 bg-gradient-to-br from-white/50 via-transparent to-transparent dark:from-white/5 pointer-events-none"></div>
+              {/* Bottom subtle edge */}
+              <div className="absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-zinc-400/20 dark:via-zinc-500/10 to-transparent"></div>
+              
+              {/* Subtle inner glow - warm tint */}
+              <div className="absolute inset-0 bg-gradient-to-br from-amber-50/30 via-transparent to-cyan-50/10 dark:from-amber-900/5 dark:to-cyan-900/5 pointer-events-none"></div>
               
               {/* Content */}
               <div className="relative p-8 sm:p-10 md:p-12 lg:p-14">
