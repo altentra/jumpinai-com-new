@@ -344,20 +344,13 @@ const InlineStudioSection = () => {
                         </button>
                       </div>
                       
-                      {/* Trust badges - Premium minimal (matches JumpinAIStudio) */}
-                      <div className="flex items-center justify-center gap-8 mt-8 text-sm text-muted-foreground/60 font-medium">
-                        <span className="flex items-center gap-2.5">
-                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500/70"></span>
-                          ~2 minutes
-                        </span>
-                        <span className="flex items-center gap-2.5">
-                          <span className="w-1.5 h-1.5 rounded-full bg-primary/50"></span>
-                          Personalized
-                        </span>
-                        <span className="flex items-center gap-2.5">
-                          <span className="w-1.5 h-1.5 rounded-full bg-amber-500/70"></span>
-                          Ready-to-use
-                        </span>
+                      {/* Refined trust signals */}
+                      <div className="flex items-center justify-center gap-3 sm:gap-4 mt-8 text-[13px] sm:text-sm text-muted-foreground/50 font-medium tracking-wide">
+                        <span>AI-Powered Strategy</span>
+                        <span className="w-px h-3 bg-muted-foreground/20"></span>
+                        <span>Tailored to You</span>
+                        <span className="w-px h-3 bg-muted-foreground/20"></span>
+                        <span>Implementation-Ready</span>
                       </div>
                     </div>
                   </div>
