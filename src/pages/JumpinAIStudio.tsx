@@ -529,22 +529,33 @@ const JumpinAIStudio = () => {
         onMouseLeave={handleStudioMouseLeave}
         className="min-h-screen scroll-snap-container relative overflow-hidden"
       >
-        {/* Premium Background System - Dark base for contrast */}
-        <div className="fixed inset-0 bg-gradient-to-br from-muted/60 via-background to-muted/40 dark:from-background dark:via-background dark:to-muted/30"></div>
-        
-        {/* Subtle noise texture for premium feel */}
-        <div className="fixed inset-0 opacity-[0.015] dark:opacity-[0.03] pointer-events-none" style={{backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 400 400\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E")'}}></div>
-        
-        {/* Interactive Dot Matrix */}
-        <div className="absolute inset-0 pointer-events-none" style={{ minHeight: '100%' }}>
-          <HeroDotMatrix isDark={studioIsDark} mousePos={studioMousePos} />
-        </div>
-        
-        {/* Premium ambient orbs with stronger presence */}
-        <div className="fixed inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-[-15%] right-[5%] w-[700px] h-[700px] bg-primary/[0.12] dark:bg-primary/[0.08] rounded-full blur-[150px] animate-pulse" style={{animationDuration: '10s'}}></div>
-          <div className="absolute bottom-[-10%] left-[-5%] w-[600px] h-[600px] bg-accent/[0.08] dark:bg-accent/[0.05] rounded-full blur-[130px] animate-pulse" style={{animationDuration: '12s', animationDelay: '3s'}}></div>
-          <div className="absolute top-[30%] left-[40%] w-[500px] h-[500px] bg-secondary/[0.06] rounded-full blur-[100px]"></div>
+        {/* Premium Background System - Matching InlineStudioSection */}
+        <div className="absolute inset-0">
+          {/* Base gradient */}
+          <div className="absolute inset-0 bg-gradient-to-br from-amber-50/70 via-slate-50/90 to-cyan-50/50 dark:from-[#0f0d0a] dark:via-[#0c1420] dark:to-[#0a1018]"></div>
+          
+          {/* Primary Gradient Flow - Golden Warmth */}
+          <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg, rgba(251, 191, 36, 0.2) 0%, rgba(245, 158, 11, 0.12) 25%, transparent 50%, rgba(6, 182, 212, 0.08) 75%, rgba(34, 211, 238, 0.12) 100%)' }}></div>
+          
+          {/* Secondary Gradient Flow - Teal Accent */}
+          <div className="absolute inset-0" style={{ background: 'linear-gradient(-45deg, rgba(20, 184, 166, 0.12) 0%, transparent 40%, transparent 60%, rgba(251, 191, 36, 0.1) 100%)' }}></div>
+          
+          {/* Radial Glow - Top Left Golden */}
+          <div className="absolute -top-[15%] -left-[10%] w-[55%] h-[55%]" style={{ background: 'radial-gradient(ellipse at center, rgba(251, 191, 36, 0.25) 0%, rgba(245, 158, 11, 0.12) 30%, transparent 60%)', filter: 'blur(80px)' }}></div>
+          
+          {/* Radial Glow - Top Right Cyan */}
+          <div className="absolute -top-[10%] -right-[10%] w-[45%] h-[45%]" style={{ background: 'radial-gradient(ellipse at center, rgba(6, 182, 212, 0.2) 0%, rgba(20, 184, 166, 0.1) 40%, transparent 65%)', filter: 'blur(70px)' }}></div>
+          
+          {/* Radial Glow - Bottom Center Warm */}
+          <div className="absolute bottom-[-10%] left-[20%] w-[60%] h-[50%]" style={{ background: 'radial-gradient(ellipse at center, rgba(251, 146, 60, 0.15) 0%, rgba(251, 191, 36, 0.08) 50%, transparent 70%)', filter: 'blur(60px)' }}></div>
+          
+          {/* Interactive Dot Matrix */}
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            <HeroDotMatrix isDark={studioIsDark} mousePos={studioMousePos} />
+          </div>
+          
+          {/* Black overlay to darken - 30% opacity */}
+          <div className="absolute inset-0 bg-black/[0.30] dark:bg-black/[0.30]"></div>
         </div>
         
         
