@@ -38,8 +38,8 @@ const HeroDotMatrix = ({ isDark, mousePos }: DotMatrixProps) => {
     const mx = mousePosRef.current.x;
     const my = mousePosRef.current.y;
 
-    const baseAlpha = isDark ? 0.35 : 0.25;
-    const peakAlpha = isDark ? 0.95 : 0.85;
+    const baseAlpha = isDark ? 0.45 : 0.32;
+    const peakAlpha = isDark ? 0.95 : 0.9;
 
     for (let x = spacing / 2; x < w; x += spacing) {
       for (let y = spacing / 2; y < h; y += spacing) {
@@ -55,13 +55,25 @@ const HeroDotMatrix = ({ isDark, mousePos }: DotMatrixProps) => {
 
         let color: string;
         if (eased > 0.01) {
+          // Premium multi-tone glow: white-hot core blending to amber/cyan at edges
           const colorMix = ((x + y) % (spacing * 4)) / (spacing * 4);
+          const innerBlend = Math.min(1, eased * 2.5); // stronger white at center
+          
           if (colorMix < 0.5) {
-            color = `rgba(251, 191, 36, ${alpha})`;
+            // Amber path: white → warm gold
+            const rr = Math.round(255 * innerBlend + 220 * (1 - innerBlend));
+            const gg = Math.round(255 * innerBlend + 170 * (1 - innerBlend));
+            const bb = Math.round(255 * innerBlend + 60 * (1 - innerBlend));
+            color = `rgba(${rr}, ${gg}, ${bb}, ${alpha})`;
           } else {
-            color = `rgba(6, 182, 212, ${alpha})`;
+            // Cyan path: white → electric blue
+            const rr = Math.round(255 * innerBlend + 100 * (1 - innerBlend));
+            const gg = Math.round(255 * innerBlend + 210 * (1 - innerBlend));
+            const bb = Math.round(255 * innerBlend + 255 * (1 - innerBlend));
+            color = `rgba(${rr}, ${gg}, ${bb}, ${alpha})`;
           }
         } else {
+          // Base neutral dots
           if (isDark) {
             color = `rgba(148, 163, 184, ${alpha})`;
           } else {
