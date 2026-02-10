@@ -316,7 +316,7 @@ const Hero = () => {
             
             {/* Body Text */}
             <p className="text-sm sm:text-base md:text-lg text-muted-foreground mb-8 sm:mb-10 max-w-4xl mx-auto lg:mx-0 leading-relaxed font-light px-4 lg:px-0">
-              Clarify your AI strategy with a roadmap designed for your specific goals. Through adaptive planning, we ensure every element aligns with how you work and what you're building toward. You'll receive tool-prompt combinations perfectly crafted for each phase, seamlessly integrated workflows for consistent execution, and intelligent AI agents for sophisticated decision-making. Build your unstoppable competitive advantage in the new era of AI.
+              Navigate AI adoption with confidence. Clarify your AI strategy with a roadmap tailored to your specific goals - adaptable at every stage. You'll receive expertly crafted tool-prompt combinations, seamlessly integrated workflows, and intelligent AI agents - all designed for seamless integration into your daily work. Your competitive advantage in the AI era starts here.
             </p>
             
             {/* Call to Action Button */}
