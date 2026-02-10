@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import HeroDotMatrix from '@/components/HeroDotMatrix';
 import { Helmet } from 'react-helmet-async';
 import { AlertCircle, Loader2, LogIn, Zap } from 'lucide-react';
 import { Turnstile, type TurnstileInstance } from '@marsidev/react-turnstile';
@@ -95,9 +96,22 @@ const JumpinAIStudio = () => {
   // State
   const [generationTimer, setGenerationTimer] = useState(0);
   const [turnstileToken, setTurnstileToken] = useState<string | null>(incomingState?.turnstileToken || null);
+  const [studioIsDark, setStudioIsDark] = useState(false);
   const [guestUsageInfo, setGuestUsageInfo] = useState<{ usageCount: number; remaining: number } | null>(null);
   const [isLoadingGuestInfo, setIsLoadingGuestInfo] = useState(true);
   const [sttUsed, setSttUsed] = useState(incomingState?.goalsUsedStt || incomingState?.challengesUsedStt || false);
+  const [studioMousePos, setStudioMousePos] = useState({ x: -1000, y: -1000 });
+  const studioContainerRef = useRef<HTMLDivElement>(null);
+
+  const handleStudioMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = studioContainerRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    setStudioMousePos({ x: e.clientX - rect.left, y: e.clientY - rect.top + (studioContainerRef.current?.scrollTop || 0) });
+  }, []);
+
+  const handleStudioMouseLeave = useCallback(() => {
+    setStudioMousePos({ x: -1000, y: -1000 });
+  }, []);
   
   // Input method tracking state - initialize from incoming state if available
   const [goalsUsedStt, setGoalsUsedStt] = useState(incomingState?.goalsUsedStt || false);
@@ -172,6 +186,15 @@ const JumpinAIStudio = () => {
       throw error;
     }
   }, [result?.jumpId]);
+
+  // Theme detection
+  useEffect(() => {
+    const check = () => setStudioIsDark(document.documentElement.classList.contains('dark'));
+    check();
+    const obs = new MutationObserver(check);
+    obs.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    return () => obs.disconnect();
+  }, []);
 
   // Add noindex meta tag
   useEffect(() => {
@@ -500,12 +523,22 @@ const JumpinAIStudio = () => {
         <meta name="description" content="Your AI-powered workspace for creating and managing strategic transformations with intelligent guidance." />
       </Helmet>
       
-      <div className="min-h-screen scroll-snap-container relative overflow-hidden">
+      <div 
+        ref={studioContainerRef}
+        onMouseMove={handleStudioMouseMove}
+        onMouseLeave={handleStudioMouseLeave}
+        className="min-h-screen scroll-snap-container relative overflow-hidden"
+      >
         {/* Premium Background System - Dark base for contrast */}
         <div className="fixed inset-0 bg-gradient-to-br from-muted/60 via-background to-muted/40 dark:from-background dark:via-background dark:to-muted/30"></div>
         
         {/* Subtle noise texture for premium feel */}
         <div className="fixed inset-0 opacity-[0.015] dark:opacity-[0.03] pointer-events-none" style={{backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 400 400\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E")'}}></div>
+        
+        {/* Interactive Dot Matrix */}
+        <div className="fixed inset-0 pointer-events-none">
+          <HeroDotMatrix isDark={studioIsDark} mousePos={studioMousePos} />
+        </div>
         
         {/* Premium ambient orbs with stronger presence */}
         <div className="fixed inset-0 overflow-hidden pointer-events-none">
@@ -514,8 +547,7 @@ const JumpinAIStudio = () => {
           <div className="absolute top-[30%] left-[40%] w-[500px] h-[500px] bg-secondary/[0.06] rounded-full blur-[100px]"></div>
         </div>
         
-        {/* Refined grid pattern */}
-        <div className="fixed inset-0 bg-[linear-gradient(hsl(var(--foreground)/0.02)_1px,transparent_1px),linear-gradient(90deg,hsl(var(--foreground)/0.02)_1px,transparent_1px)] bg-[size:60px_60px] dark:bg-[linear-gradient(hsl(var(--foreground)/0.015)_1px,transparent_1px),linear-gradient(90deg,hsl(var(--foreground)/0.015)_1px,transparent_1px)] pointer-events-none"></div>
+        
         
         <Navigation />
         
