@@ -10,7 +10,8 @@ import { supabase } from "@/integrations/supabase/client";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Helmet, HelmetProvider } from "react-helmet-async";
-const logo = "/logo.jpg";
+import logoImg from "@/assets/logo.png";
+const logo = logoImg;
 
 // Component to handle lead magnet functionality
 const LeadMagnetButton = () => {
