@@ -1,4 +1,5 @@
 import React, { useState, useRef, useMemo, useCallback } from 'react';
+import HeroDotMatrix from '@/components/HeroDotMatrix';
 import { useNavigate } from 'react-router-dom';
 import { Loader2, Zap } from 'lucide-react';
 import { Turnstile, type TurnstileInstance } from '@marsidev/react-turnstile';
@@ -14,6 +15,18 @@ const TURNSTILE_TEST_SITE_KEY = '1x00000000000000000000AA';
 const InlineStudioSection = () => {
   const navigate = useNavigate();
   const { elementRef, scrollProgress } = useScrollAnimation({ threshold: 0.15 });
+  const sectionRef = useRef<HTMLElement>(null);
+  const [mousePos, setMousePos] = useState({ x: -1000, y: -1000 });
+
+  const handleSectionMouseMove = useCallback((e: React.MouseEvent<HTMLElement>) => {
+    const rect = sectionRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    setMousePos({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+  }, []);
+
+  const handleSectionMouseLeave = useCallback(() => {
+    setMousePos({ x: -1000, y: -1000 });
+  }, []);
   
   // Form state
   const [goals, setGoals] = useState('');
@@ -118,7 +131,12 @@ const InlineStudioSection = () => {
   return (
     <section 
       id="inline-studio"
-      ref={elementRef as React.RefObject<HTMLElement>}
+      ref={(el) => {
+        (elementRef as React.MutableRefObject<HTMLElement | null>).current = el;
+        (sectionRef as React.MutableRefObject<HTMLElement | null>).current = el;
+      }}
+      onMouseMove={handleSectionMouseMove}
+      onMouseLeave={handleSectionMouseLeave}
       className="relative py-20 sm:py-24 lg:py-32 overflow-hidden"
     >
       {/* Smooth Black Transition from Hero - Black strip with feathered top+bottom edges */}
@@ -178,21 +196,9 @@ const InlineStudioSection = () => {
           }}
         ></div>
         
-        {/* Animated Dot Matrix */}
+        {/* Interactive Dot Matrix - same as Hero */}
         <div className="absolute inset-0 overflow-hidden">
-          <svg className="absolute inset-0 w-full h-full" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <linearGradient id="inline-dot-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="rgb(251, 191, 36)" stopOpacity="0.8" />
-                <stop offset="50%" stopColor="rgb(20, 184, 166)" stopOpacity="0.7" />
-                <stop offset="100%" stopColor="rgb(6, 182, 212)" stopOpacity="0.8" />
-              </linearGradient>
-              <pattern id="inline-dot-matrix" width="40" height="40" patternUnits="userSpaceOnUse">
-                <circle cx="20" cy="20" r="1.2" fill="url(#inline-dot-gradient)" />
-              </pattern>
-            </defs>
-            <rect width="100%" height="100%" fill="url(#inline-dot-matrix)" className="opacity-[0.15] dark:opacity-[0.25]" />
-          </svg>
+          <HeroDotMatrix isDark={true} mousePos={mousePos} />
         </div>
         
         {/* SIMPLE BLACK OVERLAY TO DARKEN - 30% opacity */}
