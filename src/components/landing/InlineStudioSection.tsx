@@ -345,7 +345,7 @@ const InlineStudioSection = () => {
                       </div>
                       
                       {/* Refined trust signals - color coded */}
-                      <div className="flex items-center justify-center gap-3.5 sm:gap-5 mt-8 text-[12px] sm:text-[13px] font-semibold uppercase tracking-[0.12em]">
+                      <div className="flex items-center justify-center gap-3.5 sm:gap-5 mt-8 text-[11px] sm:text-xs font-medium tracking-wide">
                         <span className="flex items-center gap-2">
                           <span className="w-1 h-1 rounded-full bg-cyan-400/80"></span>
                           <span className="text-cyan-600/70 dark:text-cyan-400/60">AI-Powered Strategy</span>
