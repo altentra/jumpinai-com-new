@@ -315,9 +315,12 @@ const Hero = () => {
             </h1>
             
             {/* Body Text */}
-            <p className="text-sm sm:text-base md:text-lg text-muted-foreground mb-8 sm:mb-10 max-w-4xl mx-auto lg:mx-0 leading-relaxed font-light px-4 lg:px-0">
-              Navigate <span className="font-semibold text-foreground/90">AI adoption</span> with confidence. Clarify your <span className="font-semibold text-foreground/90">AI strategy</span> with a <span className="font-semibold text-foreground/90">roadmap</span> tailored to your specific goals - <span className="font-semibold text-foreground/90">adaptable</span> at every stage. You'll receive expertly crafted <span className="font-semibold text-foreground/90">tool-prompt combinations</span>, seamlessly integrated <span className="font-semibold text-foreground/90">workflows</span>, and intelligent <span className="font-semibold text-foreground/90">AI agents</span> - all designed for seamless integration into your daily work. Your competitive advantage in the <span className="font-semibold text-foreground/90">AI era</span> starts here.
-            </p>
+            <div className="text-sm sm:text-base md:text-lg text-muted-foreground mb-8 sm:mb-10 max-w-4xl mx-auto lg:mx-0 leading-relaxed font-light px-4 lg:px-0 space-y-1.5 sm:space-y-2">
+              <p>Navigate <span className="font-semibold text-foreground/90">AI adoption</span> with confidence.</p>
+              <p>Clarify your <span className="font-semibold text-foreground/90">AI strategy</span> with a <span className="font-semibold text-foreground/90">roadmap</span> tailored to your specific goals - <span className="font-semibold text-foreground/90">adaptable</span> at every stage.</p>
+              <p>You'll receive expertly crafted <span className="font-semibold text-foreground/90">tool-prompt combinations</span>, seamlessly integrated <span className="font-semibold text-foreground/90">workflows</span>, and intelligent <span className="font-semibold text-foreground/90">AI agents</span> - all designed for seamless integration into your daily work.</p>
+              <p>Your competitive advantage in the <span className="font-semibold text-foreground/90">AI era</span> starts here.</p>
+            </div>
             
             {/* Call to Action Button */}
             <div className="flex justify-center lg:justify-start px-4 lg:px-0 mb-16 lg:mb-0">
