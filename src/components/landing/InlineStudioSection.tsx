@@ -344,13 +344,22 @@ const InlineStudioSection = () => {
                         </button>
                       </div>
                       
-                      {/* Refined trust signals */}
-                      <div className="flex items-center justify-center gap-3 sm:gap-4 mt-8 text-[13px] sm:text-sm text-muted-foreground/50 font-medium tracking-wide">
-                        <span>AI-Powered Strategy</span>
-                        <span className="w-px h-3 bg-muted-foreground/20"></span>
-                        <span>Tailored to You</span>
-                        <span className="w-px h-3 bg-muted-foreground/20"></span>
-                        <span>Implementation-Ready</span>
+                      {/* Refined trust signals - color coded */}
+                      <div className="flex items-center justify-center gap-3.5 sm:gap-5 mt-8 text-[12px] sm:text-[13px] font-semibold uppercase tracking-[0.12em]">
+                        <span className="flex items-center gap-2">
+                          <span className="w-1 h-1 rounded-full bg-cyan-400/80"></span>
+                          <span className="text-cyan-600/70 dark:text-cyan-400/60">AI-Powered Strategy</span>
+                        </span>
+                        <span className="w-px h-3 bg-muted-foreground/15"></span>
+                        <span className="flex items-center gap-2">
+                          <span className="w-1 h-1 rounded-full bg-amber-400/80"></span>
+                          <span className="text-amber-600/70 dark:text-amber-400/60">Tailored to You</span>
+                        </span>
+                        <span className="w-px h-3 bg-muted-foreground/15"></span>
+                        <span className="flex items-center gap-2">
+                          <span className="w-1 h-1 rounded-full bg-emerald-400/80"></span>
+                          <span className="text-emerald-600/70 dark:text-emerald-400/60">Implementation-Ready</span>
+                        </span>
                       </div>
                     </div>
                   </div>
