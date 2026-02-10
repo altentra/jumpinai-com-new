@@ -2,12 +2,16 @@ import { useEffect, useRef, useCallback } from "react";
 
 interface DotMatrixProps {
   isDark: boolean;
+  mousePos: { x: number; y: number };
 }
 
-const HeroDotMatrix = ({ isDark }: DotMatrixProps) => {
+const HeroDotMatrix = ({ isDark, mousePos }: DotMatrixProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const mouseRef = useRef({ x: -1000, y: -1000 });
   const animFrameRef = useRef<number>(0);
+  const mousePosRef = useRef(mousePos);
+
+  // Keep ref in sync without re-triggering effect
+  mousePosRef.current = mousePos;
 
   const draw = useCallback(() => {
     const canvas = canvasRef.current;
@@ -23,14 +27,13 @@ const HeroDotMatrix = ({ isDark }: DotMatrixProps) => {
 
     const spacing = 28;
     const baseRadius = 1;
-    const hoverRadius = 120;
-    const maxRadius = 2.8;
-    const mx = mouseRef.current.x;
-    const my = mouseRef.current.y;
+    const hoverRadius = 140;
+    const maxRadius = 3;
+    const mx = mousePosRef.current.x;
+    const my = mousePosRef.current.y;
 
-    // Base dot colors
     const baseAlpha = isDark ? 0.18 : 0.12;
-    const peakAlpha = isDark ? 0.7 : 0.55;
+    const peakAlpha = isDark ? 0.75 : 0.6;
 
     for (let x = spacing / 2; x < w; x += spacing) {
       for (let y = spacing / 2; y < h; y += spacing) {
@@ -38,33 +41,25 @@ const HeroDotMatrix = ({ isDark }: DotMatrixProps) => {
         const dy = y - my;
         const dist = Math.sqrt(dx * dx + dy * dy);
 
-        // Proximity factor: 1 at cursor, 0 at hoverRadius+
         const proximity = Math.max(0, 1 - dist / hoverRadius);
-        const eased = proximity * proximity; // quadratic ease for smooth falloff
+        const eased = proximity * proximity;
 
         const r = baseRadius + (maxRadius - baseRadius) * eased;
         const alpha = baseAlpha + (peakAlpha - baseAlpha) * eased;
 
-        // Color interpolation: base grey → amber/cyan glow near cursor
         let color: string;
         if (eased > 0.01) {
-          // Blend between warm amber and cool cyan based on position
           const colorMix = ((x + y) % (spacing * 4)) / (spacing * 4);
           if (colorMix < 0.5) {
-            // Amber tone
-            const rr = 251, gg = 191, bb = 36;
-            color = `rgba(${rr}, ${gg}, ${bb}, ${alpha})`;
+            color = `rgba(251, 191, 36, ${alpha})`;
           } else {
-            // Cyan tone
-            const rr = 6, gg = 182, bb = 212;
-            color = `rgba(${rr}, ${gg}, ${bb}, ${alpha})`;
+            color = `rgba(6, 182, 212, ${alpha})`;
           }
         } else {
-          // Base neutral dot
           if (isDark) {
-            color = `rgba(148, 163, 184, ${alpha})`; // slate-400
+            color = `rgba(148, 163, 184, ${alpha})`;
           } else {
-            color = `rgba(100, 116, 139, ${alpha})`; // slate-500
+            color = `rgba(100, 116, 139, ${alpha})`;
           }
         }
 
@@ -99,23 +94,10 @@ const HeroDotMatrix = ({ isDark }: DotMatrixProps) => {
     };
   }, [draw]);
 
-  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
-    const rect = canvasRef.current?.getBoundingClientRect();
-    if (!rect) return;
-    mouseRef.current = { x: e.clientX - rect.left, y: e.clientY - rect.top };
-  }, []);
-
-  const handleMouseLeave = useCallback(() => {
-    mouseRef.current = { x: -1000, y: -1000 };
-  }, []);
-
   return (
     <canvas
       ref={canvasRef}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      className="absolute inset-0 w-full h-full"
-      style={{ zIndex: 1 }}
+      className="absolute inset-0 w-full h-full pointer-events-none"
     />
   );
 };

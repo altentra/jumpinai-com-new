@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import HeroDotMatrix from "@/components/HeroDotMatrix";
 import { ArrowRight, Sparkles } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import logoTransparent from "@/assets/logo-transparent.png";
 import heroDesktopNew from "@/assets/hero-desktop-studio-new.jpg";
@@ -12,8 +12,20 @@ import heroMobileClarify from "@/assets/hero-mobile-clarify.jpg";
 
 const Hero = () => {
   const [isDark, setIsDark] = useState(false);
+  const [mousePos, setMousePos] = useState({ x: -1000, y: -1000 });
+  const sectionRef = useRef<HTMLElement>(null);
   const { elementRef: mockupsRef, scrollProgress: mockupsProgress } = useScrollAnimation({ threshold: 0.2 });
   const { elementRef: mobilesMockupsRef, scrollProgress: mobilesProgress } = useScrollAnimation({ threshold: 0.2 });
+
+  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLElement>) => {
+    const rect = sectionRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    setMousePos({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+  }, []);
+
+  const handleMouseLeave = useCallback(() => {
+    setMousePos({ x: -1000, y: -1000 });
+  }, []);
 
   useEffect(() => {
     const checkTheme = () => {
@@ -40,7 +52,7 @@ const Hero = () => {
   };
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-12 sm:pt-14 lg:pt-12">
+    <section ref={sectionRef} onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave} className="relative min-h-screen flex items-center justify-center overflow-hidden pt-12 sm:pt-14 lg:pt-12">
       {/* === WORLD-CLASS OPTIMISTIC AI HERO === */}
       
       {/* Luminous Foundation - Warm & Optimistic */}
@@ -96,7 +108,7 @@ const Hero = () => {
       
       {/* === INTERACTIVE DOT MATRIX === */}
       <div className="absolute inset-0 overflow-hidden">
-        <HeroDotMatrix isDark={isDark} />
+        <HeroDotMatrix isDark={isDark} mousePos={mousePos} />
         
         {/* Animated connection lines */}
         <svg className="absolute inset-0 w-full h-full pointer-events-none" xmlns="http://www.w3.org/2000/svg">
