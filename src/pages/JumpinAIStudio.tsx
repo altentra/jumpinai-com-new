@@ -597,19 +597,23 @@ const JumpinAIStudio = () => {
                   <div className="absolute -inset-8 bg-gradient-to-br from-amber-500/[0.08] via-primary/[0.06] to-violet-500/[0.08] rounded-[4rem] blur-3xl opacity-70"></div>
                   <div className="absolute -inset-4 bg-primary/[0.04] rounded-[3rem] blur-xl opacity-50"></div>
                   
-                  {/* Card with glassmorphism */}
-                  <div className="relative rounded-[32px] sm:rounded-[40px] overflow-hidden 
-                    bg-white/70 dark:bg-zinc-900/70
+                  {/* Card with glassmorphism + gradient border via wrapper */}
+                  <div className="relative rounded-[32px] sm:rounded-[40px] p-px bg-gradient-to-br from-amber-400/30 via-zinc-400/25 to-cyan-400/30 dark:from-amber-500/20 dark:via-zinc-500/15 dark:to-cyan-500/20">
+                  <div className="relative rounded-[31px] sm:rounded-[39px] overflow-hidden 
+                    bg-gradient-to-br from-white/75 via-zinc-50/70 to-white/65 
+                    dark:from-zinc-900/80 dark:via-zinc-800/60 dark:to-zinc-900/75
                     backdrop-blur-2xl
-                    border border-white/40 dark:border-white/[0.12]
-                    shadow-[0_32px_100px_-20px_rgba(0,0,0,0.15),0_0_0_1px_rgba(255,255,255,0.1)_inset]
-                    dark:shadow-[0_32px_100px_-20px_rgba(0,0,0,0.6),0_0_0_1px_rgba(255,255,255,0.05)_inset]">
+                    shadow-[0_8px_32px_-4px_rgba(0,0,0,0.08),0_32px_80px_-12px_rgba(0,0,0,0.12),0_0_0_1px_rgba(255,255,255,0.15)_inset,0_2px_0_rgba(255,255,255,0.2)_inset]
+                    dark:shadow-[0_8px_32px_-4px_rgba(0,0,0,0.3),0_32px_80px_-12px_rgba(0,0,0,0.5),0_0_0_1px_rgba(255,255,255,0.06)_inset,0_2px_0_rgba(255,255,255,0.03)_inset]">
                     
-                    {/* Premium top highlight - rainbow shimmer */}
-                    <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/80 dark:via-white/30 to-transparent"></div>
+                    {/* Premium top highlight - refined shimmer */}
+                    <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-amber-200/40 dark:via-amber-500/20 to-transparent"></div>
                     
-                    {/* Subtle inner glow */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-white/50 via-transparent to-transparent dark:from-white/5 pointer-events-none"></div>
+                    {/* Bottom subtle edge */}
+                    <div className="absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-zinc-400/20 dark:via-zinc-500/10 to-transparent"></div>
+                    
+                    {/* Subtle inner glow - warm tint */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-amber-50/30 via-transparent to-cyan-50/10 dark:from-amber-900/5 dark:to-cyan-900/5 pointer-events-none"></div>
                     
                     {/* Content */}
                     <div className="relative p-8 sm:p-10 md:p-12 lg:p-14">
@@ -726,25 +730,28 @@ const JumpinAIStudio = () => {
                               </button>
                             </div>
                             
-                            {/* Trust badges - Premium minimal */}
-                            <div className="flex items-center justify-center gap-8 mt-8 text-sm text-muted-foreground/60 font-medium">
-                              <span className="flex items-center gap-2.5">
-                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500/70"></span>
-                                ~2 minutes
+                            {/* Refined trust signals - color coded */}
+                            <div className="flex items-center justify-center gap-3.5 sm:gap-5 mt-8 text-[11px] sm:text-xs font-medium tracking-wide">
+                              <span className="flex items-center gap-2">
+                                <span className="w-1 h-1 rounded-full bg-teal-400/70"></span>
+                                <span className="text-teal-700/55 dark:text-teal-300/50">AI-Powered Strategy</span>
                               </span>
-                              <span className="flex items-center gap-2.5">
-                                <span className="w-1.5 h-1.5 rounded-full bg-primary/50"></span>
-                                Personalized
+                              <span className="w-px h-3 bg-muted-foreground/10"></span>
+                              <span className="flex items-center gap-2">
+                                <span className="w-1 h-1 rounded-full bg-amber-400/70"></span>
+                                <span className="text-amber-700/55 dark:text-amber-300/50">Tailored to You</span>
                               </span>
-                              <span className="flex items-center gap-2.5">
-                                <span className="w-1.5 h-1.5 rounded-full bg-amber-500/70"></span>
-                                Ready-to-use
+                              <span className="w-px h-3 bg-muted-foreground/10"></span>
+                              <span className="flex items-center gap-2">
+                                <span className="w-1 h-1 rounded-full bg-indigo-400/70"></span>
+                                <span className="text-indigo-700/55 dark:text-indigo-300/50">Implementation-Ready</span>
                               </span>
                             </div>
                           </div>
                         </div>
                       </div>
                     </div>
+                  </div>
                   </div>
                 </div>
               </div>
