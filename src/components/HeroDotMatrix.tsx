@@ -31,15 +31,15 @@ const HeroDotMatrix = ({ isDark, mousePos }: DotMatrixProps) => {
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, w, h);
 
-    const spacing = 24;
-    const baseRadius = 0.5;
-    const hoverRadius = 130;
-    const maxRadius = 1.8;
+    const spacing = 26;
+    const baseRadius = 0.8;
+    const hoverRadius = 150;
+    const maxRadius = 2.2;
     const mx = mousePosRef.current.x;
     const my = mousePosRef.current.y;
 
-    const baseAlpha = isDark ? 0.15 : 0.1;
-    const peakAlpha = isDark ? 0.9 : 0.75;
+    const baseAlpha = isDark ? 0.35 : 0.25;
+    const peakAlpha = isDark ? 0.95 : 0.85;
 
     for (let x = spacing / 2; x < w; x += spacing) {
       for (let y = spacing / 2; y < h; y += spacing) {
