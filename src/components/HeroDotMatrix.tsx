@@ -10,7 +10,6 @@ const HeroDotMatrix = ({ isDark, mousePos }: DotMatrixProps) => {
   const animFrameRef = useRef<number>(0);
   const mousePosRef = useRef(mousePos);
 
-  // Keep ref in sync without re-triggering effect
   mousePosRef.current = mousePos;
 
   const draw = useCallback(() => {
@@ -20,10 +19,17 @@ const HeroDotMatrix = ({ isDark, mousePos }: DotMatrixProps) => {
     if (!ctx) return;
 
     const dpr = window.devicePixelRatio || 1;
-    const w = canvas.width / dpr;
-    const h = canvas.height / dpr;
+    const w = canvas.clientWidth;
+    const h = canvas.clientHeight;
 
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // Resize canvas buffer if needed
+    if (canvas.width !== w * dpr || canvas.height !== h * dpr) {
+      canvas.width = w * dpr;
+      canvas.height = h * dpr;
+    }
+
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, w, h);
 
     const spacing = 28;
     const baseRadius = 1;
@@ -32,8 +38,8 @@ const HeroDotMatrix = ({ isDark, mousePos }: DotMatrixProps) => {
     const mx = mousePosRef.current.x;
     const my = mousePosRef.current.y;
 
-    const baseAlpha = isDark ? 0.18 : 0.12;
-    const peakAlpha = isDark ? 0.75 : 0.6;
+    const baseAlpha = isDark ? 0.22 : 0.15;
+    const peakAlpha = isDark ? 0.8 : 0.65;
 
     for (let x = spacing / 2; x < w; x += spacing) {
       for (let y = spacing / 2; y < h; y += spacing) {
@@ -64,7 +70,7 @@ const HeroDotMatrix = ({ isDark, mousePos }: DotMatrixProps) => {
         }
 
         ctx.beginPath();
-        ctx.arc(x * dpr, y * dpr, r * dpr, 0, Math.PI * 2);
+        ctx.arc(x, y, r, 0, Math.PI * 2);
         ctx.fillStyle = color;
         ctx.fill();
       }
@@ -74,30 +80,15 @@ const HeroDotMatrix = ({ isDark, mousePos }: DotMatrixProps) => {
   }, [isDark]);
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const resize = () => {
-      const dpr = window.devicePixelRatio || 1;
-      const rect = canvas.getBoundingClientRect();
-      canvas.width = rect.width * dpr;
-      canvas.height = rect.height * dpr;
-    };
-
-    resize();
-    window.addEventListener("resize", resize);
     animFrameRef.current = requestAnimationFrame(draw);
-
-    return () => {
-      window.removeEventListener("resize", resize);
-      cancelAnimationFrame(animFrameRef.current);
-    };
+    return () => cancelAnimationFrame(animFrameRef.current);
   }, [draw]);
 
   return (
     <canvas
       ref={canvasRef}
       className="absolute inset-0 w-full h-full pointer-events-none"
+      style={{ width: "100%", height: "100%" }}
     />
   );
 };
