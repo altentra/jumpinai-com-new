@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import HeroDotMatrix from "@/components/HeroDotMatrix";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
@@ -93,40 +94,19 @@ const Hero = () => {
         }}
       ></div>
       
-      {/* === ANIMATED DOT MATRIX === */}
+      {/* === INTERACTIVE DOT MATRIX === */}
       <div className="absolute inset-0 overflow-hidden">
-        <svg className="absolute inset-0 w-full h-full" xmlns="http://www.w3.org/2000/svg">
+        <HeroDotMatrix isDark={isDark} />
+        
+        {/* Animated connection lines */}
+        <svg className="absolute inset-0 w-full h-full pointer-events-none" xmlns="http://www.w3.org/2000/svg">
           <defs>
-            {/* Gradient for dots */}
             <linearGradient id="dot-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="rgb(251, 191, 36)" stopOpacity="0.6">
-                <animate attributeName="stop-opacity" values="0.6;0.9;0.6" dur="4s" repeatCount="indefinite" />
-              </stop>
-              <stop offset="50%" stopColor="rgb(20, 184, 166)" stopOpacity="0.5">
-                <animate attributeName="stop-opacity" values="0.5;0.8;0.5" dur="4s" repeatCount="indefinite" begin="0.5s" />
-              </stop>
-              <stop offset="100%" stopColor="rgb(6, 182, 212)" stopOpacity="0.6">
-                <animate attributeName="stop-opacity" values="0.6;0.9;0.6" dur="4s" repeatCount="indefinite" begin="1s" />
-              </stop>
+              <stop offset="0%" stopColor="rgb(251, 191, 36)" stopOpacity="0.5" />
+              <stop offset="50%" stopColor="rgb(20, 184, 166)" stopOpacity="0.4" />
+              <stop offset="100%" stopColor="rgb(6, 182, 212)" stopOpacity="0.5" />
             </linearGradient>
-            
-            {/* Dot pattern */}
-            <pattern id="dot-matrix" width="40" height="40" patternUnits="userSpaceOnUse">
-              <circle cx="20" cy="20" r="1" fill="url(#dot-gradient)">
-                <animate attributeName="r" values="1;1.5;1" dur="3s" repeatCount="indefinite" />
-              </circle>
-          </pattern>
           </defs>
-          
-          {/* Main dot grid */}
-          <rect 
-            width="100%" 
-            height="100%" 
-            fill="url(#dot-matrix)" 
-            className="opacity-[0.15] dark:opacity-[0.25]"
-          />
-          
-          {/* Animated connection lines */}
           <g className="opacity-[0.06] dark:opacity-[0.1]" stroke="url(#dot-gradient)" strokeWidth="0.5" fill="none">
             <path d="M0,200 Q400,150 800,200 T1600,200">
               <animate attributeName="d" 
