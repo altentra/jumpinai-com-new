@@ -151,13 +151,13 @@ const InlineStudioSection = () => {
       {/* Premium Background System - Matching Hero Style */}
       <div className="absolute inset-0">
         {/* Base gradient - matches Hero */}
-        <div className="absolute inset-0 bg-gradient-to-br from-amber-50/70 via-slate-50/90 to-cyan-50/50 dark:from-[#0f0d0a] dark:via-[#0c1420] dark:to-[#0a1018]"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-amber-50/70 via-slate-50/90 to-cyan-50/50 dark:from-[#110d08] dark:via-[#0c1420] dark:to-[#0a1018]"></div>
         
         {/* Primary Gradient Flow - Golden Warmth */}
         <div 
           className="absolute inset-0"
           style={{
-            background: 'linear-gradient(135deg, rgba(251, 191, 36, 0.2) 0%, rgba(245, 158, 11, 0.12) 25%, transparent 50%, rgba(6, 182, 212, 0.08) 75%, rgba(34, 211, 238, 0.12) 100%)',
+            background: 'linear-gradient(135deg, rgba(234, 170, 50, 0.18) 0%, rgba(214, 145, 30, 0.10) 25%, transparent 50%, rgba(6, 182, 212, 0.08) 75%, rgba(34, 211, 238, 0.12) 100%)',
           }}
         ></div>
         
@@ -165,7 +165,7 @@ const InlineStudioSection = () => {
         <div 
           className="absolute inset-0"
           style={{
-            background: 'linear-gradient(-45deg, rgba(20, 184, 166, 0.12) 0%, transparent 40%, transparent 60%, rgba(251, 191, 36, 0.1) 100%)',
+            background: 'linear-gradient(-45deg, rgba(20, 184, 166, 0.12) 0%, transparent 40%, transparent 60%, rgba(214, 160, 40, 0.08) 100%)',
           }}
         ></div>
         
@@ -173,7 +173,7 @@ const InlineStudioSection = () => {
         <div 
           className="absolute -top-[15%] -left-[10%] w-[55%] h-[55%]"
           style={{
-            background: 'radial-gradient(ellipse at center, rgba(251, 191, 36, 0.25) 0%, rgba(245, 158, 11, 0.12) 30%, transparent 60%)',
+            background: 'radial-gradient(ellipse at center, rgba(218, 160, 45, 0.22) 0%, rgba(200, 140, 30, 0.10) 30%, transparent 60%)',
             filter: 'blur(80px)',
           }}
         ></div>
@@ -191,7 +191,7 @@ const InlineStudioSection = () => {
         <div 
           className="absolute bottom-[-10%] left-[20%] w-[60%] h-[50%]"
           style={{
-            background: 'radial-gradient(ellipse at center, rgba(251, 146, 60, 0.15) 0%, rgba(251, 191, 36, 0.08) 50%, transparent 70%)',
+            background: 'radial-gradient(ellipse at center, rgba(210, 140, 50, 0.13) 0%, rgba(200, 155, 45, 0.07) 50%, transparent 70%)',
             filter: 'blur(60px)',
           }}
         ></div>
