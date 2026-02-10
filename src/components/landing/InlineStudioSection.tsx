@@ -347,18 +347,18 @@ const InlineStudioSection = () => {
                       {/* Refined trust signals - color coded */}
                       <div className="flex items-center justify-center gap-3.5 sm:gap-5 mt-8 text-[11px] sm:text-xs font-medium tracking-wide">
                         <span className="flex items-center gap-2">
-                          <span className="w-1 h-1 rounded-full bg-sky-300/70"></span>
-                          <span className="text-sky-700/50 dark:text-sky-300/45">AI-Powered Strategy</span>
+                          <span className="w-1 h-1 rounded-full bg-teal-400/70"></span>
+                          <span className="text-teal-700/55 dark:text-teal-300/50">AI-Powered Strategy</span>
                         </span>
                         <span className="w-px h-3 bg-muted-foreground/10"></span>
                         <span className="flex items-center gap-2">
-                          <span className="w-1 h-1 rounded-full bg-rose-300/70"></span>
-                          <span className="text-rose-700/50 dark:text-rose-300/45">Tailored to You</span>
+                          <span className="w-1 h-1 rounded-full bg-amber-400/70"></span>
+                          <span className="text-amber-700/55 dark:text-amber-300/50">Tailored to You</span>
                         </span>
                         <span className="w-px h-3 bg-muted-foreground/10"></span>
                         <span className="flex items-center gap-2">
-                          <span className="w-1 h-1 rounded-full bg-violet-300/70"></span>
-                          <span className="text-violet-700/50 dark:text-violet-300/45">Implementation-Ready</span>
+                          <span className="w-1 h-1 rounded-full bg-indigo-400/70"></span>
+                          <span className="text-indigo-700/55 dark:text-indigo-300/50">Implementation-Ready</span>
                         </span>
                       </div>
                     </div>
