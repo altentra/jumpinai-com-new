@@ -1,5 +1,37 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 
+// Robust JSON extraction with multiple fallback strategies for truncated AI responses
+function extractJsonFromResponse(response: string): any {
+  let cleaned = response.replace(/```json\s*/gi, '').replace(/```\s*/g, '').trim();
+  const jsonStart = cleaned.search(/[\{\[]/);
+  const jsonEnd = Math.max(cleaned.lastIndexOf('}'), cleaned.lastIndexOf(']'));
+  if (jsonStart === -1 || jsonEnd === -1) throw new Error('No JSON found in response');
+  cleaned = cleaned.substring(jsonStart, jsonEnd + 1);
+
+  try { return JSON.parse(cleaned); } catch {}
+
+  let fixed = cleaned.replace(/,\s*}/g, '}').replace(/,\s*]/g, ']').replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '');
+  try { return JSON.parse(fixed); } catch {}
+
+  // Balance unclosed braces/brackets from truncated responses
+  let inStr = false, esc = false;
+  const stack: string[] = [];
+  for (let i = 0; i < fixed.length; i++) {
+    const c = fixed[i];
+    if (esc) { esc = false; continue; }
+    if (c === '\\') { esc = true; continue; }
+    if (c === '"') { inStr = !inStr; continue; }
+    if (inStr) continue;
+    if (c === '{' || c === '[') stack.push(c);
+    else if (c === '}' || c === ']') stack.pop();
+  }
+  let balanced = fixed;
+  while (stack.length) { const o = stack.pop()!; balanced += o === '{' ? '}' : ']'; }
+  try { return JSON.parse(balanced); } catch {}
+
+  throw new Error('Failed to extract valid JSON after all repair attempts');
+}
+
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
@@ -151,46 +183,15 @@ CRITICAL: Return ONLY the JSON object. No markdown code blocks, no explanations.
       throw new Error('No content in Gemini API response');
     }
 
-    // Clean and parse JSON with enhanced error handling
-    content = content
-      .replace(/```json\n?/g, '')
-      .replace(/```\n?/g, '')
-      .replace(/^[^{[]*/, '')
-      .replace(/[^}\]]*$/, '')
-      .replace(/,(\s*[}\]])/g, '$1')
-      .trim();
-    
-    // CRITICAL: Escape control characters inside string values
-    // This prevents JSON parse errors from literal newlines/tabs in descriptions
-    content = content.replace(/"([^"\\]*(\\.[^"\\]*)*)"/g, (match) => {
-      return match
-        .replace(/\n/g, '\\n')
-        .replace(/\r/g, '\\r')
-        .replace(/\t/g, '\\t')
-        .replace(/\f/g, '\\f');
-    });
-
+    // Robust JSON extraction with multiple fallback strategies
     let parsed;
     try {
-      parsed = JSON.parse(content);
+      parsed = extractJsonFromResponse(content);
       console.log('Successfully parsed clarify response');
     } catch (parseError) {
-      console.error('JSON parse error:', parseError);
-      console.log('Failed content:', content.substring(0, 500));
-      
-      // Try to fix common JSON issues before giving up
-      try {
-        // Fix unclosed quotes in estimated_time fields
-        let fixedContent = content
-          .replace(/"estimated_time":\s*"([^"]*?)(?=\s*[,}])/g, '"estimated_time": "$1"')
-          .replace(/"\s*:\s*"([^"]*?)\s*\n/g, '": "$1",\n');
-        
-        parsed = JSON.parse(fixedContent);
-        console.log('Successfully parsed after fixing JSON');
-      } catch (secondError) {
-        console.error('Second parse attempt failed:', secondError);
-        throw new Error('Failed to parse AI response');
-      }
+      console.error('All JSON parse attempts failed:', parseError);
+      console.log('Raw content preview:', content.substring(0, 500));
+      throw new Error('Failed to parse AI response');
     }
 
     return new Response(
