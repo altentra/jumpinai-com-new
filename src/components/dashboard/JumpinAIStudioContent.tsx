@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { Loader2, Zap } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useCredits } from '@/hooks/useCredits';
@@ -10,6 +10,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { StudioTextarea } from '@/components/studio/StudioTextarea';
 import { markJumpAsUsingSTT } from '@/services/sttTrackingService';
 import type { AlternativeRoute, RouteExplorationHistory } from '@/types/alternativeRoutes';
+import HeroDotMatrix from '@/components/HeroDotMatrix';
 
 // Input tracking for goals and challenges (type vs narrate)
 interface InputTracking {
@@ -73,6 +74,19 @@ const JumpinAIStudioContent = () => {
   const { isGenerating, result, processingStatus, generateWithProgression } = useProgressiveGeneration();
   const [generationTimer, setGenerationTimer] = useState(0);
   const [sttUsed, setSttUsed] = useState(false);
+  const [studioIsDark, setStudioIsDark] = useState(false);
+  const [studioMousePos, setStudioMousePos] = useState({ x: -1000, y: -1000 });
+  const studioContainerRef = useRef<HTMLDivElement>(null);
+
+  const handleStudioMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = studioContainerRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    setStudioMousePos({ x: e.clientX - rect.left, y: e.clientY - rect.top + (studioContainerRef.current?.scrollTop || 0) });
+  }, []);
+
+  const handleStudioMouseLeave = useCallback(() => {
+    setStudioMousePos({ x: -1000, y: -1000 });
+  }, []);
   
   // Input method tracking state
   const [goalsUsedStt, setGoalsUsedStt] = useState(false);
@@ -128,6 +142,15 @@ const JumpinAIStudioContent = () => {
   };
 
   // Load saved form data for authenticated users
+  // Theme detection
+  useEffect(() => {
+    const check = () => setStudioIsDark(document.documentElement.classList.contains('dark'));
+    check();
+    const obs = new MutationObserver(check);
+    obs.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    return () => obs.disconnect();
+  }, []);
+
   useEffect(() => {
     if (isAuthenticated) {
       loadSavedFormData();
@@ -347,41 +370,46 @@ const JumpinAIStudioContent = () => {
 
   return (
     <div className="relative min-h-screen isolate">
-      {/* Premium Background System - SCOPED to top input section only */}
-      <div className="relative overflow-hidden">
-        <div className="absolute inset-0 -z-10 pointer-events-none">
-          <div className="absolute inset-0 bg-gradient-to-br from-muted/60 via-background to-muted/40 dark:from-background dark:via-background dark:to-muted/30" />
-
-          {/* Subtle noise texture for premium feel */}
-          <div
-            className="absolute inset-0 opacity-[0.015] dark:opacity-[0.03]"
-            style={{
-              backgroundImage:
-                'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 400 400\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E")',
-            }}
-          />
-
-          {/* Premium ambient orbs */}
-          <div className="absolute inset-0 overflow-hidden">
-            <div
-              className="absolute top-[-15%] right-[5%] w-[700px] h-[700px] bg-primary/[0.12] dark:bg-primary/[0.08] rounded-full blur-[150px] animate-pulse"
-              style={{ animationDuration: '10s' }}
-            />
-            <div
-              className="absolute bottom-[-10%] left-[-5%] w-[600px] h-[600px] bg-accent/[0.08] dark:bg-accent/[0.05] rounded-full blur-[130px] animate-pulse"
-              style={{ animationDuration: '12s', animationDelay: '3s' }}
-            />
-            <div className="absolute top-[30%] left-[40%] w-[500px] h-[500px] bg-secondary/[0.06] rounded-full blur-[100px]" />
+      {/* Premium Background System - Matching Guest Studio */}
+      <div 
+        ref={studioContainerRef}
+        onMouseMove={handleStudioMouseMove}
+        onMouseLeave={handleStudioMouseLeave}
+        className="relative overflow-hidden"
+      >
+        {/* Background layers - contained within this wrapper */}
+        <div className="absolute inset-0">
+          {/* Base gradient */}
+          <div className="absolute inset-0 bg-gradient-to-br from-amber-50/70 via-slate-50/90 to-cyan-50/50 dark:from-[#110d08] dark:via-[#0c1420] dark:to-[#0a1018]"></div>
+          
+          {/* Primary Gradient Flow - Golden Warmth */}
+          <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg, rgba(234, 170, 50, 0.18) 0%, rgba(214, 145, 30, 0.10) 25%, transparent 50%, rgba(6, 182, 212, 0.08) 75%, rgba(34, 211, 238, 0.12) 100%)' }}></div>
+          
+          {/* Secondary Gradient Flow - Teal Accent */}
+          <div className="absolute inset-0" style={{ background: 'linear-gradient(-45deg, rgba(20, 184, 166, 0.12) 0%, transparent 40%, transparent 60%, rgba(214, 160, 40, 0.08) 100%)' }}></div>
+          
+          {/* Radial Glow - Top Left Golden */}
+          <div className="absolute -top-[15%] -left-[10%] w-[55%] h-[55%]" style={{ background: 'radial-gradient(ellipse at center, rgba(218, 160, 45, 0.22) 0%, rgba(200, 140, 30, 0.10) 30%, transparent 60%)', filter: 'blur(80px)' }}></div>
+          
+          {/* Radial Glow - Top Right Cyan */}
+          <div className="absolute -top-[10%] -right-[10%] w-[45%] h-[45%]" style={{ background: 'radial-gradient(ellipse at center, rgba(6, 182, 212, 0.2) 0%, rgba(20, 184, 166, 0.1) 40%, transparent 65%)', filter: 'blur(70px)' }}></div>
+          
+          {/* Radial Glow - Bottom Center Warm */}
+          <div className="absolute bottom-[-10%] left-[20%] w-[60%] h-[50%]" style={{ background: 'radial-gradient(ellipse at center, rgba(210, 140, 50, 0.13) 0%, rgba(200, 155, 45, 0.07) 50%, transparent 70%)', filter: 'blur(60px)' }}></div>
+          
+          {/* Interactive Dot Matrix */}
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            <HeroDotMatrix isDark={studioIsDark} mousePos={studioMousePos} />
           </div>
-
-          {/* Refined grid pattern */}
-          <div className="absolute inset-0 bg-[linear-gradient(hsl(var(--foreground)/0.02)_1px,transparent_1px),linear-gradient(90deg,hsl(var(--foreground)/0.02)_1px,transparent_1px)] bg-[size:60px_60px] dark:bg-[linear-gradient(hsl(var(--foreground)/0.015)_1px,transparent_1px),linear-gradient(90deg,hsl(var(--foreground)/0.015)_1px,transparent_1px)]" />
+          
+          {/* Black overlay to darken - 30% opacity */}
+          <div className="absolute inset-0 bg-black/[0.30] dark:bg-black/[0.30]"></div>
           
           {/* Bottom fade-out into standard background */}
-          <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-b from-transparent via-background/60 to-background pointer-events-none z-10"></div>
+          <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-b from-transparent via-background/60 to-background pointer-events-none"></div>
         </div>
 
-        <div className="relative pt-8 px-4 sm:px-6 lg:px-8 pb-12">
+        <div className="relative z-10 pt-8 px-4 sm:px-6 lg:px-8 pb-12">
           <div className="max-w-4xl mx-auto">
           
           {/* HERO FORM CARD - Premium Glassmorphism (matches guest studio exactly) */}
