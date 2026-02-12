@@ -241,8 +241,8 @@ const InlineStudioSection = () => {
             {/* Card with glassmorphism + gradient border via wrapper */}
             <div className="relative rounded-[32px] sm:rounded-[40px] p-px bg-gradient-to-br from-amber-400/30 via-zinc-400/25 to-cyan-400/30 dark:from-amber-500/20 dark:via-zinc-500/15 dark:to-cyan-500/20">
             <div className="relative rounded-[31px] sm:rounded-[39px] overflow-hidden 
-              bg-gradient-to-br from-white/82 via-zinc-50/78 to-white/73 
-              dark:from-zinc-900/88 dark:via-zinc-800/70 dark:to-zinc-900/82
+              bg-gradient-to-br from-white/79 via-zinc-50/74 to-white/69 
+              dark:from-zinc-900/84 dark:via-zinc-800/65 dark:to-zinc-900/79
               backdrop-blur-2xl
               shadow-[0_8px_32px_-4px_rgba(0,0,0,0.08),0_32px_80px_-12px_rgba(0,0,0,0.12),0_0_0_1px_rgba(255,255,255,0.15)_inset,0_2px_0_rgba(255,255,255,0.2)_inset]
               dark:shadow-[0_8px_32px_-4px_rgba(0,0,0,0.3),0_32px_80px_-12px_rgba(0,0,0,0.5),0_0_0_1px_rgba(255,255,255,0.06)_inset,0_2px_0_rgba(255,255,255,0.03)_inset]">
