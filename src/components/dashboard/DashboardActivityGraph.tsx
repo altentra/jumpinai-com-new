@@ -46,7 +46,7 @@ export const DashboardActivityGraph: React.FC<DashboardActivityGraphProps> = ({ 
     },
     components: {
       label: "Tools & Prompts",
-      color: "hsl(0, 84%, 60%)",
+      color: "hsl(142, 76%, 36%)",
     },
     clarifications: {
       label: "Clarifications",
@@ -58,7 +58,7 @@ export const DashboardActivityGraph: React.FC<DashboardActivityGraphProps> = ({ 
     },
     alternativeRoutes: {
       label: "Alt. Routes",
-      color: "hsl(187, 85%, 53%)",
+      color: "hsl(0, 84%, 60%)",
     },
     analyzedJumps: {
       label: "Analyzed Jumps",
@@ -66,7 +66,7 @@ export const DashboardActivityGraph: React.FC<DashboardActivityGraphProps> = ({ 
     },
     aiAgents: {
       label: "Automations",
-      color: "hsl(142, 76%, 36%)",
+      color: "hsl(187, 85%, 53%)",
     },
   };
 
@@ -120,11 +120,11 @@ export const DashboardActivityGraph: React.FC<DashboardActivityGraphProps> = ({ 
                 <stop offset="100%" stopColor="hsl(217, 91%, 60%)" stopOpacity={0.02} />
               </linearGradient>
               
-              {/* Gradient for components - red */}
+              {/* Gradient for components - green */}
               <linearGradient id="componentsGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="hsl(0, 84%, 60%)" stopOpacity={0.5} />
-                <stop offset="40%" stopColor="hsl(0, 84%, 60%)" stopOpacity={0.25} />
-                <stop offset="100%" stopColor="hsl(0, 84%, 60%)" stopOpacity={0.02} />
+                <stop offset="0%" stopColor="hsl(142, 76%, 36%)" stopOpacity={0.5} />
+                <stop offset="40%" stopColor="hsl(142, 76%, 36%)" stopOpacity={0.25} />
+                <stop offset="100%" stopColor="hsl(142, 76%, 36%)" stopOpacity={0.02} />
               </linearGradient>
 
               {/* Gradient for clarifications - orange */}
@@ -141,11 +141,11 @@ export const DashboardActivityGraph: React.FC<DashboardActivityGraphProps> = ({ 
                 <stop offset="100%" stopColor="hsl(262, 83%, 58%)" stopOpacity={0.02} />
               </linearGradient>
 
-              {/* Gradient for alternative routes - cyan */}
+              {/* Gradient for alternative routes - red */}
               <linearGradient id="alternativeRoutesGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="hsl(187, 85%, 53%)" stopOpacity={0.5} />
-                <stop offset="40%" stopColor="hsl(187, 85%, 53%)" stopOpacity={0.25} />
-                <stop offset="100%" stopColor="hsl(187, 85%, 53%)" stopOpacity={0.02} />
+                <stop offset="0%" stopColor="hsl(0, 84%, 60%)" stopOpacity={0.5} />
+                <stop offset="40%" stopColor="hsl(0, 84%, 60%)" stopOpacity={0.25} />
+                <stop offset="100%" stopColor="hsl(0, 84%, 60%)" stopOpacity={0.02} />
               </linearGradient>
 
               {/* Gradient for analyzed jumps - pink */}
@@ -155,11 +155,11 @@ export const DashboardActivityGraph: React.FC<DashboardActivityGraphProps> = ({ 
                 <stop offset="100%" stopColor="hsl(330, 81%, 60%)" stopOpacity={0.02} />
               </linearGradient>
 
-              {/* Gradient for Automations - green */}
+              {/* Gradient for Automations - cyan */}
               <linearGradient id="aiAgentsGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="hsl(142, 76%, 36%)" stopOpacity={0.5} />
-                <stop offset="40%" stopColor="hsl(142, 76%, 36%)" stopOpacity={0.25} />
-                <stop offset="100%" stopColor="hsl(142, 76%, 36%)" stopOpacity={0.02} />
+                <stop offset="0%" stopColor="hsl(187, 85%, 53%)" stopOpacity={0.5} />
+                <stop offset="40%" stopColor="hsl(187, 85%, 53%)" stopOpacity={0.25} />
+                <stop offset="100%" stopColor="hsl(187, 85%, 53%)" stopOpacity={0.02} />
               </linearGradient>
 
               {/* Subtle glow effect */}
@@ -232,11 +232,11 @@ export const DashboardActivityGraph: React.FC<DashboardActivityGraphProps> = ({ 
               animationEasing="ease-in-out"
             />
             
-            {/* Components area - red */}
+            {/* Components area - green */}
             <Area
               type="monotone"
               dataKey="components"
-              stroke="hsl(0, 84%, 60%)"
+              stroke="hsl(142, 76%, 36%)"
               strokeWidth={2}
               fill="url(#componentsGradient)"
               dot={false}
@@ -244,7 +244,7 @@ export const DashboardActivityGraph: React.FC<DashboardActivityGraphProps> = ({ 
                 r: 4, 
                 strokeWidth: 2,
                 stroke: 'hsl(var(--background))',
-                fill: 'hsl(0, 84%, 60%)',
+                fill: 'hsl(142, 76%, 36%)',
                 filter: 'url(#softGlow)'
               }}
               animationDuration={1500}
@@ -289,11 +289,11 @@ export const DashboardActivityGraph: React.FC<DashboardActivityGraphProps> = ({ 
               animationEasing="ease-in-out"
             />
 
-            {/* Alternative routes area - cyan */}
+            {/* Alternative routes area - red */}
             <Area
               type="monotone"
               dataKey="alternativeRoutes"
-              stroke="hsl(187, 85%, 53%)"
+              stroke="hsl(0, 84%, 60%)"
               strokeWidth={2}
               fill="url(#alternativeRoutesGradient)"
               dot={false}
@@ -301,7 +301,7 @@ export const DashboardActivityGraph: React.FC<DashboardActivityGraphProps> = ({ 
                 r: 4, 
                 strokeWidth: 2,
                 stroke: 'hsl(var(--background))',
-                fill: 'hsl(187, 85%, 53%)',
+                fill: 'hsl(0, 84%, 60%)',
                 filter: 'url(#softGlow)'
               }}
               animationDuration={1500}
@@ -327,11 +327,11 @@ export const DashboardActivityGraph: React.FC<DashboardActivityGraphProps> = ({ 
               animationEasing="ease-in-out"
             />
 
-            {/* Automations area - green */}
+            {/* Automations area - cyan */}
             <Area
               type="monotone"
               dataKey="aiAgents"
-              stroke="hsl(142, 76%, 36%)"
+              stroke="hsl(187, 85%, 53%)"
               strokeWidth={2}
               fill="url(#aiAgentsGradient)"
               dot={false}
@@ -339,7 +339,7 @@ export const DashboardActivityGraph: React.FC<DashboardActivityGraphProps> = ({ 
                 r: 4, 
                 strokeWidth: 2,
                 stroke: 'hsl(var(--background))',
-                fill: 'hsl(142, 76%, 36%)',
+                fill: 'hsl(187, 85%, 53%)',
                 filter: 'url(#softGlow)'
               }}
               animationDuration={1500}
