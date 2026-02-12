@@ -241,11 +241,11 @@ const InlineStudioSection = () => {
             {/* Card with glassmorphism + gradient border via wrapper */}
             <div className="relative rounded-[32px] sm:rounded-[40px] p-px bg-gradient-to-br from-amber-400/30 via-zinc-400/25 to-cyan-400/30 dark:from-amber-500/20 dark:via-zinc-500/15 dark:to-cyan-500/20">
             <div className="relative rounded-[31px] sm:rounded-[39px] overflow-hidden 
-              bg-gradient-to-br from-white/75 via-zinc-50/70 to-white/65 
-              dark:from-zinc-900/80 dark:via-zinc-800/60 dark:to-zinc-900/75
+              bg-gradient-to-br from-white/90 via-zinc-50/85 to-white/80 
+              dark:from-zinc-900/92 dark:via-zinc-800/80 dark:to-zinc-900/88
               backdrop-blur-2xl
-              shadow-[0_8px_32px_-4px_rgba(0,0,0,0.08),0_32px_80px_-12px_rgba(0,0,0,0.12),0_0_0_1px_rgba(255,255,255,0.15)_inset,0_2px_0_rgba(255,255,255,0.2)_inset]
-              dark:shadow-[0_8px_32px_-4px_rgba(0,0,0,0.3),0_32px_80px_-12px_rgba(0,0,0,0.5),0_0_0_1px_rgba(255,255,255,0.06)_inset,0_2px_0_rgba(255,255,255,0.03)_inset]">
+              shadow-[0_8px_32px_-4px_rgba(0,0,0,0.08),0_32px_80px_-12px_rgba(0,0,0,0.12),0_0_0_1px_rgba(255,255,255,0.2)_inset,0_2px_0_rgba(255,255,255,0.25)_inset]
+              dark:shadow-[0_8px_32px_-4px_rgba(0,0,0,0.3),0_32px_80px_-12px_rgba(0,0,0,0.5),0_0_0_1px_rgba(255,255,255,0.08)_inset,0_2px_0_rgba(255,255,255,0.05)_inset]">
               
               {/* Premium top highlight - refined shimmer */}
               <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-amber-200/40 dark:via-amber-500/20 to-transparent"></div>
