@@ -239,22 +239,22 @@ const InlineStudioSection = () => {
             <div className="absolute -inset-4 bg-primary/[0.04] rounded-[3rem] blur-xl opacity-50"></div>
             
             {/* Card with glassmorphism + gradient border via wrapper */}
-            <div className="relative rounded-[32px] sm:rounded-[40px] p-px bg-gradient-to-br from-amber-400/35 via-zinc-300/30 to-cyan-400/35 dark:from-amber-500/25 dark:via-zinc-400/18 dark:to-cyan-500/25">
+            <div className="relative rounded-[32px] sm:rounded-[40px] p-px bg-gradient-to-br from-amber-400/40 via-white/20 to-cyan-400/40 dark:from-amber-500/30 dark:via-white/12 dark:to-cyan-500/30">
             <div className="relative rounded-[31px] sm:rounded-[39px] overflow-hidden 
-              bg-gradient-to-br from-zinc-700/70 via-zinc-800/65 to-zinc-750/60 
-              dark:from-zinc-800/78 dark:via-zinc-900/72 dark:to-zinc-850/68
-              backdrop-blur-2xl
-              shadow-[0_8px_32px_-4px_rgba(0,0,0,0.15),0_32px_80px_-12px_rgba(0,0,0,0.2),0_0_0_1px_rgba(255,255,255,0.08)_inset,0_2px_0_rgba(255,255,255,0.06)_inset]
-              dark:shadow-[0_8px_32px_-4px_rgba(0,0,0,0.3),0_32px_80px_-12px_rgba(0,0,0,0.5),0_0_0_1px_rgba(255,255,255,0.06)_inset,0_2px_0_rgba(255,255,255,0.03)_inset]">
+              bg-gradient-to-br from-zinc-900/85 via-zinc-950/80 to-zinc-900/85 
+              dark:from-zinc-950/90 dark:via-black/85 dark:to-zinc-950/90
+              backdrop-blur-3xl
+              shadow-[0_8px_40px_-4px_rgba(0,0,0,0.25),0_32px_80px_-12px_rgba(0,0,0,0.3),0_0_0_1px_rgba(255,255,255,0.12)_inset,0_1px_0_rgba(255,255,255,0.15)_inset]
+              dark:shadow-[0_8px_40px_-4px_rgba(0,0,0,0.5),0_32px_80px_-12px_rgba(0,0,0,0.6),0_0_0_1px_rgba(255,255,255,0.08)_inset,0_1px_0_rgba(255,255,255,0.06)_inset]">
               
               {/* Premium top highlight - refined shimmer */}
-              <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-amber-200/40 dark:via-amber-500/20 to-transparent"></div>
+              <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/30 dark:via-white/15 to-transparent"></div>
               
               {/* Bottom subtle edge */}
               <div className="absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-zinc-400/20 dark:via-zinc-500/10 to-transparent"></div>
               
               {/* Subtle inner glow - warm tint */}
-              <div className="absolute inset-0 bg-gradient-to-br from-amber-50/30 via-transparent to-cyan-50/10 dark:from-amber-900/5 dark:to-cyan-900/5 pointer-events-none"></div>
+              <div className="absolute inset-0 bg-gradient-to-br from-amber-500/[0.04] via-transparent to-cyan-500/[0.03] pointer-events-none"></div>
               
               {/* Content */}
               <div className="relative p-8 sm:p-10 md:p-12 lg:p-14">
