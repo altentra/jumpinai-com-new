@@ -61,25 +61,29 @@ export const GenerationProgressCard: React.FC<GenerationProgressCardProps> = ({
   const currentStep = status.currentStep || 'naming';
   const isComplete = status.isComplete;
   
-  // Smooth animated progress that continuously interpolates toward target
+  // Forward-only animated progress — never goes backward
+  const displayProgressRef = useRef(0);
   const [displayProgress, setDisplayProgress] = useState(0);
   const animationRef = useRef<number>();
   const targetProgress = status.progress || 0;
   
-  // Micro-progress for continuous streaming feel
-  const [microProgress, setMicroProgress] = useState(0);
-  
   useEffect(() => {
-    // Smoothly animate progress bar with easing
     const animate = () => {
-      setDisplayProgress(prev => {
-        const diff = targetProgress - prev;
-        if (Math.abs(diff) < 0.3) return targetProgress;
-        
-        // Dynamic speed: faster when far behind, slower when close
-        const speed = Math.max(0.5, Math.min(3, Math.abs(diff) / 8));
-        return prev + diff * 0.06 * speed;
-      });
+      const current = displayProgressRef.current;
+      // Only move forward — clamp target to never go below current
+      const safeTarget = Math.max(current, targetProgress);
+      const diff = safeTarget - current;
+      
+      if (diff < 0.2) {
+        displayProgressRef.current = safeTarget;
+        setDisplayProgress(safeTarget);
+      } else {
+        // Ease out — fast catch-up, smooth arrival
+        const step = diff * 0.08 + 0.15;
+        const next = Math.min(safeTarget, current + step);
+        displayProgressRef.current = next;
+        setDisplayProgress(next);
+      }
       animationRef.current = requestAnimationFrame(animate);
     };
     
@@ -88,29 +92,6 @@ export const GenerationProgressCard: React.FC<GenerationProgressCardProps> = ({
       if (animationRef.current) cancelAnimationFrame(animationRef.current);
     };
   }, [targetProgress]);
-  
-  // Micro-streaming animation within each step
-  useEffect(() => {
-    if (isComplete) {
-      setMicroProgress(0);
-      return;
-    }
-    
-    const interval = setInterval(() => {
-      setMicroProgress(prev => {
-        // Subtle incremental progress that creates streaming feel
-        const next = prev + 0.12;
-        return next > 6 ? 0 : next;
-      });
-    }, 80);
-    
-    return () => clearInterval(interval);
-  }, [isComplete, currentStep]);
-  
-  // Reset micro progress when actual step changes
-  useEffect(() => {
-    setMicroProgress(0);
-  }, [currentStep]);
   
   const getStepState = (stepId: string): 'complete' | 'active' | 'pending' => {
     const stepOrder = ['naming', 'overview', 'plan', 'tool_prompts', 'complete'];
@@ -139,7 +120,7 @@ export const GenerationProgressCard: React.FC<GenerationProgressCardProps> = ({
   }, [jumpName]);
   
   // Calculate smooth visual progress including micro-progress
-  const visualProgress = Math.min(100, displayProgress + (isComplete ? 0 : microProgress * 0.4));
+  const visualProgress = Math.min(100, displayProgress);
 
   return (
     <div className="relative group">
