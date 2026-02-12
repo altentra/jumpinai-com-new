@@ -4,7 +4,7 @@ import { Calendar, Trash2, ArrowRight } from "lucide-react";
 import { UserJump } from "@/services/jumpService";
 import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
-import logoTransparent from "@/assets/logo-transparent.png";
+import logoTransparent from "@/assets/logo-header-transparent.png";
 import JumpStatsRow from "./JumpStatsRow";
 
 interface JumpListCardProps {
