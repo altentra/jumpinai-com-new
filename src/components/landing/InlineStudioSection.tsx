@@ -239,7 +239,7 @@ const InlineStudioSection = () => {
             <div className="absolute -inset-4 bg-primary/[0.04] rounded-[3rem] blur-xl opacity-50"></div>
             
             {/* Card with glassmorphism + gradient border via wrapper */}
-            <div className="relative rounded-[32px] sm:rounded-[40px] p-px bg-gradient-to-br from-amber-400/50 via-white/25 to-cyan-400/50 dark:from-amber-500/38 dark:via-white/16 dark:to-cyan-500/38">
+            <div className="relative rounded-[32px] sm:rounded-[40px] p-px bg-gradient-to-br from-amber-400/60 via-white/30 to-cyan-400/60 dark:from-amber-500/45 dark:via-white/20 dark:to-cyan-500/45">
             <div className="relative rounded-[31px] sm:rounded-[39px] overflow-hidden 
               bg-gradient-to-br from-zinc-900/85 via-zinc-950/80 to-zinc-900/85 
               dark:from-zinc-950/90 dark:via-black/85 dark:to-zinc-950/90
