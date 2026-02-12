@@ -205,7 +205,7 @@ export function AgentListCard({
                       {/* Content */}
                       <div className="flex-1 min-w-0 space-y-1.5">
                         <h4 className={cn(
-                          "font-medium text-sm truncate transition-colors",
+                          "font-medium text-sm line-clamp-2 leading-snug transition-colors",
                           selectedAgent?.id === agent.id && "text-foreground"
                         )}>
                           {agent.title}

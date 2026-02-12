@@ -881,6 +881,32 @@ Deno.serve(async (req) => {
     const buildTypeName = isAIAgent ? 'AI Agent' : 'Workflow';
     console.log(`Generating ${buildTypeName} for platform: ${platform} - Opportunity: ${opportunity.title}`);
 
+    // Determine the jump's sequential number for this user
+    let jumpNumber = 0;
+    try {
+      const { data: userJumps } = await supabase
+        .from('user_jumps')
+        .select('id')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: true });
+      
+      if (userJumps) {
+        const jumpIndex = userJumps.findIndex((j: any) => j.id === jump.id);
+        jumpNumber = jumpIndex >= 0 ? jumpIndex + 1 : userJumps.length + 1;
+      }
+    } catch (e) {
+      console.warn('Could not determine jump number:', e);
+      jumpNumber = 0;
+    }
+
+    // Build structured title: [Type] · Jump #X · [Name] · [Platform]
+    const buildStructuredTitle = (platformName: string): string => {
+      const typeLabel = isAIAgent ? 'AI Agent' : 'Workflow';
+      const jumpLabel = jumpNumber > 0 ? `Jump #${jumpNumber}` : `Jump`;
+      const platLabel = platformName === 'n8n' ? 'n8n' : 'Make.com';
+      return `${typeLabel} · ${jumpLabel} · ${opportunity.title} · ${platLabel}`;
+    };
+
     // Determine credits: AI agents cost 2x, platforms multiply
     const baseCredits = isAIAgent ? 2 : 1;
     const creditsNeeded = platform === 'both' ? baseCredits * 2 : baseCredits;
@@ -929,7 +955,7 @@ Deno.serve(async (req) => {
           user_id: user.id,
           jump_id: jump.id,
           analysis_id: analysisId || null,
-          title: opportunity.title,
+          title: buildStructuredTitle('n8n'),
           description: opportunity.description,
           automation_target: opportunity.automationTarget || null,
           automation_type: automationType,
@@ -963,7 +989,7 @@ Deno.serve(async (req) => {
           user_id: user.id,
           jump_id: jump.id,
           analysis_id: analysisId || null,
-          title: opportunity.title + ' (Make.com)',
+          title: buildStructuredTitle('make'),
           description: opportunity.description,
           automation_target: opportunity.automationTarget || null,
           automation_type: automationType,
