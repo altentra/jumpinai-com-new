@@ -82,9 +82,6 @@ verify_jwt = false
 [functions.send-subscription-downgrade-email]
 verify_jwt = false
 
-[functions.jumps-ai-coach]
-verify_jwt = true
-
 [functions.jumps-ai-streaming]
 verify_jwt = false
 
@@ -116,6 +113,9 @@ verify_jwt = false
 verify_jwt = false
 
 [functions.build-agent]
+verify_jwt = false
+
+[functions.analyze-for-agents]
 verify_jwt = false
 
 [functions.explore-alternative-routes]
