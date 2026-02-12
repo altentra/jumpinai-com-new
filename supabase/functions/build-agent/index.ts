@@ -2,7 +2,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version',
 };
 
 type AutomationType = 'workflow' | 'ai-agent';
@@ -936,23 +936,31 @@ Deno.serve(async (req) => {
     }
 
     // Deduct credits AFTER successful generation
-    for (let i = 0; i < (platform === 'both' ? 2 : 1); i++) {
-      const platformName = i === 0 
+    // AI agents cost 2 credits each, workflows cost 1 credit each
+    const platformCount = platform === 'both' ? 2 : 1;
+    const creditsPerPlatform = isAIAgent ? 2 : 1;
+    
+    for (let p = 0; p < platformCount; p++) {
+      const platformName = p === 0 
         ? (platform === 'both' ? 'n8n' : platform) 
         : 'Make.com';
       
-      const buildTypeLabel = automationType === 'ai-agent' ? 'AI Agent' : 'Workflow';
-      const { data: creditDeducted, error: creditError } = await supabase
-        .rpc('deduct_user_credit', {
-          p_user_id: user.id,
-          p_description: `${buildTypeLabel} build (${platformName}): ${opportunity.title}`,
-          p_reference_id: savedAgentIds[i] || `agent_${platformName}_${Date.now()}`
-        });
+      const buildTypeLabel = isAIAgent ? 'AI Agent' : 'Workflow';
+      
+      // Deduct the correct number of credits per platform
+      for (let c = 0; c < creditsPerPlatform; c++) {
+        const { data: creditDeducted, error: creditError } = await supabase
+          .rpc('deduct_user_credit', {
+            p_user_id: user.id,
+            p_description: `${buildTypeLabel} build (${platformName}): ${opportunity.title}${creditsPerPlatform > 1 ? ` [${c + 1}/${creditsPerPlatform}]` : ''}`,
+            p_reference_id: savedAgentIds[p] || `agent_${platformName}_${Date.now()}`
+          });
 
-      if (creditError) {
-        console.error(`Credit deduction error for ${platformName}:`, creditError);
-      } else if (creditDeducted) {
-        console.log(`✅ Credit deducted for ${platformName} agent`);
+        if (creditError) {
+          console.error(`Credit deduction error for ${platformName} (${c + 1}/${creditsPerPlatform}):`, creditError);
+        } else if (creditDeducted) {
+          console.log(`✅ Credit deducted for ${platformName} ${buildTypeLabel} (${c + 1}/${creditsPerPlatform})`);
+        }
       }
     }
 
