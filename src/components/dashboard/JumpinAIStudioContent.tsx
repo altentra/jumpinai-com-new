@@ -413,7 +413,7 @@ const JumpinAIStudioContent = () => {
           <div className="max-w-4xl mx-auto">
           
           {/* HERO FORM CARD - Premium Glassmorphism (matches guest studio exactly) */}
-          <div className="mb-10 sm:mb-14 animate-fade-in-up" style={{ animationDelay: '0.08s' }}>
+          <div className="mb-10 sm:mb-14">
             <div className="relative">
               {/* Multi-layer ambient glow behind card */}
               <div className="absolute -inset-8 bg-gradient-to-br from-amber-500/[0.08] via-primary/[0.06] to-violet-500/[0.08] rounded-[4rem] blur-3xl opacity-70"></div>
