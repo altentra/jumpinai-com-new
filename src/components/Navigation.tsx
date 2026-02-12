@@ -3,7 +3,7 @@ import { Menu, X, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { Collapsible, CollapsibleTrigger, CollapsibleContent } from "@/components/ui/collapsible";
-import ThemeToggle from "@/components/ThemeToggle";
+
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useTheme } from "next-themes";
@@ -224,7 +224,6 @@ const Navigation = React.memo(() => {
 
           {/* Right: Theme Toggle & CTA - Fixed */}
           <div className="hidden md:flex items-center space-x-4 flex-shrink-0">
-            <ThemeToggle />
             {isAuthenticated ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -282,7 +281,6 @@ const Navigation = React.memo(() => {
 
           {/* Mobile menu button */}
           <div className="md:hidden flex items-center space-x-2 ml-auto">
-            <ThemeToggle />
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="text-muted-foreground hover:text-foreground p-2 rounded-lg transition-colors"
