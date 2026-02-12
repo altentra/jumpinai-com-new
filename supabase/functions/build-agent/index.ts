@@ -459,28 +459,19 @@ const salvageJson = (raw: string): any => {
   if (start < 0) return null;
 
   // Find the last valid closing brace by trying progressively
-  let lastValidEnd = -1;
-  let lastValidParsed = null;
-
   for (let i = cleaned.length - 1; i > start; i--) {
     if (cleaned[i] === '}') {
       const attempt = cleaned.slice(start, i + 1);
       try {
         const parsed = JSON.parse(attempt);
         if (parsed && typeof parsed === 'object') {
-          lastValidEnd = i;
-          lastValidParsed = parsed;
-          break;
+          console.log(`Salvaged JSON from position ${start} to ${i}`);
+          return parsed;
         }
       } catch {
-        // Continue searching for an earlier valid end
+        // Continue searching
       }
     }
-  }
-
-  if (lastValidParsed) {
-    console.log(`Salvaged JSON from position ${start} to ${lastValidEnd}`);
-    return lastValidParsed;
   }
 
   // Try to fix common truncation issues - close unclosed structures
@@ -512,17 +503,22 @@ const salvageJson = (raw: string): any => {
     }
   }
 
-  // Close any unclosed strings (if we ended inside a string)
+  // If we ended inside a string, close it and add a null value placeholder
   if (inString) {
     fixed += '"';
   }
 
-  // Close unclosed brackets and braces
+  // Remove any trailing comma before we close brackets
+  fixed = fixed.replace(/,\s*$/, '');
+
+  // Close unclosed brackets and braces, removing trailing commas at each level
   while (brackets > 0) {
+    fixed = fixed.replace(/,\s*$/, '');
     fixed += ']';
     brackets--;
   }
   while (braces > 0) {
+    fixed = fixed.replace(/,\s*$/, '');
     fixed += '}';
     braces--;
   }
@@ -532,6 +528,32 @@ const salvageJson = (raw: string): any => {
     console.log('Fixed truncated JSON by closing structures');
     return parsed;
   } catch {
+    // Last resort: try removing the last incomplete key-value pair
+    try {
+      // Remove last incomplete property (e.g., "key": "truncated val...)
+      const lastComma = fixed.lastIndexOf(',');
+      if (lastComma > 0) {
+        let trimmed = fixed.slice(0, lastComma);
+        // Re-close all brackets
+        let b2 = 0, k2 = 0, inStr2 = false, esc2 = false;
+        for (const c of trimmed) {
+          if (esc2) { esc2 = false; continue; }
+          if (c === '\\') { esc2 = true; continue; }
+          if (c === '"') { inStr2 = !inStr2; continue; }
+          if (!inStr2) {
+            if (c === '{') b2++; else if (c === '}') b2--;
+            if (c === '[') k2++; else if (c === ']') k2--;
+          }
+        }
+        while (k2 > 0) { trimmed += ']'; k2--; }
+        while (b2 > 0) { trimmed += '}'; b2--; }
+        const parsed2 = JSON.parse(trimmed);
+        console.log('Salvaged JSON by removing last incomplete property');
+        return parsed2;
+      }
+    } catch {
+      // truly unsalvageable
+    }
     return null;
   }
 };
@@ -645,8 +667,9 @@ Return ONLY the JSON ${workflowTerm} - no explanations, no markdown code blocks.
         }
       ],
       generationConfig: {
-        temperature: isAIAgent ? 0.3 : 0.2, // Lower temp for more consistent JSON output
-        maxOutputTokens: isAIAgent ? 16000 : 10000, // More tokens for complete JSON structures
+        temperature: isAIAgent ? 0.3 : 0.2,
+        maxOutputTokens: isAIAgent ? 32000 : 24000,
+        responseMimeType: 'application/json',
       },
       safetySettings: [
         { category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_NONE' },
@@ -668,11 +691,42 @@ Return ONLY the JSON ${workflowTerm} - no explanations, no markdown code blocks.
 
   console.log(`Raw ${platformName} response length:`, workflowJson.length);
 
-  const parsedWorkflow = salvageJson(workflowJson);
+  let parsedWorkflow = salvageJson(workflowJson);
   
   if (!parsedWorkflow) {
-    console.error(`${platformName} JSON parse error - all salvage attempts failed`);
-    throw new Error(`Failed to generate valid ${platformName} ${workflowTerm} JSON`);
+    // Retry once with even higher token limit
+    console.warn(`${platformName} JSON parse failed, retrying with higher token limit...`);
+    const retryResponse = await fetch(geminiUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        systemInstruction: { parts: [{ text: systemPrompt }] },
+        contents: [{ role: 'user', parts: [{ text: userPrompt + '\n\nCRITICAL: Return ONLY valid JSON. No markdown. No explanations. Just the raw JSON object.' }] }],
+        generationConfig: {
+          temperature: 0.1,
+          maxOutputTokens: 40000,
+          responseMimeType: 'application/json',
+        },
+        safetySettings: [
+          { category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_NONE' },
+          { category: 'HARM_CATEGORY_HATE_SPEECH', threshold: 'BLOCK_NONE' },
+          { category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT', threshold: 'BLOCK_NONE' },
+          { category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_NONE' },
+        ]
+      }),
+    });
+    
+    if (retryResponse.ok) {
+      const retryData = await retryResponse.json();
+      const retryContent = retryData.candidates?.[0]?.content?.parts?.[0]?.text || '';
+      console.log(`Retry ${platformName} response length:`, retryContent.length);
+      parsedWorkflow = salvageJson(retryContent);
+    }
+    
+    if (!parsedWorkflow) {
+      console.error(`${platformName} JSON parse error - all salvage attempts failed after retry`);
+      throw new Error(`Failed to generate valid ${platformName} ${workflowTerm} JSON`);
+    }
   }
   
   console.log(`Successfully parsed ${platformName} ${workflowTerm} JSON`);
