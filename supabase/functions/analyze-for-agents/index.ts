@@ -202,7 +202,7 @@ Focus on practical, immediately implementable opportunities. Prioritize by impac
 
       analysisResult = JSON.parse(cleanContent);
     } catch (parseError) {
-      console.error('❌ Failed to parse xAI response as JSON:', parseError);
+      console.error('❌ Failed to parse Gemini response as JSON:', parseError);
       console.log('Raw content:', content);
       throw new Error('Failed to parse analysis results');
     }
