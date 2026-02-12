@@ -244,8 +244,8 @@ const InlineStudioSection = () => {
               bg-gradient-to-br from-zinc-900/85 via-zinc-950/80 to-zinc-900/85 
               dark:from-zinc-950/90 dark:via-black/85 dark:to-zinc-950/90
               backdrop-blur-3xl
-              shadow-[0_8px_40px_-4px_rgba(0,0,0,0.25),0_32px_80px_-12px_rgba(0,0,0,0.3),0_0_0_1px_rgba(255,255,255,0.12)_inset,0_1px_0_rgba(255,255,255,0.15)_inset]
-              dark:shadow-[0_8px_40px_-4px_rgba(0,0,0,0.5),0_32px_80px_-12px_rgba(0,0,0,0.6),0_0_0_1px_rgba(255,255,255,0.08)_inset,0_1px_0_rgba(255,255,255,0.06)_inset]">
+              shadow-[0_10px_50px_-4px_rgba(0,0,0,0.35),0_40px_100px_-12px_rgba(0,0,0,0.4),0_0_0_1px_rgba(255,255,255,0.12)_inset,0_1px_0_rgba(255,255,255,0.15)_inset]
+              dark:shadow-[0_10px_50px_-4px_rgba(0,0,0,0.6),0_40px_100px_-12px_rgba(0,0,0,0.7),0_0_0_1px_rgba(255,255,255,0.08)_inset,0_1px_0_rgba(255,255,255,0.06)_inset]">
               
               {/* Premium top highlight - refined shimmer */}
               <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/30 dark:via-white/15 to-transparent"></div>
