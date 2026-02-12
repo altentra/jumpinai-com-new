@@ -524,49 +524,53 @@ const JumpinAIStudio = () => {
       </Helmet>
       
       <div 
-        ref={studioContainerRef}
-        onMouseMove={handleStudioMouseMove}
-        onMouseLeave={handleStudioMouseLeave}
-        className="min-h-screen scroll-snap-container relative overflow-hidden"
+        className="min-h-screen scroll-snap-container relative"
       >
-        {/* Premium Background System - Matching InlineStudioSection */}
-        <div className="absolute inset-0">
-          {/* Base gradient */}
-          <div className="absolute inset-0 bg-gradient-to-br from-amber-50/70 via-slate-50/90 to-cyan-50/50 dark:from-[#110d08] dark:via-[#0c1420] dark:to-[#0a1018]"></div>
-          
-          {/* Primary Gradient Flow - Golden Warmth */}
-          <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg, rgba(234, 170, 50, 0.18) 0%, rgba(214, 145, 30, 0.10) 25%, transparent 50%, rgba(6, 182, 212, 0.08) 75%, rgba(34, 211, 238, 0.12) 100%)' }}></div>
-          
-          {/* Secondary Gradient Flow - Teal Accent */}
-          <div className="absolute inset-0" style={{ background: 'linear-gradient(-45deg, rgba(20, 184, 166, 0.12) 0%, transparent 40%, transparent 60%, rgba(214, 160, 40, 0.08) 100%)' }}></div>
-          
-          {/* Radial Glow - Top Left Golden */}
-          <div className="absolute -top-[15%] -left-[10%] w-[55%] h-[55%]" style={{ background: 'radial-gradient(ellipse at center, rgba(218, 160, 45, 0.22) 0%, rgba(200, 140, 30, 0.10) 30%, transparent 60%)', filter: 'blur(80px)' }}></div>
-          
-          {/* Radial Glow - Top Right Cyan */}
-          <div className="absolute -top-[10%] -right-[10%] w-[45%] h-[45%]" style={{ background: 'radial-gradient(ellipse at center, rgba(6, 182, 212, 0.2) 0%, rgba(20, 184, 166, 0.1) 40%, transparent 65%)', filter: 'blur(70px)' }}></div>
-          
-          {/* Radial Glow - Bottom Center Warm */}
-          <div className="absolute bottom-[-10%] left-[20%] w-[60%] h-[50%]" style={{ background: 'radial-gradient(ellipse at center, rgba(210, 140, 50, 0.13) 0%, rgba(200, 155, 45, 0.07) 50%, transparent 70%)', filter: 'blur(60px)' }}></div>
-          
-          {/* Interactive Dot Matrix */}
-          <div className="absolute inset-0 overflow-hidden pointer-events-none">
-            <HeroDotMatrix isDark={studioIsDark} mousePos={studioMousePos} />
+        {/* Premium Background System - SCOPED to top input section only */}
+        <div 
+          ref={studioContainerRef}
+          onMouseMove={handleStudioMouseMove}
+          onMouseLeave={handleStudioMouseLeave}
+          className="relative overflow-hidden"
+        >
+          {/* Background layers - contained within this wrapper */}
+          <div className="absolute inset-0">
+            {/* Base gradient */}
+            <div className="absolute inset-0 bg-gradient-to-br from-amber-50/70 via-slate-50/90 to-cyan-50/50 dark:from-[#110d08] dark:via-[#0c1420] dark:to-[#0a1018]"></div>
+            
+            {/* Primary Gradient Flow - Golden Warmth */}
+            <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg, rgba(234, 170, 50, 0.18) 0%, rgba(214, 145, 30, 0.10) 25%, transparent 50%, rgba(6, 182, 212, 0.08) 75%, rgba(34, 211, 238, 0.12) 100%)' }}></div>
+            
+            {/* Secondary Gradient Flow - Teal Accent */}
+            <div className="absolute inset-0" style={{ background: 'linear-gradient(-45deg, rgba(20, 184, 166, 0.12) 0%, transparent 40%, transparent 60%, rgba(214, 160, 40, 0.08) 100%)' }}></div>
+            
+            {/* Radial Glow - Top Left Golden */}
+            <div className="absolute -top-[15%] -left-[10%] w-[55%] h-[55%]" style={{ background: 'radial-gradient(ellipse at center, rgba(218, 160, 45, 0.22) 0%, rgba(200, 140, 30, 0.10) 30%, transparent 60%)', filter: 'blur(80px)' }}></div>
+            
+            {/* Radial Glow - Top Right Cyan */}
+            <div className="absolute -top-[10%] -right-[10%] w-[45%] h-[45%]" style={{ background: 'radial-gradient(ellipse at center, rgba(6, 182, 212, 0.2) 0%, rgba(20, 184, 166, 0.1) 40%, transparent 65%)', filter: 'blur(70px)' }}></div>
+            
+            {/* Radial Glow - Bottom Center Warm */}
+            <div className="absolute bottom-[-10%] left-[20%] w-[60%] h-[50%]" style={{ background: 'radial-gradient(ellipse at center, rgba(210, 140, 50, 0.13) 0%, rgba(200, 155, 45, 0.07) 50%, transparent 70%)', filter: 'blur(60px)' }}></div>
+            
+            {/* Interactive Dot Matrix */}
+            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+              <HeroDotMatrix isDark={studioIsDark} mousePos={studioMousePos} />
+            </div>
+            
+            {/* Black overlay to darken - 30% opacity */}
+            <div className="absolute inset-0 bg-black/[0.30] dark:bg-black/[0.30]"></div>
+            
+            {/* Bottom fade-out into standard background */}
+            <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-b from-transparent via-background/60 to-background pointer-events-none"></div>
           </div>
           
-          {/* Black overlay to darken - 30% opacity */}
-          <div className="absolute inset-0 bg-black/[0.30] dark:bg-black/[0.30]"></div>
-        </div>
-        
-        
-        
-        <Navigation />
-        
-        {/* Memoized Turnstile - won't re-render on typing */}
-        {turnstileElement}
-        
-        <main className="relative z-10">          
-          <div className="relative pt-20 sm:pt-24 px-4 sm:px-6 lg:px-8">
+          <Navigation />
+          
+          {/* Memoized Turnstile - won't re-render on typing */}
+          {turnstileElement}
+          
+          <div className="relative z-10 pt-20 sm:pt-24 px-4 sm:px-6 lg:px-8 pb-16">
             <div className="max-w-4xl mx-auto">
               
               {/* Refined Header Row */}
@@ -786,10 +790,17 @@ const JumpinAIStudio = () => {
                   </button>
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+        {/* END: Premium Background Zone */}
 
-              {/* Progressive Jump Display */}
-              {result && (
-                <div ref={progressDisplayRef} className="animate-fade-in-up">
+        {/* Results section - on standard background */}
+        {result && (
+          <div className="bg-background">
+            <div className="px-4 sm:px-6 lg:px-8">
+              <div className="max-w-4xl mx-auto">
+                <div ref={progressDisplayRef} className="animate-fade-in-up pt-8">
                   <ProgressiveJumpDisplay
                     result={result}
                     generationTimer={generationTimer}
@@ -798,9 +809,15 @@ const JumpinAIStudio = () => {
                     onToolPromptsRefresh={refreshToolPrompts}
                   />
                 </div>
-              )}
+              </div>
+            </div>
+          </div>
+        )}
 
-              {/* Mini Footer */}
+        {/* Mini Footer - on standard background */}
+        <div className="bg-background">
+          <div className="px-4 sm:px-6 lg:px-8">
+            <div className="max-w-4xl mx-auto">
               <div className="mt-16 py-2 text-center border-t border-border/20">
                 <div className="text-sm text-muted-foreground/60">
                   <div>© 2026 JumpinAI, LLC. All rights reserved.</div>
@@ -824,7 +841,7 @@ const JumpinAIStudio = () => {
               </div>
             </div>
           </div>
-        </main>
+        </div>
       </div>
     </>
   );
