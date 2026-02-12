@@ -35,8 +35,8 @@ export const DashboardStats: React.FC<DashboardStatsProps> = ({ stats, isLoading
       value: stats.totalToolPrompts,
       implemented: stats.implementedToolPrompts,
       icon: Wrench,
-      color: 'text-red-500',
-      bgColor: 'bg-red-500/10',
+      color: 'text-green-500',
+      bgColor: 'bg-green-500/10',
       path: '/dashboard/tools-prompts',
     },
     {
@@ -59,8 +59,8 @@ export const DashboardStats: React.FC<DashboardStatsProps> = ({ stats, isLoading
       title: 'Alt. Routes',
       value: stats.totalAlternativeRoutes,
       icon: Route,
-      color: 'text-cyan-500',
-      bgColor: 'bg-cyan-500/10',
+      color: 'text-red-500',
+      bgColor: 'bg-red-500/10',
       path: '/dashboard/jumps',
     },
     {
@@ -75,8 +75,8 @@ export const DashboardStats: React.FC<DashboardStatsProps> = ({ stats, isLoading
       title: 'Automations',
       value: stats.totalAiAgents,
       icon: Bot,
-      color: 'text-green-500',
-      bgColor: 'bg-green-500/10',
+      color: 'text-cyan-500',
+      bgColor: 'bg-cyan-500/10',
       path: '/dashboard/automation',
     },
   ];
