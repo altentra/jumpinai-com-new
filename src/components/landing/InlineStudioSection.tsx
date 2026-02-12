@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Loader2, Zap } from 'lucide-react';
 import { Turnstile, type TurnstileInstance } from '@marsidev/react-turnstile';
 import { StudioTextarea } from '@/components/studio/StudioTextarea';
-import { useScrollAnimation } from '@/hooks/useScrollAnimation';
+
 
 const TURNSTILE_TEST_SITE_KEY = '1x00000000000000000000AA';
 
@@ -14,7 +14,6 @@ const TURNSTILE_TEST_SITE_KEY = '1x00000000000000000000AA';
  */
 const InlineStudioSection = () => {
   const navigate = useNavigate();
-  const { elementRef, scrollProgress } = useScrollAnimation({ threshold: 0.15 });
   const sectionRef = useRef<HTMLElement>(null);
   const [mousePos, setMousePos] = useState({ x: -1000, y: -1000 });
 
@@ -131,10 +130,7 @@ const InlineStudioSection = () => {
   return (
     <section 
       id="inline-studio"
-      ref={(el) => {
-        (elementRef as React.MutableRefObject<HTMLElement | null>).current = el;
-        (sectionRef as React.MutableRefObject<HTMLElement | null>).current = el;
-      }}
+      ref={sectionRef}
       onMouseMove={handleSectionMouseMove}
       onMouseLeave={handleSectionMouseLeave}
       className="relative py-20 sm:py-24 lg:py-32 overflow-hidden"
@@ -221,11 +217,7 @@ const InlineStudioSection = () => {
       
       <div className="container mx-auto px-4 relative z-10">
         <div 
-          className="max-w-4xl mx-auto transition-all duration-700 ease-out"
-          style={{
-            opacity: Math.min(1, scrollProgress * 2),
-            transform: `translateY(${(1 - Math.min(1, scrollProgress * 2)) * 30}px)`
-          }}
+          className="max-w-4xl mx-auto"
         >
           {/* Hero text - Premium typography */}
           <div className="text-center mb-12 sm:mb-14">
