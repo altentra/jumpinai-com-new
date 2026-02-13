@@ -45,12 +45,10 @@ const formatNumber = (num: number): string => {
   return num.toLocaleString();
 };
 
-const StatItem = React.memo(({ icon: Icon, value, label, gradient, glowColor, delay, isVisible }: {
+const StatItem = React.memo(({ icon: Icon, value, label, delay, isVisible }: {
   icon: React.ElementType;
   value: number;
   label: string;
-  gradient: string;
-  glowColor: string;
   delay: number;
   isVisible: boolean;
 }) => {
@@ -65,25 +63,21 @@ const StatItem = React.memo(({ icon: Icon, value, label, gradient, glowColor, de
         transitionDelay: `${delay}ms`,
       }}
     >
-      {/* Icon container with glow ring */}
+      {/* Icon — dark glass pill */}
       <div className="relative">
-        {/* Outer glow */}
-        <div
-          className={`absolute -inset-2 rounded-2xl opacity-0 group-hover:opacity-60 transition-opacity duration-500 blur-xl ${glowColor}`}
-        />
-        {/* Icon pill */}
-        <div className={`relative w-11 h-11 sm:w-12 sm:h-12 rounded-2xl ${gradient} flex items-center justify-center shadow-lg ring-1 ring-white/10 group-hover:ring-white/20 transition-all duration-300 group-hover:scale-110`}>
-          <Icon className="h-5 w-5 sm:h-5.5 sm:w-5.5 text-white drop-shadow-sm" strokeWidth={1.8} />
+        <div className="absolute -inset-1.5 rounded-2xl opacity-0 group-hover:opacity-40 transition-opacity duration-500 bg-white/10 blur-lg" />
+        <div className="relative w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-white/[0.04] border border-white/[0.08] flex items-center justify-center group-hover:bg-white/[0.07] group-hover:border-white/[0.14] transition-all duration-300 group-hover:scale-105">
+          <Icon className="h-5 w-5 text-white/50 group-hover:text-white/75 transition-colors duration-300" strokeWidth={1.5} />
         </div>
       </div>
 
       {/* Value + label */}
       <div className="text-center space-y-0.5">
-        <p className="text-2xl sm:text-3xl md:text-[2rem] font-extrabold text-white tabular-nums tracking-tight leading-none">
+        <p className="text-2xl sm:text-3xl md:text-[2rem] font-extrabold text-white/90 tabular-nums tracking-tight leading-none">
           {formatNumber(animatedValue)}
-          <span className="text-white/40 font-semibold">+</span>
+          <span className="text-white/25 font-semibold">+</span>
         </p>
-        <p className="text-[10px] sm:text-[11px] text-white/50 font-semibold uppercase tracking-[0.15em] leading-tight">
+        <p className="text-[10px] sm:text-[11px] text-white/30 font-semibold uppercase tracking-[0.15em] leading-tight">
           {label}
         </p>
       </div>
@@ -133,41 +127,11 @@ const SocialProofStats: React.FC = () => {
   if (!stats) return null;
 
   const statItems = [
-    {
-      icon: Rocket,
-      value: stats.totalJumps,
-      label: 'AI Jumps',
-      gradient: 'bg-gradient-to-br from-blue-500 to-blue-600',
-      glowColor: 'bg-blue-500/40',
-    },
-    {
-      icon: Wrench,
-      value: stats.totalToolPrompts,
-      label: 'Tool-Prompt Combos',
-      gradient: 'bg-gradient-to-br from-emerald-500 to-emerald-600',
-      glowColor: 'bg-emerald-500/40',
-    },
-    {
-      icon: Sparkles,
-      value: stats.totalClarifications,
-      label: 'Clarifications',
-      gradient: 'bg-gradient-to-br from-amber-500 to-orange-500',
-      glowColor: 'bg-amber-500/40',
-    },
-    {
-      icon: Bot,
-      value: stats.totalAutomations,
-      label: 'Automations',
-      gradient: 'bg-gradient-to-br from-cyan-500 to-cyan-600',
-      glowColor: 'bg-cyan-500/40',
-    },
-    {
-      icon: Clock,
-      value: stats.estimatedHoursSaved,
-      label: 'Hours Saved',
-      gradient: 'bg-gradient-to-br from-violet-500 to-purple-600',
-      glowColor: 'bg-violet-500/40',
-    },
+    { icon: Rocket, value: stats.totalJumps, label: 'AI Jumps' },
+    { icon: Wrench, value: stats.totalToolPrompts, label: 'Tool-Prompt Combos' },
+    { icon: Sparkles, value: stats.totalClarifications, label: 'Clarifications' },
+    { icon: Bot, value: stats.totalAutomations, label: 'Automations' },
+    { icon: Clock, value: stats.estimatedHoursSaved, label: 'Hours Saved' },
   ];
 
   return (
@@ -193,8 +157,6 @@ const SocialProofStats: React.FC = () => {
                   icon={item.icon}
                   value={item.value}
                   label={item.label}
-                  gradient={item.gradient}
-                  glowColor={item.glowColor}
                   delay={index * 120}
                   isVisible={isVisible}
                 />
