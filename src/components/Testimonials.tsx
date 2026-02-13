@@ -12,28 +12,28 @@ interface Testimonial {
 
 const testimonials: Testimonial[] = [
   {
-    name: "Maria Gonzalez",
-    role: "Freelance Graphic Designer",
+    name: "Jake Morrison",
+    role: "Real Estate Agent",
+    location: "Denver, CO",
+    quote: "Every other agent in my office started using AI last year but none of them could explain what they were actually doing with it. I ran a Jump on a Sunday night and by Wednesday I had automated my entire listing description process and my follow-up emails. My broker asked me how I suddenly had time to take on 4 extra clients. I just smiled. Seriously though — the plan was so specific to real estate that it felt like someone in my industry wrote it.",
+    highlight: "4 extra clients per month",
+    avatar: "JM",
+  },
+  {
+    name: "Aaliyah Brooks",
+    role: "Etsy Shop Owner · Handmade Jewelry",
+    location: "Atlanta, GA",
+    quote: "I'm a one-person operation and I was drowning in product photos, descriptions, customer messages, all of it. A friend sent me JumpinAI and I thought it was gonna be another generic 'use ChatGPT for everything' thing. It wasn't. It mapped out exactly which tools fit MY workflow and gave me the prompts ready to go. Then I used the automation builder and now my order confirmations and review requests run on autopilot. I got my weekends back.",
+    highlight: "Reclaimed 12+ hrs/week",
+    avatar: "AB",
+  },
+  {
+    name: "Tom Kessler",
+    role: "Operations Manager · SaaS Startup",
     location: "Austin, TX",
-    quote: "I kept putting off the AI thing for months — every time I tried figuring it out myself I'd spiral into tutorials and give up. JumpinAI just laid it all out. Here's what to use, here's how, now go. I set up my entire client onboarding in two afternoons and it basically runs itself now. That was three months ago and I haven't touched it since. Best decision I made this year.",
-    highlight: "Cut admin time by 60%",
-    avatar: "MG",
-  },
-  {
-    name: "David Chen",
-    role: "Small Business Owner · E-commerce",
-    location: "Portland, OR",
-    quote: "Everyone kept telling me I need AI for my store but nobody could tell me WHERE to start. I ran a Jump and it literally gave me the tools AND the prompts — like ready to copy and use. My product listings used to take me 45 minutes each. Now it's maybe 10. That alone was worth it, but the whole plan opened my eyes to stuff I didn't even know was possible.",
-    highlight: "Product listings 4x faster",
-    avatar: "DC",
-  },
-  {
-    name: "Priya Sharma",
-    role: "Marketing Coordinator",
-    location: "Chicago, IL",
-    quote: "We were all just using ChatGPT randomly, no strategy at all. After my Jump I had this clear plan mapping tools to each part of our pipeline. But the part that really blew my mind was the automation feature — I clicked a few buttons and JumpinAI actually built me a working n8n workflow. Didn't have to figure out the nodes or connections myself. It just… worked.",
-    highlight: "Fully automated social pipeline",
-    avatar: "PS",
+    quote: "We were paying for like six different AI tools and nobody on the team knew which one to use for what. Total mess. I ran a Jump for our ops workflow and it basically audited everything — told us which tools actually mattered, which ones we were wasting money on, and how to connect them. We cut two subscriptions the same week and the workflow JumpinAI built for us replaced a process that used to take our intern three hours every Monday.",
+    highlight: "Cut 2 redundant AI tools",
+    avatar: "TK",
   },
 ];
 
