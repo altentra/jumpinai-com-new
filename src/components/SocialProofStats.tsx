@@ -150,7 +150,13 @@ const SocialProofStats: React.FC = () => {
       <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-5xl mx-auto">
           {/* Glass card — matches "From Confusion to Clarity" card style */}
-          <div className="group relative rounded-3xl">
+          <div
+            className="group relative rounded-3xl transition-all duration-700 ease-out"
+            style={{
+              opacity: isVisible ? 1 : 0,
+              transform: isVisible ? 'translateY(0)' : 'translateY(40px)',
+            }}
+          >
             {/* Liquid glass border wrapper */}
             <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/[0.03] via-white/[0.01] to-white/[0.03] p-[1px]">
               <div className="absolute inset-0 rounded-3xl bg-card"></div>
