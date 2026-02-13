@@ -12,6 +12,7 @@ import BookPromotion from "@/components/BookPromotion";
 import Newsletter from "@/components/Newsletter";
 import Footer from "@/components/Footer";
 import SocialProofStats from "@/components/SocialProofStats";
+import Testimonials from "@/components/Testimonials";
 import { GoogleSheetsTest } from "@/components/GoogleSheetsTest";
 import { useAuth } from '@/hooks/useAuth';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
@@ -528,6 +529,9 @@ const Index = () => {
 
       {/* Social Proof Stats - Platform Impact */}
       <SocialProofStats />
+
+      {/* Testimonials - Social Proof */}
+      <Testimonials />
 
       {/* How JumpinAI Studio Works */}
       <section className="py-16 lg:py-24">
