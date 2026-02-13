@@ -151,9 +151,13 @@ const SocialProofStats: React.FC = () => {
       <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-5xl mx-auto">
           {/* Glass card */}
-          <div className="relative rounded-[1.75rem] border border-white/[0.10] bg-white/[0.03] backdrop-blur-md p-8 sm:p-10 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.06)]">
+          <div className="relative rounded-[1.75rem] border border-white/[0.12] bg-white/[0.03] backdrop-blur-md p-8 sm:p-10">
             {/* Top edge highlight */}
-            <div className="absolute inset-x-6 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
+            <div className="absolute inset-x-6 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/25 to-transparent"></div>
+            {/* Bottom edge subtle highlight */}
+            <div className="absolute inset-x-10 bottom-0 h-[1px] bg-gradient-to-r from-transparent via-white/8 to-transparent"></div>
+            {/* Inner glow */}
+            <div className="absolute inset-[1px] rounded-[1.7rem] bg-gradient-to-b from-white/[0.04] via-transparent to-transparent pointer-events-none"></div>
 
             <div className="relative grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-8 sm:gap-6">
               {statItems.map((item, index) => (
