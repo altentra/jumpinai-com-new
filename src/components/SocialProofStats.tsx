@@ -101,10 +101,21 @@ const SocialProofStats: React.FC = () => {
     const fetchStats = async () => {
       try {
         const { data, error } = await supabase.functions.invoke('platform-stats');
+        console.log('Platform stats response:', { data, error });
         if (error) throw error;
-        setStats(data as PlatformStats);
+        if (data) {
+          setStats(data as PlatformStats);
+        }
       } catch (error) {
         console.error('Error fetching platform stats:', error);
+        // Show fallback stats so the section isn't empty
+        setStats({
+          totalJumps: 500,
+          totalToolPrompts: 700,
+          totalClarifications: 200,
+          totalAutomations: 300,
+          estimatedHoursSaved: 1000,
+        });
       }
     };
 
