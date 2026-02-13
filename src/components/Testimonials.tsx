@@ -15,7 +15,7 @@ const testimonials: Testimonial[] = [
     name: "Maria Gonzalez",
     role: "Freelance Graphic Designer",
     location: "Austin, TX",
-    quote: "Honestly? I'd been putting off the whole AI thing for months. Every time I tried to figure it out on my own I'd end up down some rabbit hole and give up. JumpinAI just… laid it all out for me. Like here's what you should use, here's how, go. I set up my client onboarding in maybe two afternoons and now it basically runs itself. Wish I'd found this sooner.",
+    quote: "I kept putting off the AI thing for months — every time I tried figuring it out myself I'd spiral into tutorials and give up. JumpinAI just laid it all out. Here's what to use, here's how, now go. I set up my entire client onboarding in two afternoons and it basically runs itself now. That was three months ago and I haven't touched it since. Best decision I made this year.",
     highlight: "Cut admin time by 60%",
     avatar: "MG",
   },
@@ -57,12 +57,16 @@ const TestimonialCard = React.memo(({ testimonial, index, isVisible }: {
       {/* Bottom shimmer */}
       <div className="absolute inset-x-10 bottom-0 h-[1px] bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" />
 
-      {/* Highlight badge */}
-      <div className="mb-5">
-        <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-primary/70 bg-primary/[0.07] border border-primary/[0.10] rounded-full px-3 py-1">
-          <Quote className="h-3 w-3 text-primary/50" strokeWidth={2} />
-          {testimonial.highlight}
-        </span>
+      {/* Card header — highlight metric */}
+      <div className="mb-6">
+        <div className="flex items-center gap-2.5">
+          <div className="w-7 h-7 rounded-lg bg-primary/[0.08] border border-primary/[0.12] flex items-center justify-center flex-shrink-0">
+            <Quote className="h-3.5 w-3.5 text-primary/60" strokeWidth={2} />
+          </div>
+          <span className="text-[11px] font-bold uppercase tracking-[0.12em] text-white/70">
+            {testimonial.highlight}
+          </span>
+        </div>
       </div>
 
       {/* Quote text */}
