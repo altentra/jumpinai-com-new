@@ -10,7 +10,6 @@ interface PlatformStats {
   estimatedHoursSaved: number;
 }
 
-// Animated counter hook
 const useCountUp = (target: number, duration: number = 2000, shouldStart: boolean = false) => {
   const [count, setCount] = useState(0);
   const frameRef = useRef<number>();
@@ -22,7 +21,6 @@ const useCountUp = (target: number, duration: number = 2000, shouldStart: boolea
     const animate = (currentTime: number) => {
       const elapsed = currentTime - startTime;
       const progress = Math.min(elapsed / duration, 1);
-      // Ease-out cubic
       const eased = 1 - Math.pow(1 - progress, 3);
       setCount(Math.round(eased * target));
 
@@ -91,24 +89,9 @@ const SocialProofStats: React.FC = () => {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const [jumpsRes, toolPromptsRes, clarificationsRes, automationsRes] = await Promise.all([
-          supabase.from('user_jumps').select('id', { count: 'exact', head: true }),
-          supabase.from('user_tool_prompts').select('id', { count: 'exact', head: true }),
-          supabase.from('user_jump_actions').select('id', { count: 'exact', head: true }).eq('action_type', 'clarify'),
-          supabase.from('user_agents').select('id', { count: 'exact', head: true }),
-        ]);
-
-        const totalAutomations = automationsRes.count || 0;
-        // Estimate: each automation saves ~4 hours/week, running for avg 8 weeks
-        const estimatedHoursSaved = totalAutomations * 32;
-
-        setStats({
-          totalJumps: jumpsRes.count || 0,
-          totalToolPrompts: toolPromptsRes.count || 0,
-          totalClarifications: clarificationsRes.count || 0,
-          totalAutomations,
-          estimatedHoursSaved,
-        });
+        const { data, error } = await supabase.functions.invoke('platform-stats');
+        if (error) throw error;
+        setStats(data as PlatformStats);
       } catch (error) {
         console.error('Error fetching platform stats:', error);
       }
@@ -147,13 +130,11 @@ const SocialProofStats: React.FC = () => {
 
   return (
     <section ref={sectionRef} className="py-10 sm:py-14 relative overflow-hidden">
-      {/* Subtle background glow */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[200px] bg-gradient-to-r from-primary/5 via-accent/5 to-primary/5 rounded-full blur-3xl opacity-60"></div>
       </div>
 
       <div className="container mx-auto px-4 relative z-10">
-        {/* Section label */}
         <div
           className="text-center mb-6 sm:mb-8 transition-all duration-700"
           style={{
@@ -166,10 +147,8 @@ const SocialProofStats: React.FC = () => {
           </p>
         </div>
 
-        {/* Stats row with glass card */}
         <div className="max-w-5xl mx-auto">
           <div className="relative rounded-2xl border border-white/[0.06] bg-gradient-to-br from-white/[0.03] via-white/[0.01] to-white/[0.03] backdrop-blur-sm shadow-[0_8px_32px_rgba(0,0,0,0.12)] p-6 sm:p-8">
-            {/* Inner glow border */}
             <div className="absolute inset-[1px] rounded-2xl bg-gradient-to-b from-white/[0.04] via-transparent to-transparent pointer-events-none"></div>
 
             <div className="relative grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6 sm:gap-4">
