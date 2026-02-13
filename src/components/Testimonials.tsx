@@ -28,12 +28,12 @@ const testimonials: Testimonial[] = [
     avatar: "GS",
   },
   {
-    name: "Omar J.",
-    role: "Logistics Manager",
-    location: "Chicago, IL",
-    quote: "I'd been manually doing things I didn't even realize could be automated. The Jump didn't just show me a plan — it showed me how much time I was throwing away. I built my first workflow that afternoon. My director asked what changed. I told him I finally stopped working harder and started working smarter.",
-    highlight: "Stopped working harder",
-    avatar: "OJ",
+    name: "Nina V.",
+    role: "Veterinary Clinic Owner",
+    location: "Raleigh, NC",
+    quote: "I treat animals, not spreadsheets. But I was spending more time on the business side than the clinical side and it was burning me out. I tried JumpinAI not expecting much — and walked away with a plan so tailored to my clinic that my office manager thought I'd hired a consultant. Three weeks in, we're running automations I didn't know were possible for a practice our size.",
+    highlight: "More time with patients",
+    avatar: "NV",
   },
 ];
 
