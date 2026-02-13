@@ -50,41 +50,37 @@ const TestimonialCard = React.memo(({ testimonial, index, isVisible }: {
       transitionDelay: `${index * 150}ms`,
     }}
   >
-    {/* Card */}
-    <div className="relative flex flex-col h-full rounded-[1.25rem] border border-white/[0.10] bg-white/[0.03] backdrop-blur-md p-7 sm:p-9 overflow-hidden group-hover:border-white/[0.18] group-hover:bg-white/[0.05] transition-all duration-500">
-      {/* Top shimmer */}
-      <div className="absolute inset-x-6 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent" />
-      {/* Bottom shimmer */}
-      <div className="absolute inset-x-10 bottom-0 h-[1px] bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" />
+    {/* Card — matches Features card style */}
+    <div className="relative flex flex-col h-full rounded-3xl border-2 border-border bg-card shadow-lg p-7 sm:p-9 overflow-hidden group-hover:border-primary group-hover:shadow-xl group-hover:scale-105 transition-all duration-300">
 
       {/* Card header — highlight metric */}
       <div className="mb-6">
         <div className="flex items-center gap-2.5">
-          <div className="w-7 h-7 rounded-lg bg-primary/[0.08] border border-primary/[0.12] flex items-center justify-center flex-shrink-0">
-            <Quote className="h-3.5 w-3.5 text-primary/60" strokeWidth={2} />
+          <div className="flex-shrink-0 w-7 h-7 rounded-lg bg-muted border border-border flex items-center justify-center">
+            <Quote className="h-3.5 w-3.5 text-muted-foreground" strokeWidth={2} />
           </div>
-          <span className="text-[11px] font-bold uppercase tracking-[0.12em] text-white/70">
+          <span className="text-[11px] font-bold uppercase tracking-[0.12em] text-foreground/70">
             {testimonial.highlight}
           </span>
         </div>
       </div>
 
       {/* Quote text */}
-      <blockquote className="flex-1 text-[0.84rem] sm:text-[0.9rem] leading-[1.7] text-white/55 mb-7 font-light">
+      <blockquote className="flex-1 text-[0.84rem] sm:text-[0.9rem] leading-[1.7] text-muted-foreground mb-7 font-light">
         "{testimonial.quote}"
       </blockquote>
 
       {/* Divider */}
-      <div className="h-[1px] bg-gradient-to-r from-transparent via-white/[0.08] to-transparent mb-5" />
+      <div className="h-[1px] bg-border mb-5" />
 
       {/* Author */}
       <div className="flex items-center gap-3.5">
-        <div className="w-10 h-10 rounded-full bg-white/[0.05] border border-white/[0.10] flex items-center justify-center flex-shrink-0">
-          <span className="text-[11px] font-semibold text-white/45 tracking-wider">{testimonial.avatar}</span>
+        <div className="w-10 h-10 rounded-full bg-muted border border-border flex items-center justify-center flex-shrink-0">
+          <span className="text-[11px] font-semibold text-muted-foreground tracking-wider">{testimonial.avatar}</span>
         </div>
         <div className="min-w-0">
-          <p className="text-[0.8rem] font-semibold text-white/80 tracking-wide">{testimonial.name}</p>
-          <p className="text-[10.5px] text-white/30 tracking-wide mt-0.5">{testimonial.role} · {testimonial.location}</p>
+          <p className="text-[0.8rem] font-semibold text-foreground tracking-wide">{testimonial.name}</p>
+          <p className="text-[10.5px] text-muted-foreground tracking-wide mt-0.5">{testimonial.role} · {testimonial.location}</p>
         </div>
       </div>
     </div>
@@ -129,10 +125,10 @@ const Testimonials: React.FC = () => {
               transform: isVisible ? 'translateY(0)' : 'translateY(16px)',
             }}
           >
-            <p className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.2em] text-white/25 mb-3">
+            <p className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.2em] text-muted-foreground mb-3">
               From Our Community
             </p>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white/90 tracking-tight">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground tracking-tight">
               How People Are Adapting With JumpinAI
             </h2>
           </div>
