@@ -50,40 +50,51 @@ const TestimonialCard = React.memo(({ testimonial, index, isVisible }: {
       transitionDelay: `${index * 150}ms`,
     }}
   >
-    {/* Card — matches Features card style */}
-    <div className="relative flex flex-col h-full rounded-3xl border-2 border-border bg-card shadow-lg p-7 sm:p-9 overflow-hidden group-hover:border-primary group-hover:shadow-xl group-hover:scale-105 transition-all duration-300">
+    {/* Liquid glass border wrapper */}
+    <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/[0.03] via-white/[0.01] to-white/[0.03] p-[1px]">
+      <div className="absolute inset-0 rounded-3xl bg-card"></div>
+    </div>
+    
+    <div className="relative flex flex-col h-full bg-card rounded-3xl p-7 sm:p-9 shadow-modern hover:shadow-modern-lg transition-all duration-500 border border-white/10 hover:border-white/20 overflow-hidden">
+      {/* Subtle glass overlay */}
+      <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/[0.02] via-transparent to-white/[0.01] pointer-events-none"></div>
 
-      {/* Card header — highlight metric */}
-      <div className="mb-6">
-        <div className="flex items-center gap-2.5">
-          <div className="flex-shrink-0 w-7 h-7 rounded-lg bg-muted border border-border flex items-center justify-center">
-            <Quote className="h-3.5 w-3.5 text-muted-foreground" strokeWidth={2} />
+      <div className="relative z-10 flex flex-col h-full">
+        {/* Card header — highlight metric */}
+        <div className="mb-6">
+          <div className="flex items-center gap-2.5">
+            <div className="w-7 h-7 rounded-lg bg-primary/10 border border-primary/[0.12] flex items-center justify-center flex-shrink-0">
+              <Quote className="h-3.5 w-3.5 text-primary/60" strokeWidth={2} />
+            </div>
+            <span className="text-[11px] font-bold uppercase tracking-[0.12em] text-foreground/70">
+              {testimonial.highlight}
+            </span>
           </div>
-          <span className="text-[11px] font-bold uppercase tracking-[0.12em] text-foreground/70">
-            {testimonial.highlight}
-          </span>
         </div>
-      </div>
 
-      {/* Quote text */}
-      <blockquote className="flex-1 text-[0.84rem] sm:text-[0.9rem] leading-[1.7] text-muted-foreground mb-7 font-light">
-        "{testimonial.quote}"
-      </blockquote>
+        {/* Quote text */}
+        <blockquote className="flex-1 text-[0.84rem] sm:text-[0.9rem] leading-[1.7] text-muted-foreground mb-7 font-light">
+          "{testimonial.quote}"
+        </blockquote>
 
-      {/* Divider */}
-      <div className="h-[1px] bg-border mb-5" />
+        {/* Divider */}
+        <div className="h-[1px] bg-white/[0.08] mb-5" />
 
-      {/* Author */}
-      <div className="flex items-center gap-3.5">
-        <div className="w-10 h-10 rounded-full bg-muted border border-border flex items-center justify-center flex-shrink-0">
-          <span className="text-[11px] font-semibold text-muted-foreground tracking-wider">{testimonial.avatar}</span>
-        </div>
-        <div className="min-w-0">
-          <p className="text-[0.8rem] font-semibold text-foreground tracking-wide">{testimonial.name}</p>
-          <p className="text-[10.5px] text-muted-foreground tracking-wide mt-0.5">{testimonial.role} · {testimonial.location}</p>
+        {/* Author */}
+        <div className="flex items-center gap-3.5">
+          <div className="w-10 h-10 rounded-full bg-white/[0.05] border border-white/[0.10] flex items-center justify-center flex-shrink-0">
+            <span className="text-[11px] font-semibold text-muted-foreground tracking-wider">{testimonial.avatar}</span>
+          </div>
+          <div className="min-w-0">
+            <p className="text-[0.8rem] font-semibold text-foreground tracking-wide">{testimonial.name}</p>
+            <p className="text-[10.5px] text-muted-foreground tracking-wide mt-0.5">{testimonial.role} · {testimonial.location}</p>
+          </div>
         </div>
       </div>
     </div>
+    
+    {/* Subtle white back shadow */}
+    <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-gray-800 to-black dark:from-white dark:to-gray-300 opacity-20 group-hover:opacity-40 transition-opacity duration-500 -z-10 blur-lg"></div>
   </div>
 ));
 

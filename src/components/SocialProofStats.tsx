@@ -149,21 +149,33 @@ const SocialProofStats: React.FC = () => {
 
       <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-5xl mx-auto">
-          {/* Glass card — matches Features card style */}
-          <div className="relative rounded-3xl border-2 border-border bg-card shadow-lg p-8 sm:p-10 overflow-hidden hover:border-primary hover:shadow-xl transition-all duration-300">
-
-            <div className="relative grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-8 sm:gap-6">
-              {statItems.map((item, index) => (
-                <StatItem
-                  key={item.label}
-                  icon={item.icon}
-                  value={item.value}
-                  label={item.label}
-                  delay={index * 120}
-                  isVisible={isVisible}
-                />
-              ))}
+          {/* Glass card — matches "From Confusion to Clarity" card style */}
+          <div className="group relative rounded-3xl">
+            {/* Liquid glass border wrapper */}
+            <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/[0.03] via-white/[0.01] to-white/[0.03] p-[1px]">
+              <div className="absolute inset-0 rounded-3xl bg-card"></div>
             </div>
+            
+            <div className="relative bg-card rounded-3xl p-8 sm:p-10 shadow-modern hover:shadow-modern-lg transition-all duration-500 border border-white/10 hover:border-white/20 overflow-hidden">
+              {/* Subtle glass overlay */}
+              <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-white/[0.02] via-transparent to-white/[0.01] pointer-events-none"></div>
+
+              <div className="relative z-10 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-8 sm:gap-6">
+                {statItems.map((item, index) => (
+                  <StatItem
+                    key={item.label}
+                    icon={item.icon}
+                    value={item.value}
+                    label={item.label}
+                    delay={index * 120}
+                    isVisible={isVisible}
+                  />
+                ))}
+              </div>
+            </div>
+            
+            {/* Subtle white back shadow */}
+            <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-gray-800 to-black dark:from-white dark:to-gray-300 opacity-20 group-hover:opacity-40 transition-opacity duration-500 -z-10 blur-lg"></div>
           </div>
         </div>
       </div>
