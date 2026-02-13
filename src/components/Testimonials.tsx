@@ -28,12 +28,12 @@ const testimonials: Testimonial[] = [
     avatar: "GS",
   },
   {
-    name: "Kira N.",
-    role: "Executive Coach",
-    location: "Charlotte, NC",
-    quote: "I'm not someone who gets excited about technology. But when I saw how the plan broke everything down into steps I could actually follow — and I could keep drilling deeper into any step that confused me — something clicked. I now use AI in ways I couldn't have even described six months ago. My clients notice the difference even if they can't name it.",
-    highlight: "Clients notice the difference",
-    avatar: "KN",
+    name: "Danielle F.",
+    role: "Real Estate Team Lead",
+    location: "Austin, TX",
+    quote: "My competitor started using AI and suddenly their listings looked better, their follow-ups were faster, everything. I panicked. Ran a Jump that night, and by Friday I had a workflow running that my whole team uses now. The gap I was worried about? Gone. We actually pulled ahead.",
+    highlight: "Pulled ahead of the competition",
+    avatar: "DF",
   },
 ];
 
