@@ -63,18 +63,9 @@ const StatItem = React.memo(({ icon: Icon, value, label, delay, isVisible }: {
         transitionDelay: `${delay}ms`,
       }}
     >
-      {/* Icon — premium dark glass with inner depth */}
-      <div className="relative">
-        {/* Ambient glow */}
-        <div className="absolute -inset-3 rounded-[1.25rem] bg-white/[0.03] opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-700" />
-        {/* Outer ring */}
-        <div className="absolute -inset-[1px] rounded-[1.125rem] bg-gradient-to-b from-white/[0.12] via-white/[0.04] to-white/[0.02] group-hover:from-white/[0.18] group-hover:via-white/[0.06] group-hover:to-white/[0.03] transition-all duration-500" />
-        {/* Main container */}
-        <div className="relative w-12 h-12 sm:w-[3.25rem] sm:h-[3.25rem] rounded-2xl bg-gradient-to-b from-white/[0.08] to-white/[0.02] flex items-center justify-center group-hover:from-white/[0.12] group-hover:to-white/[0.04] transition-all duration-500 group-hover:scale-105">
-          {/* Inner highlight */}
-          <div className="absolute inset-[1px] rounded-[0.875rem] bg-gradient-to-b from-white/[0.06] via-transparent to-transparent pointer-events-none" />
-          <Icon className="relative h-[1.2rem] w-[1.2rem] sm:h-[1.35rem] sm:w-[1.35rem] text-white/70 group-hover:text-white/90 transition-colors duration-400 drop-shadow-[0_1px_2px_rgba(255,255,255,0.1)]" strokeWidth={1.75} />
-        </div>
+      {/* Icon — clean flat premium */}
+      <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-white/[0.06] border border-white/[0.08] flex items-center justify-center group-hover:bg-white/[0.10] group-hover:border-white/[0.14] transition-all duration-500">
+        <Icon className="h-[1.1rem] w-[1.1rem] sm:h-[1.2rem] sm:w-[1.2rem] text-white/50 group-hover:text-white/75 transition-colors duration-400" strokeWidth={1.5} />
       </div>
 
       {/* Value + label */}
