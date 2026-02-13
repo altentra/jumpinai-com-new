@@ -150,14 +150,17 @@ const SocialProofStats: React.FC = () => {
 
       <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-5xl mx-auto">
-          {/* Glass card */}
-          <div className="relative rounded-[1.75rem] border border-white/[0.12] bg-white/[0.03] backdrop-blur-md p-8 sm:p-10">
-            {/* Top edge highlight */}
-            <div className="absolute inset-x-6 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/25 to-transparent"></div>
-            {/* Bottom edge subtle highlight */}
-            <div className="absolute inset-x-10 bottom-0 h-[1px] bg-gradient-to-r from-transparent via-white/8 to-transparent"></div>
-            {/* Inner glow */}
-            <div className="absolute inset-[1px] rounded-[1.7rem] bg-gradient-to-b from-white/[0.04] via-transparent to-transparent pointer-events-none"></div>
+          {/* Gradient border wrapper */}
+          <div className="relative rounded-[1.85rem] p-[1px] bg-gradient-to-b from-white/20 via-white/[0.06] to-white/[0.10]">
+            {/* Glass card */}
+            <div className="relative rounded-[1.8rem] bg-white/[0.03] backdrop-blur-md p-8 sm:p-10">
+              {/* Top edge shimmer */}
+              <div className="absolute inset-x-8 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/30 to-transparent"></div>
+              {/* Side edge accents */}
+              <div className="absolute inset-y-8 left-0 w-[1px] bg-gradient-to-b from-transparent via-white/10 to-transparent"></div>
+              <div className="absolute inset-y-8 right-0 w-[1px] bg-gradient-to-b from-transparent via-white/10 to-transparent"></div>
+              {/* Inner glow */}
+              <div className="absolute inset-[1px] rounded-[1.75rem] bg-gradient-to-b from-white/[0.04] via-transparent to-transparent pointer-events-none"></div>
 
             <div className="relative grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-8 sm:gap-6">
               {statItems.map((item, index) => (
@@ -171,6 +174,7 @@ const SocialProofStats: React.FC = () => {
                 />
               ))}
             </div>
+          </div>
           </div>
         </div>
       </div>
