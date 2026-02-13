@@ -12,27 +12,27 @@ interface Testimonial {
 
 const testimonials: Testimonial[] = [
   {
-    name: "Jake Morrison",
+    name: "Jake M.",
     role: "Real Estate Agent",
     location: "Denver, CO",
-    quote: "Every other agent in my office started using AI last year but none of them could explain what they were actually doing with it. I ran a Jump on a Sunday night and by Wednesday I had automated my entire listing description process and my follow-up emails. My broker asked me how I suddenly had time to take on 4 extra clients. I just smiled. Seriously though — the plan was so specific to real estate that it felt like someone in my industry wrote it.",
-    highlight: "4 extra clients per month",
+    quote: "I kept hearing 'you need AI' but had zero idea where to start. Ran a Jump, got a plan, and two days later my listing descriptions and follow-up emails were on autopilot. Took on 4 extra clients that month just because I had the time. Genuinely wish I'd done this sooner.",
+    highlight: "4 extra clients/month",
     avatar: "JM",
   },
   {
-    name: "Aaliyah Brooks",
-    role: "Etsy Shop Owner · Handmade Jewelry",
+    name: "Aaliyah B.",
+    role: "Etsy Shop Owner",
     location: "Atlanta, GA",
-    quote: "I'm a one-person operation and I was drowning in product photos, descriptions, customer messages, all of it. A friend sent me JumpinAI and I thought it was gonna be another generic 'use ChatGPT for everything' thing. It wasn't. It mapped out exactly which tools fit MY workflow and gave me the prompts ready to go. Then I used the automation builder and now my order confirmations and review requests run on autopilot. I got my weekends back.",
-    highlight: "Reclaimed 12+ hrs/week",
+    quote: "I run my shop alone so every hour matters. JumpinAI didn't just say 'use ChatGPT' — it showed me the exact tools for MY business and gave me prompts I could copy right away. Then I built an automation and now my order emails go out without me touching anything. I got my weekends back. That's not a small thing.",
+    highlight: "12+ hours saved weekly",
     avatar: "AB",
   },
   {
-    name: "Tom Kessler",
-    role: "Operations Manager · SaaS Startup",
+    name: "Tom K.",
+    role: "Ops Manager, SaaS Startup",
     location: "Austin, TX",
-    quote: "We were paying for like six different AI tools and nobody on the team knew which one to use for what. Total mess. I ran a Jump for our ops workflow and it basically audited everything — told us which tools actually mattered, which ones we were wasting money on, and how to connect them. We cut two subscriptions the same week and the workflow JumpinAI built for us replaced a process that used to take our intern three hours every Monday.",
-    highlight: "Cut 2 redundant AI tools",
+    quote: "We were paying for six AI tools and nobody knew which one to use for what. Ran one Jump and it basically told us — drop these two, keep these, here's how to connect them. Saved us money the same week. The automation it built replaced a 3-hour Monday task. My intern was thrilled.",
+    highlight: "Cut costs in week one",
     avatar: "TK",
   },
 ];
