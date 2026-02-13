@@ -28,12 +28,12 @@ const testimonials: Testimonial[] = [
     avatar: "GS",
   },
   {
-    name: "Danielle F.",
-    role: "Real Estate Team Lead",
-    location: "Austin, TX",
-    quote: "My competitor started using AI and suddenly their listings looked better, their follow-ups were faster, everything. I panicked. Ran a Jump that night, and by Friday I had a workflow running that my whole team uses now. The gap I was worried about? Gone. We actually pulled ahead.",
-    highlight: "Pulled ahead of the competition",
-    avatar: "DF",
+    name: "Omar J.",
+    role: "Logistics Manager",
+    location: "Chicago, IL",
+    quote: "I'd been manually doing things I didn't even realize could be automated. The Jump didn't just show me a plan — it showed me how much time I was throwing away. I built my first workflow that afternoon. My director asked what changed. I told him I finally stopped working harder and started working smarter.",
+    highlight: "Stopped working harder",
+    avatar: "OJ",
   },
 ];
 
