@@ -259,11 +259,11 @@ const Index = () => {
       <Helmet>
         <title>JumpinAI – Start Using AI. In Your Best Way Possible.</title>
         <meta property="og:title" content="JumpinAI – Start Using AI. In Your Best Way Possible." />
-        <meta property="og:description" content="JumpinAI is an AI Adaptation Studio helping entrepreneurs and small businesses clarify AI strategy with customized roadmaps, expertly crafted tool-prompt combinations, seamlessly integrated workflows, and intelligent AI agents. Build your competitive advantage." />
+        <meta property="og:description" content="JumpinAI is the AI Adaptation Studio empowering entrepreneurs, creators, and professionals to navigate the AI era with clarity and confidence. From strategic roadmaps tailored to your vision to automated workflows and AI agents that work for you — this is how you stop watching AI change the world and start using it to change yours." />
         <meta property="og:image" content="https://jumpinai.com/logo.jpg?v=2026" />
         <meta property="og:url" content="https://jumpinai.com/" />
         <meta name="twitter:title" content="JumpinAI – Start Using AI. In Your Best Way Possible." />
-        <meta name="twitter:description" content="JumpinAI is an AI Adaptation Studio helping entrepreneurs & small businesses navigate AI adoption with clarity and confidence. Customized roadmaps, tool-prompt combinations, workflows & AI agents." />
+        <meta name="twitter:description" content="JumpinAI is the AI Adaptation Studio empowering entrepreneurs, creators, and professionals to navigate the AI era with clarity and confidence. From strategic roadmaps tailored to your vision to automated workflows and AI agents that work for you." />
         <meta name="twitter:image" content="https://jumpinai.com/logo.jpg?v=2026" />
         <link rel="canonical" href="https://jumpinai.com/" />
       </Helmet>
