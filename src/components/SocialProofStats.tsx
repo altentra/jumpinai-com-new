@@ -83,8 +83,16 @@ const StatItem = React.memo(({ icon: Icon, value, label, delay, isVisible }: {
 
 StatItem.displayName = 'StatItem';
 
+const FALLBACK_STATS: PlatformStats = {
+  totalJumps: 500,
+  totalToolPrompts: 700,
+  totalClarifications: 200,
+  totalAutomations: 300,
+  estimatedHoursSaved: 1000,
+};
+
 const SocialProofStats: React.FC = () => {
-  const [stats, setStats] = useState<PlatformStats | null>(null);
+  const [stats, setStats] = useState<PlatformStats>(FALLBACK_STATS);
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
 
@@ -94,19 +102,12 @@ const SocialProofStats: React.FC = () => {
         const { data, error } = await supabase.functions.invoke('platform-stats');
         console.log('Platform stats response:', { data, error });
         if (error) throw error;
-        if (data) {
+        if (data && typeof data === 'object' && 'totalJumps' in data) {
           setStats(data as PlatformStats);
         }
       } catch (error) {
         console.error('Error fetching platform stats:', error);
-        // Show fallback stats so the section isn't empty
-        setStats({
-          totalJumps: 500,
-          totalToolPrompts: 700,
-          totalClarifications: 200,
-          totalAutomations: 300,
-          estimatedHoursSaved: 1000,
-        });
+        // Fallback already set as initial state
       }
     };
 
@@ -130,8 +131,6 @@ const SocialProofStats: React.FC = () => {
 
     return () => observer.disconnect();
   }, []);
-
-  if (!stats) return null;
 
   const statItems = [
     { icon: Rocket, value: stats.totalJumps, label: 'AI Jumps' },
