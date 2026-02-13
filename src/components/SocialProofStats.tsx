@@ -79,9 +79,8 @@ const StatItem = React.memo(({ icon: Icon, value, label, delay, isVisible }: {
 
       {/* Value + label */}
       <div className="text-center space-y-1">
-        <p className="text-xl sm:text-2xl md:text-[1.65rem] font-bold text-white/90 tracking-[-0.01em] leading-none tabular-nums">
-          {formatNumber(animatedValue)}
-          <span className="text-white/20 font-semibold text-[0.7em]">+</span>
+        <p className="text-xl sm:text-2xl md:text-[1.65rem] font-bold text-white/90 tracking-[-0.01em] leading-none tabular-nums inline-flex items-baseline">
+          {formatNumber(animatedValue)}<span className="text-white/90 font-bold">+</span>
         </p>
         <p className="text-[10px] sm:text-[11px] text-white/40 font-bold uppercase tracking-[0.18em] leading-tight">
           {label}
