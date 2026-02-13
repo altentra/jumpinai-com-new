@@ -57,10 +57,10 @@ const TestimonialCard = React.memo(({ testimonial, index, isVisible }: {
       {/* Bottom shimmer */}
       <div className="absolute inset-x-10 bottom-0 h-[1px] bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" />
 
-      {/* Quote icon + highlight row */}
-      <div className="flex items-center justify-between mb-5">
-        <Quote className="h-5 w-5 text-white/15" strokeWidth={1.5} />
-        <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-primary/70 bg-primary/[0.07] border border-primary/[0.10] rounded-full px-3 py-1">
+      {/* Highlight badge */}
+      <div className="mb-5">
+        <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-primary/70 bg-primary/[0.07] border border-primary/[0.10] rounded-full px-3 py-1">
+          <Quote className="h-3 w-3 text-primary/50" strokeWidth={2} />
           {testimonial.highlight}
         </span>
       </div>
