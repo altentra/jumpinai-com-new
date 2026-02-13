@@ -15,7 +15,7 @@ const testimonials: Testimonial[] = [
     name: "Maria Gonzalez",
     role: "Freelance Graphic Designer",
     location: "Austin, TX",
-    quote: "I was spending hours every week trying to figure out which AI tools would actually help my design workflow. JumpinAI gave me a clear, personalized plan in minutes. Within two weeks, I automated my client onboarding process and cut my admin time by 60%. I went from feeling overwhelmed by AI to actually using it every single day.",
+    quote: "Honestly? I'd been putting off the whole AI thing for months. Every time I tried to figure it out on my own I'd end up down some rabbit hole and give up. JumpinAI just… laid it all out for me. Like here's what you should use, here's how, go. I set up my client onboarding in maybe two afternoons and now it basically runs itself. Wish I'd found this sooner.",
     highlight: "Cut admin time by 60%",
     avatar: "MG",
   },
@@ -23,7 +23,7 @@ const testimonials: Testimonial[] = [
     name: "David Chen",
     role: "Small Business Owner · E-commerce",
     location: "Portland, OR",
-    quote: "I kept hearing 'you need to use AI' but had no idea where to start for my online store. The Jump I generated showed me exactly which tools to use for product descriptions, customer emails, and inventory forecasting — with the actual prompts ready to copy. My product listing time dropped from 45 minutes to under 10.",
+    quote: "Everyone kept telling me I need AI for my store but nobody could tell me WHERE to start. I ran a Jump and it literally gave me the tools AND the prompts — like ready to copy and use. My product listings used to take me 45 minutes each. Now it's maybe 10. That alone was worth it, but the whole plan opened my eyes to stuff I didn't even know was possible.",
     highlight: "Product listings 4x faster",
     avatar: "DC",
   },
@@ -31,7 +31,7 @@ const testimonials: Testimonial[] = [
     name: "Priya Sharma",
     role: "Marketing Coordinator",
     location: "Chicago, IL",
-    quote: "Our team was using ChatGPT randomly without any strategy. After running my Jump, I got a structured plan that mapped AI tools to each part of our marketing pipeline. The tool-prompt combos were a game-changer — I built an n8n workflow that now handles our entire social media scheduling automatically.",
+    quote: "We were all just using ChatGPT randomly, no strategy at all. After my Jump I had this clear plan mapping tools to each part of our pipeline. But the part that really blew my mind was the automation feature — I clicked a few buttons and JumpinAI actually built me a working n8n workflow. Didn't have to figure out the nodes or connections myself. It just… worked.",
     highlight: "Fully automated social pipeline",
     avatar: "PS",
   },
@@ -129,7 +129,7 @@ const Testimonials: React.FC = () => {
             }}
           >
             <p className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.2em] text-white/30 mb-3">
-              Real People, Real Results
+              From Our Community
             </p>
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white/90 tracking-tight">
               How People Are Adapting With JumpinAI
