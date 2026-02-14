@@ -12,28 +12,28 @@ interface Testimonial {
 
 const testimonials: Testimonial[] = [
   {
-    name: "Tanya R.",
+    name: "Sarah M.",
     role: "Interior Designer",
     location: "Nashville, TN",
     quote: "I spent three weekends Googling 'how to use AI for my business' and ended up more confused than when I started. A friend sent me JumpinAI. I typed two things in and got back something that actually made me go 'oh — that's what I should be doing.' Implemented the first phase that same week. Wish I'd found this before wasting a month going in circles.",
     highlight: "Ended a month of going in circles",
-    avatar: "TR",
+    avatar: "SM",
   },
   {
-    name: "Greg S.",
+    name: "Mike T.",
     role: "SaaS Co-founder",
     location: "Portland, OR",
     quote: "We were about to hire someone full-time just to figure out our AI strategy. Ran a Jump instead, mostly out of curiosity. The roadmap was so specific to our stack and our bottlenecks that we cancelled the job posting. Built two automations off the back of it and onboarded our team in a week. Saved us a salary.",
     highlight: "Cancelled a job posting",
-    avatar: "GS",
+    avatar: "MT",
   },
   {
-    name: "Nina V.",
+    name: "Jessica L.",
     role: "Veterinary Clinic Owner",
     location: "Raleigh, NC",
     quote: "I treat animals, not spreadsheets. But I was spending more time on the business side than the clinical side and it was burning me out. I tried JumpinAI not expecting much — and walked away with a plan so tailored to my clinic that my office manager thought I'd hired a consultant. Three weeks in, we're running automations I didn't know were possible for a practice our size.",
     highlight: "More time with patients",
-    avatar: "NV",
+    avatar: "JL",
   },
 ];
 
