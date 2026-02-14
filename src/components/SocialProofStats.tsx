@@ -10,7 +10,7 @@ interface PlatformStats {
   estimatedHoursSaved: number;
 }
 
-const useCountUp = (target: number, duration: number = 1400, shouldStart: boolean = false) => {
+const useCountUp = (target: number, duration: number = 2400, shouldStart: boolean = false) => {
   const [count, setCount] = useState(0);
   const frameRef = useRef<number>();
 
@@ -52,7 +52,7 @@ const StatItem = React.memo(({ icon: Icon, value, label, delay, isVisible }: {
   delay: number;
   isVisible: boolean;
 }) => {
-  const animatedValue = useCountUp(value, 1400, isVisible);
+  const animatedValue = useCountUp(value, 2400, isVisible);
 
   return (
     <div
@@ -122,7 +122,7 @@ const SocialProofStats: React.FC = () => {
           observer.disconnect();
         }
       },
-      { threshold: 0.2 }
+      { threshold: 0.3 }
     );
 
     if (sectionRef.current) {
