@@ -254,7 +254,7 @@ const InlineStudioSection = () => {
                     {/* Unified single input */}
                     <StudioTextarea
                       ref={visionTextareaRef}
-                      label="Your vision & challenges"
+                      label="What are you building? And what's in your way?"
                       value={vision}
                       onChange={setVision}
                       onTyped={() => setVisionTyped(true)}

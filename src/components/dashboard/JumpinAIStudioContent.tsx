@@ -431,7 +431,7 @@ const JumpinAIStudioContent = () => {
                       {/* Unified single input */}
                       <StudioTextarea
                         ref={visionTextareaRef}
-                        label="Your vision & challenges"
+                        label="What are you building? And what's in your way?"
                         value={formData.goals}
                         onChange={(value) => setFormData(prev => ({ ...prev, goals: value }))}
                         onTyped={() => setVisionTyped(true)}
