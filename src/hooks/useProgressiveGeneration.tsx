@@ -201,7 +201,7 @@ export const useProgressiveGeneration = () => {
         title: 'Generating Jump...',
         full_content: '',
         formGoals: formData.goals,
-        formChallenges: formData.challenges,
+        formChallenges: formData.challenges || '',
         components: {
           toolPrompts: [],
           plan: null,

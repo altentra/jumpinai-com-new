@@ -32,23 +32,19 @@ interface IncomingStudioState {
   autoStart?: boolean;
 }
 
-// Input tracking for goals and challenges (type vs narrate)
+// Input tracking (simplified for single input)
 interface InputTracking {
-  goalsInputMethod: 'typed' | 'narrated' | 'mixed';
-  challengesInputMethod: 'typed' | 'narrated' | 'mixed';
-  goalsSttDurationSeconds: number;
-  challengesSttDurationSeconds: number;
-  totalSttDurationSeconds: number;
+  inputMethod: 'typed' | 'narrated' | 'mixed';
+  sttDurationSeconds: number;
 }
 
 // Silently send notification to admin about jump generation (guest + authenticated)
 const sendJumpGenerationNotification = async (
-  formData: { goals: string; challenges: string },
+  formData: { goals: string },
   user: { id?: string; email?: string; user_metadata?: { name?: string; full_name?: string } } | null,
   inputTracking: InputTracking
 ) => {
   try {
-    // Get IP and location
     let ipAddress: string | undefined;
     let location: string | undefined;
 
@@ -69,15 +65,14 @@ const sendJumpGenerationNotification = async (
         ipAddress,
         location,
         goals: formData.goals,
-        challenges: formData.challenges,
+        challenges: '',
         timestamp: new Date().toISOString(),
         userAgent: navigator.userAgent,
-        // Input method tracking
-        goalsInputMethod: inputTracking.goalsInputMethod,
-        challengesInputMethod: inputTracking.challengesInputMethod,
-        goalsSttDurationSeconds: inputTracking.goalsSttDurationSeconds,
-        challengesSttDurationSeconds: inputTracking.challengesSttDurationSeconds,
-        totalSttDurationSeconds: inputTracking.totalSttDurationSeconds,
+        goalsInputMethod: inputTracking.inputMethod,
+        challengesInputMethod: 'typed',
+        goalsSttDurationSeconds: inputTracking.sttDurationSeconds,
+        challengesSttDurationSeconds: 0,
+        totalSttDurationSeconds: inputTracking.sttDurationSeconds,
       },
     });
   } catch {
@@ -113,13 +108,10 @@ const JumpinAIStudio = () => {
     setStudioMousePos({ x: -1000, y: -1000 });
   }, []);
   
-  // Input method tracking state - initialize from incoming state if available
-  const [goalsUsedStt, setGoalsUsedStt] = useState(incomingState?.goalsUsedStt || false);
-  const [challengesUsedStt, setChallengesUsedStt] = useState(incomingState?.challengesUsedStt || false);
-  const [goalsSttDuration, setGoalsSttDuration] = useState(incomingState?.goalsSttDuration || 0);
-  const [challengesSttDuration, setChallengesSttDuration] = useState(incomingState?.challengesSttDuration || 0);
-  const [goalsTyped, setGoalsTyped] = useState(incomingState?.goalsTyped || false);
-  const [challengesTyped, setChallengesTyped] = useState(incomingState?.challengesTyped || false);
+  // Input method tracking state - simplified for single input
+  const [visionUsedStt, setVisionUsedStt] = useState(incomingState?.goalsUsedStt || false);
+  const [visionSttDuration, setVisionSttDuration] = useState(incomingState?.goalsSttDuration || 0);
+  const [visionTyped, setVisionTyped] = useState(incomingState?.goalsTyped || false);
   
   // Track if we've already triggered auto-start
   const autoStartTriggered = useRef(false);
@@ -130,7 +122,7 @@ const JumpinAIStudio = () => {
     experienceLevel: '',
     aiKnowledge: '',
     goals: incomingState?.goals || '',
-    challenges: incomingState?.challenges || '',
+    challenges: '',
     timeCommitment: '',
     budget: ''
   });
@@ -141,8 +133,7 @@ const JumpinAIStudio = () => {
   const guestUsageFetched = useRef(false);
   const progressDisplayRef = useRef<HTMLDivElement>(null);
   const generateButtonRef = useRef<HTMLDivElement>(null);
-  const goalsTextareaRef = useRef<HTMLTextAreaElement>(null);
-  const challengesTextareaRef = useRef<HTMLTextAreaElement>(null);
+  const visionTextareaRef = useRef<HTMLTextAreaElement>(null);
 
   // Turnstile can fail on preview/staging domains due to Cloudflare domain restrictions.
   // Use Turnstile's official test key in Lovable preview/local environments so guests aren't blocked.
@@ -287,20 +278,13 @@ const JumpinAIStudio = () => {
     }
   }, [isGenerating]);
 
-  // Auto-adjust textarea heights
+  // Auto-adjust textarea height
   useEffect(() => {
-    if (goalsTextareaRef.current && challengesTextareaRef.current) {
-      goalsTextareaRef.current.style.height = 'auto';
-      challengesTextareaRef.current.style.height = 'auto';
-      
-      const goalsHeight = goalsTextareaRef.current.scrollHeight;
-      const challengesHeight = challengesTextareaRef.current.scrollHeight;
-      const maxHeight = Math.max(goalsHeight, challengesHeight);
-      
-      goalsTextareaRef.current.style.height = maxHeight + 'px';
-      challengesTextareaRef.current.style.height = maxHeight + 'px';
+    if (visionTextareaRef.current) {
+      visionTextareaRef.current.style.height = 'auto';
+      visionTextareaRef.current.style.height = visionTextareaRef.current.scrollHeight + 'px';
     }
-  }, [formData.goals, formData.challenges]);
+  }, [formData.goals]);
 
   // Auto-start generation when coming from landing page with data
   useEffect(() => {
@@ -310,8 +294,7 @@ const JumpinAIStudio = () => {
       !autoStartTriggered.current && 
       !isLoading && 
       !isLoadingGuestInfo &&
-      formData.goals.trim() && 
-      formData.challenges.trim() &&
+      formData.goals.trim() &&
       !isGenerating
     ) {
       autoStartTriggered.current = true;
@@ -341,50 +324,39 @@ const JumpinAIStudio = () => {
   const handleGenerate = useCallback(async (alternativeContext?: { title: string; description: string }) => {
     console.log('=== GENERATE BUTTON CLICKED ===');
     
-    // Calculate input methods
+    // Calculate input method
     const getInputMethod = (usedStt: boolean, typed: boolean): 'typed' | 'narrated' | 'mixed' => {
       if (usedStt && typed) return 'mixed';
       if (usedStt) return 'narrated';
       return 'typed';
     };
     
-    // Determine overall input method
-    const goalsMethod = getInputMethod(goalsUsedStt, goalsTyped);
-    const challengesMethod = getInputMethod(challengesUsedStt, challengesTyped);
-    let overallInputMethod: 'typed' | 'narrated' | 'mixed' = 'typed';
-    if (goalsMethod === 'narrated' && challengesMethod === 'narrated') {
-      overallInputMethod = 'narrated';
-    } else if (goalsUsedStt || challengesUsedStt) {
-      overallInputMethod = 'mixed';
-    }
+    const overallInputMethod = getInputMethod(visionUsedStt, visionTyped);
     
     const effectiveFormData = alternativeContext 
       ? {
           ...formData,
           goals: `${formData.goals}\n\n[ALTERNATIVE APPROACH SELECTED: "${alternativeContext.title}"]\nUser has explicitly chosen this alternative approach: ${alternativeContext.description}\nGenerate a jump that follows THIS specific approach, NOT the original default approach.`,
-          // Add STT tracking data to formData for edge function
-          sttUsed: goalsUsedStt || challengesUsedStt,
+          sttUsed: visionUsedStt,
           inputMethod: overallInputMethod,
-          goalsSttSeconds: goalsSttDuration,
-          challengesSttSeconds: challengesSttDuration,
+          goalsSttSeconds: visionSttDuration,
+          challengesSttSeconds: 0,
         }
       : {
           ...formData,
-          // Add STT tracking data to formData for edge function
-          sttUsed: goalsUsedStt || challengesUsedStt,
+          sttUsed: visionUsedStt,
           inputMethod: overallInputMethod,
-          goalsSttSeconds: goalsSttDuration,
-          challengesSttSeconds: challengesSttDuration,
+          goalsSttSeconds: visionSttDuration,
+          challengesSttSeconds: 0,
         };
     
-    if (!effectiveFormData.goals.trim() || !effectiveFormData.challenges.trim()) {
-      toast.error('Please fill in your goals and challenges');
+    if (!effectiveFormData.goals.trim()) {
+      toast.error('Please share your vision, goals, and challenges');
       return;
     }
 
     // Guest users: Verify Turnstile token
     if (!turnstileToken) {
-      // If no token, try to get a fresh one by triggering reset
       if (turnstileRef.current) {
         toast.info('Security verification in progress. Please wait a moment and try again.');
         turnstileRef.current.reset();
@@ -395,16 +367,13 @@ const JumpinAIStudio = () => {
     }
     
     const inputTracking: InputTracking = {
-      goalsInputMethod: goalsMethod,
-      challengesInputMethod: challengesMethod,
-      goalsSttDurationSeconds: goalsSttDuration,
-      challengesSttDurationSeconds: challengesSttDuration,
-      totalSttDurationSeconds: goalsSttDuration + challengesSttDuration,
+      inputMethod: overallInputMethod,
+      sttDurationSeconds: visionSttDuration,
     };
 
     // Send silent notification to admin (fire and forget)
     void sendJumpGenerationNotification(
-      { goals: formData.goals, challenges: formData.challenges },
+      { goals: formData.goals },
       user,
       inputTracking
     );
@@ -635,48 +604,34 @@ const JumpinAIStudio = () => {
                       
                       {/* Hero text - Premium typography */}
                       <div className="text-center mb-10 sm:mb-12">
-                        <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[2.75rem] font-bold text-foreground mb-4 tracking-tight leading-[1.15]">
-                          Create Your{' '}
-                          <span className="bg-gradient-to-r from-primary via-primary/90 to-primary/80 bg-clip-text text-transparent">
-                            Jump in AI
-                          </span>
-                        </h2>
-                        <p className="text-muted-foreground text-sm sm:text-base md:text-lg max-w-xl mx-auto font-medium">
-                          Share your vision and challenges — we'll craft your personalized AI implementation roadmap.
-                        </p>
-                      </div>
+                      <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[2.75rem] font-bold text-foreground mb-4 tracking-tight leading-[1.15]">
+                        What's Your Next{' '}
+                        <span className="bg-gradient-to-r from-primary via-primary/90 to-primary/80 bg-clip-text text-transparent">
+                          Big Move
+                        </span>
+                        ?
+                      </h2>
+                      <p className="text-muted-foreground text-sm sm:text-base md:text-lg max-w-xl mx-auto font-medium">
+                        Share your vision, goals, and challenges — we'll craft your personalized AI implementation roadmap.
+                      </p>
+                    </div>
 
                       {/* Form inputs */}
                       <div className="space-y-8 sm:space-y-10">
-                        <div className="grid md:grid-cols-2 gap-6 sm:gap-8 lg:gap-10">
-                          {/* Goals Input */}
+                        <div>
+                          {/* Unified single input */}
                           <StudioTextarea
-                            ref={goalsTextareaRef}
-                            label="What are you building?"
+                            ref={visionTextareaRef}
+                            label="Tell us everything"
                             value={formData.goals}
                             onChange={(value) => setFormData(prev => ({ ...prev, goals: value }))}
-                            onTyped={() => setGoalsTyped(true)}
+                            onTyped={() => setVisionTyped(true)}
                             onSttUsed={() => {
                               setSttUsed(true);
-                              setGoalsUsedStt(true);
+                              setVisionUsedStt(true);
                             }}
-                            onSttDuration={(seconds) => setGoalsSttDuration(prev => prev + seconds)}
-                            placeholder="Describe your goals, project, or what you want to achieve with AI..."
-                          />
-                          
-                          {/* Challenges Input */}
-                          <StudioTextarea
-                            ref={challengesTextareaRef}
-                            label="What's in your way?"
-                            value={formData.challenges}
-                            onChange={(value) => setFormData(prev => ({ ...prev, challenges: value }))}
-                            onTyped={() => setChallengesTyped(true)}
-                            onSttUsed={() => {
-                              setSttUsed(true);
-                              setChallengesUsedStt(true);
-                            }}
-                            onSttDuration={(seconds) => setChallengesSttDuration(prev => prev + seconds)}
-                            placeholder="What obstacles, challenges, or frustrations are you facing..."
+                            onSttDuration={(seconds) => setVisionSttDuration(prev => prev + seconds)}
+                            placeholder="What are you building? What do you want to achieve with AI? What challenges or obstacles are standing in your way? Tell us everything..."
                           />
                         </div>
 
