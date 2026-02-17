@@ -105,17 +105,20 @@ export const StudioTextarea = forwardRef<HTMLTextAreaElement, StudioTextareaProp
   return (
     <div className="group/input space-y-3">
       {/* Label - Premium typography */}
-      <label className={cn(
-        "flex items-center gap-2.5 text-sm font-semibold tracking-wide transition-colors duration-200",
+      <div className={cn(
+        "flex flex-col gap-1.5 text-sm font-semibold tracking-wide transition-colors duration-200",
         stateStyles.label
       )}>
-        {/* State indicator dot */}
-        <span className={cn(
-          "w-2 h-2 rounded-full transition-all duration-200",
-          stateStyles.indicator
-        )} />
-        <span className="uppercase text-xs tracking-[0.15em] whitespace-pre-line">{label}</span>
-      </label>
+        {label.split('\n').map((line, i) => (
+          <span key={i} className="flex items-center gap-2.5">
+            <span className={cn(
+              "w-2 h-2 rounded-full transition-all duration-200",
+              stateStyles.indicator
+            )} />
+            <span className="uppercase text-xs tracking-[0.15em]">{line}</span>
+          </span>
+        ))}
+      </div>
 
       {/* Input container with premium depth */}
       <div className="relative">

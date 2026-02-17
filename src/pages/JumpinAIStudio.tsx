@@ -623,7 +623,7 @@ const JumpinAIStudio = () => {
                           {/* Unified single input */}
                           <StudioTextarea
                             ref={visionTextareaRef}
-                            label={"• What are you building?\n• And what's in your way?"}
+                            label={"What are you building?\nAnd what's in your way?"}
                             value={formData.goals}
                             onChange={(value) => setFormData(prev => ({ ...prev, goals: value }))}
                             onTyped={() => setVisionTyped(true)}
