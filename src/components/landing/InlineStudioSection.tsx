@@ -254,13 +254,13 @@ const InlineStudioSection = () => {
                     {/* Unified single input */}
                     <StudioTextarea
                       ref={visionTextareaRef}
-                      label="What are you building? And what's in your way?"
+                      label={"What are you building?\nAnd what's in your way?"}
                       value={vision}
                       onChange={setVision}
                       onTyped={() => setVisionTyped(true)}
                       onSttUsed={() => setVisionUsedStt(true)}
                       onSttDuration={(seconds) => setVisionSttDuration(prev => prev + seconds)}
-                      placeholder="Describe what you're building and any obstacles you're facing — we'll map out your personalized AI strategy..."
+                      placeholder="Describe what you're building and any obstacles you're facing — we'll map out your personalized AI integration strategy..."
                     />
                   </div>
 

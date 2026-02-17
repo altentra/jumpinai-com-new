@@ -114,7 +114,7 @@ export const StudioTextarea = forwardRef<HTMLTextAreaElement, StudioTextareaProp
           "w-2 h-2 rounded-full transition-all duration-200",
           stateStyles.indicator
         )} />
-        <span className="uppercase text-xs tracking-[0.15em]">{label}</span>
+        <span className="uppercase text-xs tracking-[0.15em] whitespace-pre-line">{label}</span>
       </label>
 
       {/* Input container with premium depth */}
