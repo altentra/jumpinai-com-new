@@ -27,18 +27,14 @@ const InlineStudioSection = () => {
     setMousePos({ x: -1000, y: -1000 });
   }, []);
   
-  // Form state
-  const [goals, setGoals] = useState('');
-  const [challenges, setChallenges] = useState('');
+  // Form state - unified single input
+  const [vision, setVision] = useState('');
   const [isTransitioning, setIsTransitioning] = useState(false);
   
   // STT tracking state
-  const [goalsUsedStt, setGoalsUsedStt] = useState(false);
-  const [challengesUsedStt, setChallengesUsedStt] = useState(false);
-  const [goalsSttDuration, setGoalsSttDuration] = useState(0);
-  const [challengesSttDuration, setChallengesSttDuration] = useState(0);
-  const [goalsTyped, setGoalsTyped] = useState(false);
-  const [challengesTyped, setChallengesTyped] = useState(false);
+  const [visionUsedStt, setVisionUsedStt] = useState(false);
+  const [visionSttDuration, setVisionSttDuration] = useState(0);
+  const [visionTyped, setVisionTyped] = useState(false);
   
   // Turnstile state for pre-validation
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
@@ -46,18 +42,12 @@ const InlineStudioSection = () => {
   const turnstileErrorShownRef = useRef(false);
   
   // Refs
-  const goalsTextareaRef = useRef<HTMLTextAreaElement>(null);
-  const challengesTextareaRef = useRef<HTMLTextAreaElement>(null);
+  const visionTextareaRef = useRef<HTMLTextAreaElement>(null);
 
   // Handle generate - transitions to studio with data
   const handleGenerate = useCallback(() => {
-    if (!goals.trim() || !challenges.trim()) {
-      // Focus the empty field
-      if (!goals.trim()) {
-        goalsTextareaRef.current?.focus();
-      } else {
-        challengesTextareaRef.current?.focus();
-      }
+    if (!vision.trim()) {
+      visionTextareaRef.current?.focus();
       return;
     }
 
@@ -65,16 +55,16 @@ const InlineStudioSection = () => {
     
     // Prepare the state to pass to studio
     const studioState = {
-      goals,
-      challenges,
-      goalsUsedStt,
-      challengesUsedStt,
-      goalsSttDuration,
-      challengesSttDuration,
-      goalsTyped,
-      challengesTyped,
+      goals: vision,
+      challenges: '',
+      goalsUsedStt: visionUsedStt,
+      challengesUsedStt: false,
+      goalsSttDuration: visionSttDuration,
+      challengesSttDuration: 0,
+      goalsTyped: visionTyped,
+      challengesTyped: false,
       turnstileToken,
-      autoStart: true, // Signal to auto-start generation
+      autoStart: true,
     };
     
     // Navigate to studio with state
@@ -82,7 +72,7 @@ const InlineStudioSection = () => {
       state: studioState,
       replace: false 
     });
-  }, [goals, challenges, goalsUsedStt, challengesUsedStt, goalsSttDuration, challengesSttDuration, goalsTyped, challengesTyped, turnstileToken, navigate]);
+  }, [vision, visionUsedStt, visionSttDuration, visionTyped, turnstileToken, navigate]);
 
   // Memoized Turnstile component
   const turnstileElement = useMemo(() => {
@@ -125,7 +115,7 @@ const InlineStudioSection = () => {
     );
   }, []);
 
-  const isFormValid = goals.trim() && challenges.trim();
+  const isFormValid = vision.trim().length > 0;
 
   return (
     <section 
@@ -222,13 +212,14 @@ const InlineStudioSection = () => {
           {/* Hero text - Premium typography */}
           <div className="text-center mb-12 sm:mb-14">
             <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[2.75rem] font-bold text-foreground mb-5 tracking-tight leading-[1.15]">
-              Create Your{' '}
+              What's Your Next{' '}
               <span className="bg-gradient-to-r from-primary via-primary/90 to-primary/80 bg-clip-text text-transparent">
-                Jump in AI
+                Big Move
               </span>
+              ?
             </h2>
             <p className="text-muted-foreground text-sm sm:text-base md:text-lg max-w-xl mx-auto font-medium">
-              Share your vision and challenges — we'll craft your personalized AI implementation roadmap.
+              Share your vision, goals, and challenges — we'll craft your personalized AI implementation roadmap.
             </p>
           </div>
 
@@ -260,29 +251,17 @@ const InlineStudioSection = () => {
               <div className="relative p-8 sm:p-10 md:p-12 lg:p-14">
                 {/* Form inputs */}
                 <div className="space-y-8 sm:space-y-10">
-                  <div className="grid md:grid-cols-2 gap-6 sm:gap-8 lg:gap-10">
-                    {/* Goals Input */}
+                  <div>
+                    {/* Unified single input */}
                     <StudioTextarea
-                      ref={goalsTextareaRef}
-                      label="What are you building?"
-                      value={goals}
-                      onChange={setGoals}
-                      onTyped={() => setGoalsTyped(true)}
-                      onSttUsed={() => setGoalsUsedStt(true)}
-                      onSttDuration={(seconds) => setGoalsSttDuration(prev => prev + seconds)}
-                      placeholder="Describe your goals, project, or what you want to achieve with AI..."
-                    />
-                    
-                    {/* Challenges Input */}
-                    <StudioTextarea
-                      ref={challengesTextareaRef}
-                      label="What's in your way?"
-                      value={challenges}
-                      onChange={setChallenges}
-                      onTyped={() => setChallengesTyped(true)}
-                      onSttUsed={() => setChallengesUsedStt(true)}
-                      onSttDuration={(seconds) => setChallengesSttDuration(prev => prev + seconds)}
-                      placeholder="What obstacles, challenges, or frustrations are you facing..."
+                      ref={visionTextareaRef}
+                      label="Tell us everything"
+                      value={vision}
+                      onChange={setVision}
+                      onTyped={() => setVisionTyped(true)}
+                      onSttUsed={() => setVisionUsedStt(true)}
+                      onSttDuration={(seconds) => setVisionSttDuration(prev => prev + seconds)}
+                      placeholder="What are you building? What do you want to achieve with AI? What challenges or obstacles are standing in your way? Tell us everything..."
                     />
                   </div>
 

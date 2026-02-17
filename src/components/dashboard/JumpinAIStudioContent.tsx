@@ -12,23 +12,19 @@ import { markJumpAsUsingSTT } from '@/services/sttTrackingService';
 import type { AlternativeRoute, RouteExplorationHistory } from '@/types/alternativeRoutes';
 import HeroDotMatrix from '@/components/HeroDotMatrix';
 
-// Input tracking for goals and challenges (type vs narrate)
+// Input tracking (simplified for single input)
 interface InputTracking {
-  goalsInputMethod: 'typed' | 'narrated' | 'mixed';
-  challengesInputMethod: 'typed' | 'narrated' | 'mixed';
-  goalsSttDurationSeconds: number;
-  challengesSttDurationSeconds: number;
-  totalSttDurationSeconds: number;
+  inputMethod: 'typed' | 'narrated' | 'mixed';
+  sttDurationSeconds: number;
 }
 
 // Silently send notification to admin about jump generation
 const sendJumpGenerationNotification = async (
-  formData: { goals: string; challenges: string },
+  formData: { goals: string },
   user: { id?: string; email?: string; user_metadata?: { name?: string; full_name?: string } } | null,
   inputTracking: InputTracking
 ) => {
   try {
-    // Get IP and location
     let ipAddress = 'Unknown';
     let location = 'Unknown';
 
@@ -42,7 +38,6 @@ const sendJumpGenerationNotification = async (
       // ignore
     }
 
-    // Send notification silently
     await supabase.functions.invoke('send-jump-generation-notification', {
       body: {
         userType: user?.id ? 'authenticated' : 'guest',
@@ -52,19 +47,18 @@ const sendJumpGenerationNotification = async (
         ipAddress,
         location,
         goals: formData.goals,
-        challenges: formData.challenges,
+        challenges: '',
         timestamp: new Date().toISOString(),
         userAgent: navigator.userAgent,
-        // Input method tracking
-        goalsInputMethod: inputTracking.goalsInputMethod,
-        challengesInputMethod: inputTracking.challengesInputMethod,
-        goalsSttDurationSeconds: inputTracking.goalsSttDurationSeconds,
-        challengesSttDurationSeconds: inputTracking.challengesSttDurationSeconds,
-        totalSttDurationSeconds: inputTracking.totalSttDurationSeconds,
+        goalsInputMethod: inputTracking.inputMethod,
+        challengesInputMethod: 'typed',
+        goalsSttDurationSeconds: inputTracking.sttDurationSeconds,
+        challengesSttDurationSeconds: 0,
+        totalSttDurationSeconds: inputTracking.sttDurationSeconds,
       },
     });
   } catch {
-    // Silently fail - don't disrupt the main flow
+    // Silently fail
   }
 };
 
@@ -88,18 +82,14 @@ const JumpinAIStudioContent = () => {
     setStudioMousePos({ x: -1000, y: -1000 });
   }, []);
   
-  // Input method tracking state
-  const [goalsUsedStt, setGoalsUsedStt] = useState(false);
-  const [challengesUsedStt, setChallengesUsedStt] = useState(false);
-  const [goalsSttDuration, setGoalsSttDuration] = useState(0);
-  const [challengesSttDuration, setChallengesSttDuration] = useState(0);
-  const [goalsTyped, setGoalsTyped] = useState(false);
-  const [challengesTyped, setChallengesTyped] = useState(false);
+  // Input method tracking state - simplified for single input
+  const [visionUsedStt, setVisionUsedStt] = useState(false);
+  const [visionSttDuration, setVisionSttDuration] = useState(0);
+  const [visionTyped, setVisionTyped] = useState(false);
   
   const progressDisplayRef = useRef<HTMLDivElement>(null);
   const generateButtonRef = useRef<HTMLDivElement>(null);
-  const goalsTextareaRef = useRef<HTMLTextAreaElement>(null);
-  const challengesTextareaRef = useRef<HTMLTextAreaElement>(null);
+  const visionTextareaRef = useRef<HTMLTextAreaElement>(null);
 
   const [formData, setFormData] = useState<StudioFormData>({
     currentRole: '',
@@ -186,20 +176,13 @@ const JumpinAIStudioContent = () => {
     }
   }, [isGenerating]);
 
-  // Auto-adjust textarea heights
+  // Auto-adjust textarea height
   useEffect(() => {
-    if (goalsTextareaRef.current && challengesTextareaRef.current) {
-      goalsTextareaRef.current.style.height = 'auto';
-      challengesTextareaRef.current.style.height = 'auto';
-      
-      const goalsHeight = goalsTextareaRef.current.scrollHeight;
-      const challengesHeight = challengesTextareaRef.current.scrollHeight;
-      const maxHeight = Math.max(goalsHeight, challengesHeight);
-      
-      goalsTextareaRef.current.style.height = maxHeight + 'px';
-      challengesTextareaRef.current.style.height = maxHeight + 'px';
+    if (visionTextareaRef.current) {
+      visionTextareaRef.current.style.height = 'auto';
+      visionTextareaRef.current.style.height = visionTextareaRef.current.scrollHeight + 'px';
     }
-  }, [formData.goals, formData.challenges]);
+  }, [formData.goals]);
 
   const loadSavedFormData = async () => {
     if (!isAuthenticated || !user?.id) return;
@@ -250,44 +233,34 @@ const JumpinAIStudioContent = () => {
   };
 
   const handleGenerate = async (alternativeContext?: { title: string; description: string }) => {
-    // Calculate input methods first
+    // Calculate input method
     const getInputMethod = (usedStt: boolean, typed: boolean): 'typed' | 'narrated' | 'mixed' => {
       if (usedStt && typed) return 'mixed';
       if (usedStt) return 'narrated';
       return 'typed';
     };
     
-    // Determine overall input method
-    const goalsMethod = getInputMethod(goalsUsedStt, goalsTyped);
-    const challengesMethod = getInputMethod(challengesUsedStt, challengesTyped);
-    let overallInputMethod: 'typed' | 'narrated' | 'mixed' = 'typed';
-    if (goalsMethod === 'narrated' && challengesMethod === 'narrated') {
-      overallInputMethod = 'narrated';
-    } else if (goalsUsedStt || challengesUsedStt) {
-      overallInputMethod = 'mixed';
-    }
+    const overallInputMethod = getInputMethod(visionUsedStt, visionTyped);
     
     const effectiveFormData = alternativeContext 
       ? {
           ...formData,
           goals: `${formData.goals}\n\n[ALTERNATIVE APPROACH SELECTED: "${alternativeContext.title}"]\nUser has explicitly chosen this alternative approach: ${alternativeContext.description}\nGenerate a jump that follows THIS specific approach, NOT the original default approach.`,
-          // Add STT tracking data to formData for edge function
-          sttUsed: goalsUsedStt || challengesUsedStt,
+          sttUsed: visionUsedStt,
           inputMethod: overallInputMethod,
-          goalsSttSeconds: goalsSttDuration,
-          challengesSttSeconds: challengesSttDuration,
+          goalsSttSeconds: visionSttDuration,
+          challengesSttSeconds: 0,
         }
       : {
           ...formData,
-          // Add STT tracking data to formData for edge function
-          sttUsed: goalsUsedStt || challengesUsedStt,
+          sttUsed: visionUsedStt,
           inputMethod: overallInputMethod,
-          goalsSttSeconds: goalsSttDuration,
-          challengesSttSeconds: challengesSttDuration,
+          goalsSttSeconds: visionSttDuration,
+          challengesSttSeconds: 0,
         };
     
-    if (!effectiveFormData.goals.trim() || !effectiveFormData.challenges.trim()) {
-      toast.error('Please fill in your goals and challenges');
+    if (!effectiveFormData.goals.trim()) {
+      toast.error('Please share your vision, goals, and challenges');
       return;
     }
 
@@ -298,16 +271,13 @@ const JumpinAIStudioContent = () => {
 
     try {
       const inputTracking: InputTracking = {
-        goalsInputMethod: goalsMethod,
-        challengesInputMethod: challengesMethod,
-        goalsSttDurationSeconds: goalsSttDuration,
-        challengesSttDurationSeconds: challengesSttDuration,
-        totalSttDurationSeconds: goalsSttDuration + challengesSttDuration,
+        inputMethod: overallInputMethod,
+        sttDurationSeconds: visionSttDuration,
       };
 
       // Send silent notification to admin (fire and forget)
       sendJumpGenerationNotification(
-        { goals: formData.goals, challenges: formData.challenges },
+        { goals: formData.goals },
         user,
         inputTracking
       );
@@ -443,47 +413,33 @@ const JumpinAIStudioContent = () => {
                   {/* Hero text - Premium typography (inside the card) */}
                   <div className="text-center mb-10 sm:mb-12">
                     <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[2.75rem] font-bold text-foreground mb-4 tracking-tight leading-[1.15]">
-                      Create Your{' '}
+                      What's Your Next{' '}
                       <span className="bg-gradient-to-r from-primary via-primary/90 to-primary/80 bg-clip-text text-transparent">
-                        Jump in AI
+                        Big Move
                       </span>
+                      ?
                     </h2>
                     <p className="text-muted-foreground text-sm sm:text-base md:text-lg max-w-xl mx-auto font-medium">
-                      Share your vision and challenges — we'll craft your personalized AI implementation roadmap.
+                      Share your vision, goals, and challenges — we'll craft your personalized AI implementation roadmap.
                     </p>
                   </div>
 
                   {/* Form inputs */}
                   <div className="space-y-8 sm:space-y-10">
-                    <div className="grid md:grid-cols-2 gap-6 sm:gap-8 lg:gap-10">
-                      {/* Goals Input */}
+                    <div>
+                      {/* Unified single input */}
                       <StudioTextarea
-                        ref={goalsTextareaRef}
-                        label="What are you building?"
+                        ref={visionTextareaRef}
+                        label="Tell us everything"
                         value={formData.goals}
                         onChange={(value) => setFormData(prev => ({ ...prev, goals: value }))}
-                        onTyped={() => setGoalsTyped(true)}
+                        onTyped={() => setVisionTyped(true)}
                         onSttUsed={() => {
                           setSttUsed(true);
-                          setGoalsUsedStt(true);
+                          setVisionUsedStt(true);
                         }}
-                        onSttDuration={(seconds) => setGoalsSttDuration(prev => prev + seconds)}
-                        placeholder="Describe your goals, project, or what you want to achieve with AI..."
-                      />
-                      
-                      {/* Challenges Input */}
-                      <StudioTextarea
-                        ref={challengesTextareaRef}
-                        label="What's in your way?"
-                        value={formData.challenges}
-                        onChange={(value) => setFormData(prev => ({ ...prev, challenges: value }))}
-                        onTyped={() => setChallengesTyped(true)}
-                        onSttUsed={() => {
-                          setSttUsed(true);
-                          setChallengesUsedStt(true);
-                        }}
-                        onSttDuration={(seconds) => setChallengesSttDuration(prev => prev + seconds)}
-                        placeholder="What obstacles, challenges, or frustrations are you facing..."
+                        onSttDuration={(seconds) => setVisionSttDuration(prev => prev + seconds)}
+                        placeholder="What are you building? What do you want to achieve with AI? What challenges or obstacles are standing in your way? Tell us everything..."
                       />
                     </div>
 

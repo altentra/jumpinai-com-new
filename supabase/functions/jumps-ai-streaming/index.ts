@@ -274,7 +274,7 @@ Deno.serve(async (req) => {
                   ip_address: ipAddress,
                   location: location,
                   form_goals: formData.goals,
-                  form_challenges: formData.challenges,
+                  form_challenges: formData.challenges || '',
                   // STT tracking fields
                   stt_used: sttTracking?.sttUsed || false,
                   input_method: sttTracking?.inputMethod || 'typed',
@@ -306,7 +306,7 @@ Deno.serve(async (req) => {
                   ip_address: ipAddress,
                   location: location,
                   form_goals: formData.goals,
-                  form_challenges: formData.challenges,
+                  form_challenges: formData.challenges || '',
                   // STT tracking fields
                   stt_used: sttTracking?.sttUsed || false,
                   input_method: sttTracking?.inputMethod || 'typed',
@@ -907,27 +907,26 @@ function getStepPrompts(step: number, context: StudioFormData, overviewContent: 
   const currentDate = getCurrentDate();
   const dateReference = `${currentDate.month} ${currentDate.year}`;
   
-  // Build context from user input - extract ALL insights from the 2 main fields
+  // Build context from user input - unified single input field
+  // The user provides everything in one field: goals, challenges, context, vision
+  const userInput = context.goals || 'Not specified';
   const baseContext = `
-USER'S GOALS AND ASPIRATIONS:
-${context.goals || 'Not specified'}
-
-USER'S CHALLENGES AND OBSTACLES:
-${context.challenges || 'Not specified'}
+USER'S INPUT (goals, challenges, vision, and context):
+${userInput}
   `.trim();
 
   switch (step) {
     case 1:
       // STEP 1: Quick name generation - extract insights from goals & challenges
       return {
-        systemPrompt: `You are a creative naming expert and business analyst. From the user's goals and challenges, you will intelligently infer their context (industry, role, experience level, urgency) and create an inspiring journey name.`,
+        systemPrompt: `You are a creative naming expert and business analyst. From the user's input, you will intelligently infer their context (industry, role, experience level, urgency, goals, challenges) and create an inspiring journey name.`,
         userPrompt: `Analyze this person's situation deeply from what they've shared:
 
 ${baseContext}
 
 Your task:
-1. From their GOALS, infer: What industry/field are they in? What's their likely role? What transformation do they seek?
-2. From their CHALLENGES, understand: What's blocking them? What's their experience level? How urgent is this?
+1. From their INPUT, infer: What industry/field are they in? What's their likely role? What transformation do they seek?
+2. Understand: What's blocking them? What goals do they have? What's their experience level? How urgent is this?
 3. Create an inspiring, specific 3-5 word name that captures their unique transformation journey
 
 Return ONLY valid JSON:
@@ -1390,9 +1389,8 @@ CRITICAL: PHASE ALIGNMENT:
 - Phase 2 (Combos 4-6): Growth tools - content creation, automation, scaling
 - Phase 3 (Combos 7-9): Mastery tools - optimization, analytics, advanced features
 
-CRITICAL: CONTEXT INFERENCE & DEFAULTS:
-- From GOALS: Infer their industry (from language/context), desired tools/capabilities, complexity needs
-- From CHALLENGES: Deduce their experience level, budget sensitivity, time constraints
+  CRITICAL: CONTEXT INFERENCE & DEFAULTS:
+- From the user's INPUT: Infer their industry (from language/context), desired tools/capabilities, complexity needs, challenges, experience level, budget sensitivity, time constraints
 - Apply smart defaults when unclear:
   * Experience: Standard AI learning curve (tech-savvy but new to AI)
   * Budget: Lean approach - prioritize free/affordable tools, only premium when truly optimal

@@ -9,7 +9,7 @@ export interface StudioFormData {
   aiKnowledge: string;
   aiExperience?: string;
   goals: string;
-  challenges: string;
+  challenges?: string;
   timeCommitment: string;
   budget: string;
   urgency?: string;

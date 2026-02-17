@@ -2,13 +2,13 @@ import { z } from 'https://deno.land/x/zod@v3.22.4/mod.ts';
 
 export interface StudioFormData {
   goals: string;
-  challenges: string;
+  challenges?: string;
   turnstileToken?: string;
 }
 
 export const StudioFormSchema = z.object({
-  goals: z.string().trim().min(10, 'Goals must be at least 10 characters').max(2000, 'Goals must be less than 2000 characters'),
-  challenges: z.string().trim().min(10, 'Challenges must be at least 10 characters').max(2000, 'Challenges must be less than 2000 characters')
+  goals: z.string().trim().min(10, 'Please share more details (at least 10 characters)').max(4000, 'Input must be less than 4000 characters'),
+  challenges: z.string().optional()
 });
 
 export async function verifyTurnstile(token: string, secretKey: string, ipAddress: string): Promise<boolean> {
