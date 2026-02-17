@@ -212,11 +212,10 @@ const InlineStudioSection = () => {
           {/* Hero text - Premium typography */}
           <div className="text-center mb-12 sm:mb-14">
             <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[2.75rem] font-bold text-foreground mb-5 tracking-tight leading-[1.15]">
-              What's Your Next{' '}
+              Create Your{' '}
               <span className="bg-gradient-to-r from-primary via-primary/90 to-primary/80 bg-clip-text text-transparent">
-                Big Move
+                Jump in AI
               </span>
-              ?
             </h2>
             <p className="text-muted-foreground text-sm sm:text-base md:text-lg max-w-xl mx-auto font-medium">
               Share your vision, goals, and challenges — we'll craft your personalized AI implementation roadmap.
@@ -255,13 +254,13 @@ const InlineStudioSection = () => {
                     {/* Unified single input */}
                     <StudioTextarea
                       ref={visionTextareaRef}
-                      label="Tell us everything"
+                      label="Your vision & challenges"
                       value={vision}
                       onChange={setVision}
                       onTyped={() => setVisionTyped(true)}
                       onSttUsed={() => setVisionUsedStt(true)}
                       onSttDuration={(seconds) => setVisionSttDuration(prev => prev + seconds)}
-                      placeholder="What are you building? What do you want to achieve with AI? What challenges or obstacles are standing in your way? Tell us everything..."
+                      placeholder="Describe what you're building and any obstacles you're facing — we'll map out your personalized AI strategy..."
                     />
                   </div>
 
