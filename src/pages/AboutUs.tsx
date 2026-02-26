@@ -11,7 +11,6 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Helmet, HelmetProvider } from "react-helmet-async";
 import logoImg from "@/assets/logo.png";
-import founderImg from "@/assets/founder-ivan-mchook.jpg";
 const logo = logoImg;
 
 // Component to handle lead magnet functionality
@@ -661,13 +660,10 @@ const AboutUs = () => {
                   <div className="absolute -inset-1 bg-gradient-to-br from-primary/30 via-accent/20 to-primary/30 rounded-2xl blur-lg opacity-40 group-hover:opacity-70 transition-all duration-500"></div>
                   
                   {/* Monogram card */}
-                  <div className="relative w-36 h-36 sm:w-44 sm:h-44 glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/25 rounded-2xl overflow-hidden shadow-xl shadow-primary/15 group-hover:border-primary/40 transition-all duration-500">
-                    <img 
-                      src={founderImg} 
-                      alt="Ivan McHook - Founder of JumpinAI" 
-                      className="w-full h-full object-cover"
-                      loading="lazy"
-                    />
+                  <div className="relative w-36 h-36 sm:w-44 sm:h-44 glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/25 rounded-2xl flex items-center justify-center shadow-xl shadow-primary/15 group-hover:border-primary/40 transition-all duration-500">
+                    <span className="text-5xl sm:text-6xl font-black bg-gradient-to-br from-foreground via-primary/80 to-primary/60 bg-clip-text text-transparent select-none tracking-tighter">
+                      IM
+                    </span>
                   </div>
                 </div>
 
