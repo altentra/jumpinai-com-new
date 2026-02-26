@@ -112,14 +112,9 @@ const Footer = () => {
                   </Link>
                 </li>
                 <li>
-                  <Link to="/jumps" className="text-xs md:text-sm text-foreground/70 hover:text-foreground transition-colors duration-300 leading-relaxed block">
-                    Guides
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/resources" className="text-xs md:text-sm text-foreground/70 hover:text-foreground transition-colors duration-300 leading-relaxed block">
-                    Resources
-                  </Link>
+                  <a href="https://www.arttoadapt.com" target="_blank" rel="noopener noreferrer" className="text-xs md:text-sm text-foreground/70 hover:text-foreground transition-colors duration-300 leading-relaxed block">
+                    Art to Adapt
+                  </a>
                 </li>
               </ul>
             </div>
