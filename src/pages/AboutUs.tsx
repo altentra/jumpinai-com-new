@@ -638,6 +638,91 @@ const AboutUs = () => {
         </div>
       </section>
 
+      {/* Founder Section */}
+      <section className="px-4 py-8 sm:py-12 relative z-10">
+        <div className="max-w-5xl mx-auto">
+          <div className="glass backdrop-blur-md bg-gradient-to-br from-background/30 via-primary/5 to-background/30 dark:from-background/15 dark:via-primary/10 dark:to-background/15 border border-primary/20 rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10 shadow-2xl shadow-primary/10 hover:shadow-3xl hover:shadow-primary/15 transition-all duration-500">
+            
+            {/* Section header */}
+            <div className="text-center mb-8 sm:mb-10">
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold bg-gradient-to-br from-foreground via-primary/90 to-foreground bg-clip-text text-transparent mb-3">
+                The Founder
+              </h2>
+              <div className="w-16 sm:w-20 h-0.5 bg-gradient-to-r from-transparent via-primary/50 to-transparent mx-auto rounded-full"></div>
+            </div>
+
+            <div className="grid md:grid-cols-[1fr_1.5fr] gap-8 md:gap-12 items-center">
+              
+              {/* Left - Visual identity */}
+              <div className="flex flex-col items-center space-y-5">
+                <div className="relative group">
+                  {/* Glow ring */}
+                  <div className="absolute -inset-1 bg-gradient-to-br from-primary/30 via-accent/20 to-primary/30 rounded-2xl blur-lg opacity-40 group-hover:opacity-70 transition-all duration-500"></div>
+                  
+                  {/* Monogram card */}
+                  <div className="relative w-36 h-36 sm:w-44 sm:h-44 glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/25 rounded-2xl flex items-center justify-center shadow-xl shadow-primary/15 group-hover:border-primary/40 transition-all duration-500">
+                    <span className="text-5xl sm:text-6xl font-black bg-gradient-to-br from-foreground via-primary/80 to-primary/60 bg-clip-text text-transparent select-none tracking-tighter">
+                      IM
+                    </span>
+                  </div>
+                </div>
+
+                <div className="text-center space-y-1">
+                  <h3 className="text-lg sm:text-xl font-bold text-foreground">Ivan McHook</h3>
+                  <p className="text-xs sm:text-sm text-muted-foreground font-medium tracking-wide">Entrepreneur · Author · Builder</p>
+                </div>
+
+                {/* Social links */}
+                <div className="flex items-center gap-3">
+                  <a 
+                    href="https://x.com/mchook" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="group/link flex items-center gap-2 glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/25 hover:border-primary/50 rounded-xl px-4 py-2.5 shadow-lg shadow-primary/10 hover:shadow-xl hover:shadow-primary/20 transition-all duration-300"
+                  >
+                    <svg className="w-4 h-4 text-foreground group-hover/link:text-primary transition-colors duration-300" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                    </svg>
+                    <span className="text-xs font-semibold text-foreground group-hover/link:text-primary transition-colors duration-300">@mchook</span>
+                  </a>
+                  <a 
+                    href="https://www.ivanmchook.com" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="group/link flex items-center gap-2 glass backdrop-blur-sm bg-background/25 dark:bg-background/15 border border-primary/25 hover:border-primary/50 rounded-xl px-4 py-2.5 shadow-lg shadow-primary/10 hover:shadow-xl hover:shadow-primary/20 transition-all duration-300"
+                  >
+                    <svg className="w-4 h-4 text-foreground group-hover/link:text-primary transition-colors duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="12" cy="12" r="10" /><path d="M2 12h20" /><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                    </svg>
+                    <span className="text-xs font-semibold text-foreground group-hover/link:text-primary transition-colors duration-300">Website</span>
+                  </a>
+                </div>
+              </div>
+
+              {/* Right - Story */}
+              <div className="space-y-5">
+                <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
+                  Ivan McHook is an entrepreneur, author, and venture builder who founded <span className="text-foreground font-semibold">JumpinAI</span> to solve a real problem — most people hear about AI but have no idea where to start. JumpinAI delivers personalized roadmaps, curated tools, and practical strategies that turn curiosity into capability.
+                </p>
+                <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
+                  Through <a href="https://www.vistalaunchpad.com" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline underline-offset-4 font-medium transition-colors duration-300">VistaLaunchpad</a>, he built a venture studio holding 150+ premium domains across AI, hospitality, wellness, and emerging technology — every collection positioned with purpose, every domain chosen with intent.
+                </p>
+                <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
+                  His latest book, <a href="https://www.arttoadapt.com" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline underline-offset-4 font-medium transition-colors duration-300"><em>Art to Adapt: Mastering the One Skill the AI Age Demands</em></a>, is a practical guide to thriving when the world shifts under your feet.
+                </p>
+                
+                {/* Philosophy quote */}
+                <div className="glass backdrop-blur-sm bg-background/20 dark:bg-background/10 border border-primary/20 rounded-xl p-4 sm:p-5 shadow-lg shadow-primary/10">
+                  <p className="text-sm sm:text-base text-foreground/90 italic leading-relaxed text-center">
+                    "Summits are just the view along the way."
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Call to Action - Glass Morphism */}
       <section className="px-4 py-8 sm:py-12 relative z-10">
         <div className="max-w-4xl mx-auto">
