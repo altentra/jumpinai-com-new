@@ -1686,9 +1686,8 @@ export const generatePitchDeckPDF = (): void => {
   setTextColor(colors.body);
   pdf.setFontSize(7.5);
   pdf.setFont('helvetica', 'normal');
-  pdf.text('• Starter Plan: $9/month — 25 credits monthly', margin + 3, yPosition + 13);
-  pdf.text('• Pro Plan: $25/month — 100 credits + AI Coach access', margin + 3, yPosition + 18);
-  pdf.text('• Growth Plan: $49/month — 250 credits + priority support', margin + 3, yPosition + 23);
+  pdf.text('• Pro Plan: $15/month (promo) — 100 credits + AI Coach access', margin + 3, yPosition + 13);
+  pdf.text('• Growth Plan: $30/month (promo) — 250 credits + priority support', margin + 3, yPosition + 18);
   pdf.text('• 1 credit = 1 complete Jump (3-tab transformation blueprint)', margin + 3, yPosition + 28);
   pdf.text('• All credits roll over month-to-month and never expire', margin + 3, yPosition + 33);
 

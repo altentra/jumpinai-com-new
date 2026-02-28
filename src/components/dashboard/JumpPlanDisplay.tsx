@@ -265,17 +265,12 @@ export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, o
     const tier = subscription.subscription_tier;
     if (!tier) return false;
     
-    // Starter plan ($9/month): can clarify up to level 1 (clarify main steps to get sub-steps)
-    if (tier.toLowerCase().includes('starter')) {
-      return currentLevel <= 1;
-    }
-    
-    // Pro plan ($25/month): can clarify up to level 2 (3 levels deep total)
+    // Pro plan ($15/month promo): can clarify up to level 2 (3 levels deep total)
     if (tier.toLowerCase().includes('pro')) {
       return currentLevel <= 2;
     }
     
-    // Growth plan ($49/month): can clarify up to level 3 (4 levels deep total)
+    // Growth plan ($30/month promo): can clarify up to level 3 (4 levels deep total)
     if (tier.toLowerCase().includes('growth')) {
       return currentLevel <= 3;
     }
@@ -800,11 +795,11 @@ export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, o
     if (!canClarifyAtLevel(1)) {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
-        toast.error('Sign up and subscribe to Starter Plan ($9/month) or higher to clarify to Level 2.');
+        toast.error('Sign up and subscribe to Pro Plan or higher to clarify to Level 2.');
       } else if (!subscription || !subscription.subscribed) {
-        toast.error('Subscribe to Starter Plan ($9/month) or higher to clarify to Level 2.');
+        toast.error('Subscribe to Pro Plan or higher to clarify to Level 2.');
       } else {
-        toast.error('Upgrade to Starter Plan ($9/month) or higher to clarify to Level 2.');
+        toast.error('Upgrade to Pro Plan or higher to clarify to Level 2.');
       }
       return;
     }
@@ -1343,11 +1338,11 @@ export default function JumpPlanDisplay({ planContent, structuredPlan, onEdit, o
     if (!canClarifyAtLevel(1)) {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
-        toast.error('Sign up and subscribe to Starter Plan ($9/month) or higher to clarify to Level 2.');
+        toast.error('Sign up and subscribe to Pro Plan or higher to clarify to Level 2.');
       } else if (!subscription || !subscription.subscribed) {
-        toast.error('Subscribe to Starter Plan ($9/month) or higher to clarify to Level 2.');
+        toast.error('Subscribe to Pro Plan or higher to clarify to Level 2.');
       } else {
-        toast.error('Upgrade to Starter Plan ($9/month) or higher to clarify to Level 2.');
+        toast.error('Upgrade to Pro Plan or higher to clarify to Level 2.');
       }
       return;
     }
