@@ -140,7 +140,7 @@ export const StudioTextarea = forwardRef<HTMLTextAreaElement, StudioTextareaProp
             onBlur={handleBlur}
             placeholder={placeholder}
             className={cn(
-              "relative w-full min-h-[180px] sm:min-h-[200px] p-5 sm:p-6 pb-16",
+              "relative w-full min-h-[240px] sm:min-h-[260px] p-5 sm:p-6 pb-16",
               "rounded-xl",
               stateStyles.bg,
               // Placeholder - HIGH visibility with good contrast
