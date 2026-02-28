@@ -1661,7 +1661,7 @@ export const generatePitchDeckPDF = (): void => {
   setTextColor(colors.body);
   pdf.setFontSize(7.5);
   pdf.setFont('helvetica', 'normal');
-  pdf.text('• 3 free Jumps to experience value                    • 5 welcome credits upon sign up', margin + 3, yPosition + 13);
+  pdf.text('• 5 free Jumps to experience value                    • 5 welcome credits upon sign up', margin + 3, yPosition + 13);
   pdf.text('• Viral acquisition through free tier                   • Low CAC, high conversion potential', margin + 3, yPosition + 19);
 
   yPosition += 28;
