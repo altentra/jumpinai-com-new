@@ -740,7 +740,7 @@ const PricingNew = () => {
                   </AccordionTrigger>
                   <AccordionContent className="px-5 sm:px-6 pb-4 pt-0">
                     <p className="text-sm text-muted-foreground leading-relaxed">
-                      Free plan includes 3 welcome credits to generate Jumps. You can use Clarify, Reroute, and Equip on main steps (level 1 only). Deeper clarification levels require a paid subscription.
+                      Free plan includes 5 welcome credits to generate Jumps. You can use Clarify, Reroute, and Equip on main steps (level 1 only). Deeper clarification levels require a paid subscription.
                     </p>
                   </AccordionContent>
                 </AccordionItem>

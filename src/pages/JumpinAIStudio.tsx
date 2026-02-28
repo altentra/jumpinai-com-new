@@ -390,7 +390,7 @@ const JumpinAIStudio = () => {
       );
       
       if (result.jumpId) {
-        toast.success('Your Jump in AI is ready! Sign up to get 3 welcome credits and save your jumps.');
+        toast.success('Your Jump in AI is ready! Sign up to get 5 welcome credits and save your jumps.');
       }
 
       // Update guest usage info after successful generation
@@ -411,7 +411,7 @@ const JumpinAIStudio = () => {
       console.error('Error generating Jump:', error);
       
       if (error.message?.includes('Rate limit exceeded') || error.message?.includes('429')) {
-        toast.error('You\'ve used all 3 free tries. Please sign up to get 3 welcome credits and continue!');
+        toast.error('You\'ve used all 3 free tries. Please sign up to get 5 welcome credits and continue!');
       } else {
         toast.error('Failed to generate your Jump. Please try again.');
       }
@@ -732,7 +732,7 @@ const JumpinAIStudio = () => {
                 <div className="flex flex-col sm:flex-row items-center justify-between gap-5 p-6 sm:p-8 rounded-[32px] border-2 border-amber-500/25 dark:border-amber-400/20 bg-gradient-to-r from-amber-500/[0.06] via-orange-500/[0.04] to-amber-500/[0.06] dark:from-amber-500/[0.12] dark:via-orange-500/[0.08] dark:to-amber-500/[0.12] backdrop-blur-sm shadow-xl shadow-amber-500/5">
                   <p className="text-base text-muted-foreground text-center sm:text-left font-medium">
                     <span className="text-foreground font-semibold">Sign up free</span> to save your Jumps and unlock{' '}
-                    <span className="text-amber-600 dark:text-amber-400 font-bold">3 welcome credits</span>
+                    <span className="text-amber-600 dark:text-amber-400 font-bold">5 welcome credits</span>
                   </p>
                   <button
                     onClick={() => login('/dashboard/studio')}
