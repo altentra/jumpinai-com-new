@@ -446,15 +446,11 @@ const PitchDeck = () => {
                 <ul className="space-y-2 text-xs text-muted-foreground">
                   <li className="flex items-start gap-2">
                     <span className="text-primary mt-0.5">•</span>
-                    <span><span className="font-semibold text-foreground">Starter Plan:</span> $9/month — 25 credits monthly</span>
+                    <span><span className="font-semibold text-foreground">Pro Plan:</span> $15/month (promo, reg. $20) — 100 credits + AI Coach</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-primary mt-0.5">•</span>
-                    <span><span className="font-semibold text-foreground">Pro Plan:</span> $25/month — 100 credits + AI Coach access</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-primary mt-0.5">•</span>
-                    <span><span className="font-semibold text-foreground">Growth Plan:</span> $49/month — 250 credits + priority support</span>
+                    <span><span className="font-semibold text-foreground">Growth Plan:</span> $30/month (promo, reg. $35) — 250 credits + priority support</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-primary mt-0.5">•</span>

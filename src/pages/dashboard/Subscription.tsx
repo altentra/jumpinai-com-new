@@ -220,9 +220,8 @@ export default function Subscription() {
   const getPlanTier = (planName: string): number => {
     const name = planName.toLowerCase();
     if (name.includes('free')) return 0;
-    if (name.includes('starter')) return 1;
-    if (name.includes('pro')) return 2;
-    if (name.includes('growth')) return 3;
+    if (name.includes('pro')) return 1;
+    if (name.includes('growth')) return 2;
     return 0;
   };
 
@@ -359,7 +358,6 @@ export default function Subscription() {
   const getPlanIcon = (planName: string) => {
     const name = planName.toLowerCase();
     if (name.includes('free')) return Zap;
-    if (name.includes('starter')) return Star;
     if (name.includes('pro')) return Crown;
     if (name.includes('growth')) return Rocket;
     return Zap;
@@ -516,7 +514,7 @@ export default function Subscription() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
           {subscriptionPlans.map((plan) => {
             const PlanIcon = getPlanIcon(plan.name);
             const badge = getPlanBadge(plan.name);
@@ -552,10 +550,22 @@ export default function Subscription() {
                   <CardTitle className="text-lg font-bold">{plan.name}</CardTitle>
                   <CardDescription className="text-xs min-h-[40px]">{plan.description}</CardDescription>
                   <div className="mt-3">
-                    <div className="text-3xl font-bold gradient-text-primary">
-                      {plan.price_cents === 0 ? 'Free' : formatPrice(plan.price_cents)}
-                      {plan.price_cents > 0 && <span className="text-sm font-normal text-muted-foreground">/mo</span>}
-                    </div>
+                    {plan.price_cents === 0 ? (
+                      <div className="text-3xl font-bold gradient-text-primary">Free</div>
+                    ) : (
+                      <div className="flex items-center justify-center gap-2">
+                        <span className="text-lg line-through text-muted-foreground/60">
+                          {plan.name.toLowerCase().includes('pro') ? '$20' : '$35'}
+                        </span>
+                        <span className="text-3xl font-bold gradient-text-primary">{formatPrice(plan.price_cents)}</span>
+                        <span className="text-sm font-normal text-muted-foreground">/mo</span>
+                      </div>
+                    )}
+                    {plan.price_cents > 0 && (
+                      <Badge className="mt-1 bg-emerald-500/10 text-emerald-600 border-emerald-500/20 text-xs">
+                        Launch Promo
+                      </Badge>
+                    )}
                     <div className="text-sm text-muted-foreground mt-1">
                       {plan.credits_per_month} credits {plan.price_cents > 0 && 'monthly'}
                     </div>

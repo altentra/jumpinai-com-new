@@ -147,9 +147,8 @@ const Index = () => {
   const getPlanTier = (planName: string): number => {
     const name = planName.toLowerCase();
     if (name.includes('free')) return 0;
-    if (name.includes('starter')) return 1;
-    if (name.includes('pro')) return 2;
-    if (name.includes('growth')) return 3;
+    if (name.includes('pro')) return 1;
+    if (name.includes('growth')) return 2;
     return 0;
   };
 
@@ -2048,10 +2047,22 @@ const Index = () => {
                       <h3 className="text-xl font-bold">{plan.name}</h3>
                       <p className="text-sm text-muted-foreground">{plan.description}</p>
                       <div className="mt-4">
-                        <div className="text-3xl font-bold">
-                          {isFree ? 'Free' : `$${(plan.price_cents / 100).toFixed(0)}`}
-                          {!isFree && <span className="text-base font-normal text-muted-foreground">/month</span>}
-                        </div>
+                        {isFree ? (
+                          <div className="text-3xl font-bold">Free</div>
+                        ) : (
+                          <div className="flex items-center justify-center gap-2">
+                            <span className="text-lg line-through text-muted-foreground/60">
+                              {plan.name.toLowerCase().includes('pro') ? '$20' : '$35'}
+                            </span>
+                            <span className="text-3xl font-bold">{`$${(plan.price_cents / 100).toFixed(0)}`}</span>
+                            <span className="text-base font-normal text-muted-foreground">/month</span>
+                          </div>
+                        )}
+                        {!isFree && (
+                          <span className="inline-block mt-1 bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 text-xs px-2 py-0.5 rounded-full font-medium">
+                            Launch Promo
+                          </span>
+                        )}
                         <div className="text-sm text-muted-foreground mt-1">
                           {plan.credits_per_month} credits {!isFree && 'monthly'}
                         </div>
