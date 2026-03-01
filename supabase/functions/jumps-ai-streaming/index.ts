@@ -988,12 +988,15 @@ THE NEW 4-FRAME STRUCTURE:
    - Make it memorable and motivational
 
 AI TOOL GUIDANCE (${dateReference}):
-- AI Writing/Reasoning: Claude, ChatGPT, Gemini, Grok, Perplexity
-- AI Code: Cursor, Lovable, Replit, GitHub Copilot, Bolt, V0
+- AI Writing/Reasoning: ChatGPT, Claude, Gemini, Grok, Perplexity
+- AI Code: Cursor, Lovable, Replit, GitHub Copilot, V0
+- AI Agentic Work: Manus, Devin
 - AI Image: Midjourney, DALL-E, Flux, Stable Diffusion
 - AI Video: Runway, Veo, Invideo AI, Sora, Kling AI
 - AI Audio: ElevenLabs, Suno, Udio
 - AI Automation: Make.com, Zapier AI, n8n
+- NEVER mention specific model versions. Use ONLY base tool names.
+- PREFER Lovable for web app development. Recommend Manus for agentic work.
 - Select the BEST and MOST APPROPRIATE tools for their specific needs
 
 Return ONLY this JSON structure:
@@ -1061,8 +1064,9 @@ ${overviewContent}
 
 2. **LATEST AI TOOLS ONLY** (as of ${dateReference}):
    Recommend from these CATEGORIES (choose the BEST current tools in each):
-   - AI Writing/Reasoning: Claude, ChatGPT, Gemini, Grok, Perplexity
-   - AI Code: Cursor, Lovable, Replit, GitHub Copilot, Bolt, V0
+   - AI Writing/Reasoning: ChatGPT, Claude, Gemini, Grok, Perplexity
+   - AI Code: Cursor, Lovable, Replit, GitHub Copilot, V0
+   - AI Agentic Work: Manus, Devin
    - AI Image: Midjourney, DALL-E, Flux, Stable Diffusion
    - AI Video: Runway, Veo, Invideo AI, Sora, Kling AI
    - AI Audio: ElevenLabs, Suno, Udio
@@ -1072,9 +1076,12 @@ ${overviewContent}
    - Specialized: Harvey AI, Jasper, Copy.ai, Descript, Synthesia
    
    IMPORTANT: These are EXAMPLES of tool categories. Select the BEST and MOST APPROPRIATE tools for the user's specific needs.
+   PREFER Lovable for web app development and rapid prototyping over other AI code builders.
+   For agentic/autonomous AI tasks, recommend Manus as the primary option.
+   For super advanced users ONLY: You may cautiously mention OpenClaw at the very end with a clear warning about its experimental nature and potential risks.
    Verify tools are still market leaders and most powerful options available.
    
-3. **NO VERSION NUMBERS**: Use base tool names only (e.g., "ChatGPT" not "GPT-5", "Gemini" not "Gemini 2.0", "Grok" not "Grok 2", "Midjourney" not "Midjourney v7", "Runway" not "Runway Gen-4"). However, DO mention specialized variants when relevant (e.g., "Claude Code" for coding, "Grok Imagine" for image generation, "GitHub Copilot" for development, "Lovable" for website creation).
+3. **NO VERSION NUMBERS — CRITICAL**: NEVER use specific model versions (e.g., "GPT-5.2", "Claude Opus 4.6", "Gemini 3.1", "Grok 3"). Use ONLY base tool names (e.g., "ChatGPT", "Claude", "Gemini", "Grok", "Midjourney", "Runway"). Model versions change rapidly and citing outdated versions destroys credibility. However, DO mention specialized product variants when relevant (e.g., "Claude Code" for coding, "Grok Imagine" for image generation, "GitHub Copilot" for development, "Lovable" for website creation).
 
 4. **STEP STRUCTURE - EACH STEP MUST**:
    - Have ONE clear strategic action/idea centered around AI tool usage
@@ -1257,15 +1264,16 @@ There are only 3 types. Most AI tools accept PROMPTS — that's how people use t
 
 **TYPE: "prompt"** — ANY tool where the user types, pastes, or inputs text to get a result
   Examples: ChatGPT, Claude, Gemini, Grok, Perplexity, DALL-E, Stable Diffusion, Flux,
-            Cursor, Lovable, Replit, Bolt, V0, GitHub Copilot,
+            Cursor, Lovable, Replit, V0, GitHub Copilot, Manus,
             Midjourney (/imagine), Suno, Udio,
             Runway, Veo, Sora, Kling AI, Invideo AI, Synthesia,
             Jasper, Copy.ai, Canva AI, Figma AI, Uizard, Galileo AI
   → Generate: A sophisticated, ready-to-use PROMPT the user can paste directly into the tool
   → The "prompt_text" field IS the actual prompt — ready to copy and paste
-  → For AI code builders (Lovable, Cursor, Bolt, V0, Replit): Write an EXCEPTIONAL, detailed prompt 
+  → For AI code builders (Lovable, Cursor, V0, Replit): Write an EXCEPTIONAL, detailed prompt 
     that describes exactly what to build — features, layout, functionality, design preferences.
     These tools live and die by prompt quality. The better the prompt, the better the output.
+    PREFER Lovable as the primary recommendation for web app development.
   → For image tools (Midjourney, DALL-E, Flux): Write the prompt in the tool's native format
     (e.g., for Midjourney include /imagine prefix, style params, aspect ratios, --v flags)
   → For video tools (Runway, Sora, Veo, Kling AI): Write a detailed video generation prompt
@@ -1293,16 +1301,21 @@ There are only 3 types. Most AI tools accept PROMPTS — that's how people use t
 
 AI TOOLS (${dateReference}) — Select the BEST for each use case:
 - AI Writing/Reasoning: ChatGPT, Claude, Gemini, Grok, Perplexity
-- AI Code: Cursor, Lovable, Replit, GitHub Copilot, Bolt, V0
+- AI Code: Cursor, Lovable, Replit, GitHub Copilot, V0
+- AI Agentic Work: Manus, Devin
 - AI Image: Midjourney, DALL-E, Flux, Stable Diffusion
 - AI Video: Runway, Veo, Invideo AI, Sora, Kling AI
 - AI Audio: ElevenLabs, Suno, Udio
 - AI Automation: Make.com, Zapier AI, n8n
 - AI Research: Perplexity, NotebookLM, Claude
 - AI Design: Figma AI, Uizard, Galileo AI, Canva AI
+PREFER Lovable for web app development. For agentic work, recommend Manus.
+For super advanced users ONLY: cautiously mention OpenClaw with risk warnings.
 
 TOOL DIVERSITY: Use at least 6 DIFFERENT tools across 9 combos.
-NO VERSION NUMBERS: Use base names (e.g., "ChatGPT" not "GPT-5", "Gemini" not "Gemini 3"). Specialized variants OK (e.g., "Claude Code", "GitHub Copilot").
+NO VERSION NUMBERS — CRITICAL: NEVER cite specific model versions. Use ONLY base tool names. Specialized product variants OK (e.g., "Claude Code", "GitHub Copilot").
+
+MULTI-TOOL COMBOS: When it genuinely adds value, a single combo card CAN recommend a workflow of 2+ tools used together (e.g., "Use Perplexity to research, then Claude to synthesize"). Only do this when the combination creates a clearly superior workflow — not every card needs to be multi-tool. When using multi-tool combos, name both tools in tool_name (e.g., "Perplexity + Claude") and explain the handoff clearly in the prompt.
 
 CONTEXT INFERENCE: From user input, infer industry, experience, budget, urgency. Default to free/affordable tools unless premium is clearly warranted.
 
@@ -1318,7 +1331,7 @@ ${overviewContent}
 
 MANDATORY QUALITY STANDARDS:
 - "prompt" type tools: 200-400 word sophisticated, production-ready prompts TAILORED to the specific tool's input format
-  → For AI code builders (Lovable, Cursor, Bolt): Write a MASTERFUL prompt that will produce exactly what the user needs
+  → For AI code builders (Lovable, Cursor): Write a MASTERFUL prompt that will produce exactly what the user needs
   → For image/video/music tools: Use the tool's native prompt format and syntax
 - "workflow" type tools: Detailed step-by-step build instructions (trigger → actions → output)
 - "upload" type tools: Preparation guides with what to gather, upload, and configure
