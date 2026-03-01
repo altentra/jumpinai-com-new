@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Copy, ExternalLink, Sparkles, CheckCircle, Clock, DollarSign, ArrowLeftRight, MessageSquare } from "lucide-react";
+import { Copy, ExternalLink, Sparkles, CheckCircle, Clock, DollarSign, ArrowLeftRight, MessageSquare, Workflow, Code, Terminal, Upload, Film } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { trackToolClick, trackPromptCopy, trackComboUsage } from "@/services/jumpTrackingService";
@@ -64,8 +64,8 @@ export function ToolPromptComboCard({ combo, onClick, index, jumpId }: ToolPromp
       }
       
       toast({
-        title: "Prompt Copied!",
-        description: "Ready to paste into " + (combo.tool_name || combo.name || 'the tool'),
+        title: "Copied!",
+        description: "Content copied to clipboard",
       });
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
@@ -136,6 +136,21 @@ export function ToolPromptComboCard({ combo, onClick, index, jumpId }: ToolPromp
   const difficultyLevel = safeExtract(combo, 'difficulty_level');
   const setupTime = safeExtract(combo, 'setup_time');
   const costEstimate = safeExtract(combo, 'cost_estimate');
+  const toolInteractionType = safeExtract(combo, 'tool_interaction_type') || 'prompt';
+  const expectedOutput = safeExtract(combo, 'expected_output');
+  
+  // Get interaction-type-aware labels and icons
+  const getContentMeta = () => {
+    switch (toolInteractionType) {
+      case 'workflow': return { label: 'Workflow Instructions', Icon: Workflow, copyLabel: 'Copy Instructions', badgeColor: 'bg-purple-500/10 text-purple-500 border-purple-500/20' };
+      case 'project': return { label: 'Project Specification', Icon: Code, copyLabel: 'Copy Spec', badgeColor: 'bg-cyan-500/10 text-cyan-500 border-cyan-500/20' };
+      case 'command': return { label: 'Ready-to-Use Command', Icon: Terminal, copyLabel: 'Copy Command', badgeColor: 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' };
+      case 'upload': return { label: 'Setup & Usage Guide', Icon: Upload, copyLabel: 'Copy Guide', badgeColor: 'bg-amber-500/10 text-amber-500 border-amber-500/20' };
+      case 'creative_brief': return { label: 'Creative Brief', Icon: Film, copyLabel: 'Copy Brief', badgeColor: 'bg-pink-500/10 text-pink-500 border-pink-500/20' };
+      default: return { label: 'Ready-to-Use Prompt', Icon: MessageSquare, copyLabel: 'Copy Prompt', badgeColor: 'bg-primary/10 text-primary border-primary/20' };
+    }
+  };
+  const contentMeta = getContentMeta();
   
   // Safely handle arrays - check both top level and content field
   const alternatives = Array.isArray(combo.alternatives) 
@@ -225,9 +240,18 @@ export function ToolPromptComboCard({ combo, onClick, index, jumpId }: ToolPromp
           {promptText && (
             <div className="space-y-3">
               <span className="text-sm font-medium flex items-center gap-2">
-                <MessageSquare className="w-4 h-4 text-primary" />
-                Ready-to-Use Prompt
+                <contentMeta.Icon className="w-4 h-4 text-primary" />
+                {contentMeta.label}
               </span>
+              {toolInteractionType !== 'prompt' && (
+                <Badge variant="outline" className={`text-[10px] w-fit ${contentMeta.badgeColor}`}>
+                  {toolInteractionType === 'workflow' ? '⚙️ No prompt needed' : 
+                   toolInteractionType === 'project' ? '🏗️ Project specs' :
+                   toolInteractionType === 'command' ? '⌨️ Command' :
+                   toolInteractionType === 'upload' ? '📁 Setup guide' :
+                   toolInteractionType === 'creative_brief' ? '🎬 Brief' : ''}
+                </Badge>
+              )}
               <div 
                 onClick={copyPrompt}
                 className={`bg-muted/30 border border-border rounded-lg p-3 cursor-pointer transition-all duration-300 ${
@@ -253,9 +277,9 @@ export function ToolPromptComboCard({ combo, onClick, index, jumpId }: ToolPromp
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent -translate-x-full group-hover/copy:translate-x-full transition-transform duration-1000"></div>
                   
                   {/* Content */}
-                  <span className="relative text-sm font-bold text-foreground group-hover/copy:text-primary transition-colors duration-300 whitespace-nowrap">
-                    {copied ? "Copied!" : "Copy Prompt"}
-                  </span>
+                   <span className="relative text-sm font-bold text-foreground group-hover/copy:text-primary transition-colors duration-300 whitespace-nowrap">
+                     {copied ? "Copied!" : contentMeta.copyLabel}
+                   </span>
                   
                   {/* Icon */}
                   <div className="relative flex items-center justify-center w-6 h-6 rounded-xl bg-primary/20 group-hover/copy:bg-primary/30 transition-all duration-300">
@@ -287,6 +311,22 @@ export function ToolPromptComboCard({ combo, onClick, index, jumpId }: ToolPromp
                           <div key={idx}>{step.trim()}</div>
                         ))}
                     </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Expected Output */}
+          {expectedOutput && (
+            <div className="relative group/section">
+              <div className="absolute -inset-0.5 bg-gradient-to-r from-violet-500/20 to-purple-500/20 rounded-2xl blur opacity-30 group-hover/section:opacity-50 transition duration-300"></div>
+              <div className="relative p-3 bg-gradient-to-br from-violet-500/10 via-violet-500/5 to-purple-500/10 backdrop-blur-sm border border-violet-500/20 rounded-2xl hover:border-violet-500/30 transition-all duration-300">
+                <div className="flex items-start gap-2">
+                  <CheckCircle className="w-4 h-4 text-violet-600 dark:text-violet-400 mt-0.5 shrink-0" />
+                  <div>
+                    <p className="text-xs font-medium text-violet-600 dark:text-violet-400 mb-1">Expected Output</p>
+                    <p className="text-xs sm:text-sm text-foreground leading-relaxed">{expectedOutput}</p>
                   </div>
                 </div>
               </div>

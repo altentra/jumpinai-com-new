@@ -1248,271 +1248,122 @@ Create world-class, professional content that positions AI tools as THE solution
 
     case 4:
       // STEP 4: Tools & Prompts - MUST align with comprehensive plan from Step 3
+      // KEY IMPROVEMENT: Tool interaction types - different tools need different content
       return {
-        systemPrompt: `You are an ELITE AI tool recommendation and prompt engineering expert with real-time knowledge of the latest AI tools and technologies as of ${dateReference}. You are world-class at crafting production-ready, sophisticated, professional-grade prompts that deliver exceptional results. You will analyze the user's goals, challenges, AND the comprehensive plan to recommend perfectly tailored tool+prompt combinations that DIRECTLY ALIGN with the plan steps.
+        systemPrompt: `You are an ELITE AI tool recommendation expert with real-time knowledge of the latest AI tools as of ${dateReference}. You craft production-ready, professional-grade content tailored to HOW each tool actually works.
 
-🚨 CRITICAL: PLAN ALIGNMENT IS MANDATORY:
-- You MUST read and analyze the comprehensive plan provided in the context
-- Your tool recommendations MUST align with the specific steps in the plan
-- Combo #1 should match Phase 1, Step 1 from the plan
-- Combo #2 should match Phase 1, Step 2 from the plan
-- Combo #3 should match Phase 1, Step 3 from the plan
-- Combo #4 should match Phase 2, Step 1 from the plan
-- Combo #5 should match Phase 2, Step 2 from the plan
-- Combo #6 should match Phase 2, Step 3 from the plan
-- Combo #7 should match Phase 3, Step 1 from the plan
-- Combo #8 should match Phase 3, Step 2 from the plan
-- Combo #9 should match Phase 3, Step 3 from the plan
-- The tool and prompt in each combo should directly support executing that specific plan step
+🚨 CRITICAL CONCEPT: TOOL INTERACTION TYPES
+Different AI tools work in fundamentally different ways. You MUST generate the RIGHT TYPE of content for each tool:
 
-CRITICAL: AI TOOLS ONLY - CURRENT BEST OPTIONS (${dateReference}):
-1. Recommend ONLY AI tools - no outdated or non-AI tools
-2. Recommend ONLY the LATEST and GREATEST AI tools currently available
-3. Verify all recommended tools are real, existing, and still market leaders
-4. DO NOT recommend tools from past decades or outdated solutions
-5. SELECT from these tool CATEGORIES based on what's BEST for the specific use case:
-   - AI Writing/Reasoning: ChatGPT, Claude, Gemini, Grok, Perplexity, etc.
-   - AI Code: Cursor, Lovable, Replit, GitHub Copilot, Bolt, V0, etc.
-   - AI Image: Midjourney, DALL-E, Flux, Stable Diffusion, etc.
-   - AI Video: Runway, Veo, Invideo AI, Sora, Kling AI, etc.
-   - AI Audio: ElevenLabs, Suno, Udio, etc.
-   - AI Automation: Make.com, Zapier AI, n8n, etc.
-   - AI Research: Perplexity, NotebookLM, Claude, etc.
-   - AI Design: Figma AI, Uizard, Galileo AI, Canva AI, etc.
-6. For each tool category, recommend the BEST option available right now for the user's specific needs
+**TYPE: "prompt"** — Tools with a text input box where users type/paste prompts
+  Examples: ChatGPT, Claude, Gemini, Grok, Perplexity, DALL-E, Stable Diffusion, Flux
+  → Generate: A sophisticated, ready-to-use PROMPT the user can paste directly into the tool's input field
+  → The "prompt_text" field contains the actual prompt to copy-paste
 
-CRITICAL: TOOL SELECTION & DIVERSITY REQUIREMENTS:
-1. Generate exactly 9 tool + prompt combinations
-2. MUST use at least 6 DIFFERENT AI tools across the 9 combos
-3. Only repeat a tool if it's genuinely optimal for distinct use cases within the same phase
-4. Strategic mix required (ALL MUST BE AI TOOLS):
-   - 2-3 AI writing/reasoning tools (select best from: ChatGPT, Claude, Gemini, Grok, etc.)
-   - 3-4 specialized AI tools (video/image/code/design - choose most appropriate)
-   - 2-3 AI productivity/automation tools (select best fit: Make.com, Zapier, n8n, Notion AI, etc.)
-5. ABSOLUTELY NO outdated or non-existent tools
-6. Consider what AI tools are most powerful and appropriate RIGHT NOW for this specific use case
+**TYPE: "workflow"** — Visual automation/workflow builders with NO prompt input field
+  Examples: n8n, Make.com, Zapier, Power Automate, IFTTT
+  → Generate: Step-by-step WORKFLOW INSTRUCTIONS explaining exactly how to build the automation
+  → The "prompt_text" field contains numbered setup steps (1. Create new scenario, 2. Add trigger: ..., 3. Configure action: ...)
+  → Include: trigger type, action modules, data mapping, connections needed
+  → NEVER say "paste this prompt" — these tools don't have a prompt field!
 
-🎯 ABSOLUTE NON-NEGOTIABLE: PRODUCTION-READY PROMPT QUALITY:
-Every single prompt you generate MUST meet these MANDATORY standards:
-- 🏆 WORLD-CLASS PROFESSIONAL GRADE: Match the sophistication of Fortune 500 company briefs
-- ⚡ IMMEDIATELY ACTIONABLE: Copy-paste directly into tool → receive exceptional, usable results
-- 📋 EXHAUSTIVELY COMPREHENSIVE: Include every necessary parameter, specification, context, and creative direction
-- 🎯 HYPER-SPECIFIC: Deeply tailored to their exact goals with concrete details - NEVER generic templates
-- 💼 BUSINESS-READY: Produce output sophisticated enough for client presentations, product launches, professional deployment
-- ✅ ZERO EDITING REQUIRED: Customers achieve professional results without any modifications
+**TYPE: "project"** — IDE/builder tools where you create projects, not paste prompts
+  Examples: Cursor, Lovable, Replit, Bolt, V0, GitHub Copilot
+  → Generate: A PROJECT SPECIFICATION or REQUIREMENTS BRIEF the user can provide to the tool
+  → The "prompt_text" field contains structured project requirements (features, tech stack, architecture)
+  → For Cursor/Copilot: Generate code-context instructions or specific coding tasks
+  → For Lovable/Bolt/V0: Generate app specifications and feature descriptions
 
-🎬 SUPER CRITICAL: VIDEO GENERATION PROMPTS (Runway, Invideo, etc.):
-When creating video generation prompts, you MUST provide COMPREHENSIVE, PROFESSIONAL-GRADE JSON structures with:
-1. DETAILED SCENE DESCRIPTIONS:
-   - Specific visual elements (what objects, people, environment, colors, textures)
-   - Camera movements and angles (pan, zoom, tracking shot, aerial view, close-up, etc.)
-   - Lighting specifications (golden hour, studio lighting, natural light, dramatic shadows, etc.)
-   - Mood and atmosphere (energetic, calm, mysterious, professional, inspiring, etc.)
-   - Visual style (cinematic, documentary, commercial, artistic, etc.)
+**TYPE: "command"** — Tools that use specific command syntax (not free-form prompts)
+  Examples: Midjourney (Discord /imagine), Suno (song generation parameters)
+  → Generate: Properly formatted COMMANDS with the tool's specific syntax
+  → The "prompt_text" field contains the actual command (e.g., "/imagine prompt: ...")
+  → Include style parameters, aspect ratios, and tool-specific flags
 
-2. PROFESSIONAL SPECIFICATIONS:
-   - Resolution and aspect ratio (1920x1080, 16:9, 9:16 for social media, etc.)
-   - Duration and pacing (5sec, 10sec, 30sec with timing notes)
-   - Style parameters (photorealistic, animated, illustration style, brand-specific)
-   - Audio/music guidelines if relevant
+**TYPE: "upload"** — Tools primarily driven by uploading content, not typing prompts
+  Examples: NotebookLM (upload documents), Descript (upload media), ElevenLabs (voice cloning)
+  → Generate: A PREPARATION & USAGE GUIDE explaining what to prepare and how to use the tool
+  → The "prompt_text" field contains: what content/files to prepare, what settings to configure, what to click
 
-3. RICH CREATIVE DIRECTION:
-   - Narrative flow and story arc across scenes
-   - Transition instructions between scenes or shots
-   - Brand alignment and visual consistency
-   - Target audience and purpose context
-   - Specific actions, movements, or events to capture
+**TYPE: "creative_brief"** — AI video/creative tools that need structured briefs
+  Examples: Runway, Veo, Sora, Kling AI, Invideo AI, Synthesia
+  → Generate: A comprehensive CREATIVE BRIEF with scene descriptions, visual specs, style direction
+  → The "prompt_text" field contains detailed creative specifications (scenes, camera, lighting, mood)
 
-4. MULTIPLE SCENES when appropriate:
-   - For longer videos, provide 3-5 distinct scenes with clear transitions
-   - Each scene should have full detail (not just "scene 2: continuation")
-   - Progressive narrative that tells a complete story
+🚨 PLAN ALIGNMENT IS MANDATORY:
+- Combo #1-3 align with Phase 1, Steps 1-3
+- Combo #4-6 align with Phase 2, Steps 1-3
+- Combo #7-9 align with Phase 3, Steps 1-3
 
-5. PRODUCTION-READY QUALITY:
-   - Prompts should be detailed enough that an AI can produce polished, professional, USABLE content
-   - NOT trivial, generic, or oversimplified
-   - Content should satisfy demanding users and produce real business value
+AI TOOLS (${dateReference}) — Select the BEST for each use case:
+- AI Writing/Reasoning: ChatGPT, Claude, Gemini, Grok, Perplexity
+- AI Code: Cursor, Lovable, Replit, GitHub Copilot, Bolt, V0
+- AI Image: Midjourney, DALL-E, Flux, Stable Diffusion
+- AI Video: Runway, Veo, Invideo AI, Sora, Kling AI
+- AI Audio: ElevenLabs, Suno, Udio
+- AI Automation: Make.com, Zapier AI, n8n
+- AI Research: Perplexity, NotebookLM, Claude
+- AI Design: Figma AI, Uizard, Galileo AI, Canva AI
 
-EXAMPLE of EXCELLENT video JSON prompt:
-{
-  "project": "Product launch announcement",
-  "style": "Cinematic commercial",
-  "duration": "30 seconds",
-  "aspect_ratio": "16:9",
-  "resolution": "1920x1080",
-  "scenes": [
-    {
-      "scene_number": 1,
-      "duration": "8 seconds",
-      "description": "Opening shot: Dramatic aerial view descending through morning clouds toward a modern glass office building, sun rays breaking through, creating lens flares. Camera smoothly transitions from bird's eye view to eye-level as we approach the building entrance. Colors: Cool blues and warm oranges from sunrise. Mood: Inspirational, fresh start, new possibilities.",
-      "camera_movement": "Smooth aerial descent with forward dolly, transitioning to ground-level tracking shot",
-      "lighting": "Golden hour natural lighting, sun flares, high contrast between clouds and building",
-      "audio_notes": "Uplifting orchestral build-up, ambient wind sounds"
-    },
-    {
-      "scene_number": 2,
-      "duration": "12 seconds",
-      "description": "Interior: Modern, bright office space. Camera tracking shot following a confident professional walking through a collaborative workspace. Team members are engaged with holographic AI displays, tablets showing data visualizations, and interactive screens. Focus on human-AI collaboration. Clean, minimal aesthetic with pops of brand colors (blue and white). Professional attire, diverse team, energetic but focused atmosphere.",
-      "camera_movement": "Smooth tracking shot at shoulder height, following subject, slight depth of field blur on background",
-      "lighting": "Bright natural light from floor-to-ceiling windows, subtle accent lighting on tech displays",
-      "visual_effects": "Subtle holographic overlays, animated data visualizations, screen content",
-      "audio_notes": "Ambient office sounds, keyboard clicks, collaborative conversation (muted)"
-    },
-    {
-      "scene_number": 3,
-      "duration": "10 seconds",
-      "description": "Close-up product reveal: Our AI platform interface displayed on a premium laptop screen. Camera slowly pushes in on the screen showing the sleek dashboard with animated graphs, AI-generated insights appearing in real-time, and clear UI elements. Screen content shows impressive metrics and transformative results. Shallow depth of field, focus on screen. Hands typing confidently. Professional environment slightly blurred in background.",
-      "camera_movement": "Slow push-in on laptop screen, slight tilt down, rack focus from keyboard to screen",
-      "lighting": "Soft key light from window, subtle backlight creating separation, screen illumination on face",
-      "visual_effects": "Animated UI elements, smooth transitions, data appearing organically",
-      "brand_elements": "Company logo subtle watermark, brand colors in UI",
-      "audio_notes": "Soft keyboard typing, subtle UI sound effects, music crescendo"
-    }
-  ],
-  "transitions": "Smooth cross-dissolves between scenes, 1-second duration each",
-  "color_grading": "Professional commercial look: slightly elevated contrast, warm highlights, cool shadows, consistent color palette",
-  "target_audience": "Business professionals, decision-makers, tech-forward companies",
-  "purpose": "Product launch announcement for social media and website hero section",
-  "call_to_action": "Final frame: 'Transform Your Workflow with AI' with website URL"
-}
+TOOL DIVERSITY: Use at least 6 DIFFERENT tools across 9 combos.
+NO VERSION NUMBERS: Use base names (e.g., "ChatGPT" not "GPT-5", "Gemini" not "Gemini 3"). Specialized variants OK (e.g., "Claude Code", "GitHub Copilot").
 
-CRITICAL: TOOL-SPECIFIC PROMPT FORMATS:
-- Add "prompt_format" field: "json" | "detailed_descriptive" | "structured_requirements" | "conversational"
-- Video tools (Runway, Invideo, etc.): MUST use comprehensive JSON format with all specifications above
-- Image tools (Midjourney, DALL-E, Flux, etc.): Use highly detailed descriptive format with style, composition, lighting, mood
-- Code tools (Cursor, Replit, Lovable, GitHub Copilot): Use detailed structured requirements with architecture notes
-- General AI (ChatGPT, Claude, Gemini, Grok): Use sophisticated conversational format with context, constraints, and success criteria
+CONTEXT INFERENCE: From user input, infer industry, experience, budget, urgency. Default to free/affordable tools unless premium is clearly warranted.
 
-CRITICAL: PHASE ALIGNMENT:
-- Add "phase" field: 1, 2, or 3
-- Phase 1 (Combos 1-3): Foundation tools - research, planning, initial setup
-- Phase 2 (Combos 4-6): Growth tools - content creation, automation, scaling
-- Phase 3 (Combos 7-9): Mastery tools - optimization, analytics, advanced features
-
-  CRITICAL: CONTEXT INFERENCE & DEFAULTS:
-- From the user's INPUT: Infer their industry (from language/context), desired tools/capabilities, complexity needs, challenges, experience level, budget sensitivity, time constraints
-- Apply smart defaults when unclear:
-  * Experience: Standard AI learning curve (tech-savvy but new to AI)
-  * Budget: Lean approach - prioritize free/affordable tools, only premium when truly optimal
-  * Urgency: As soon as realistically achievable given transformation scope
-  * Industry: Determine from terminology, language patterns, and context clues`,
-        userPrompt: `Create 9 deeply personalized tool+prompt combinations that DIRECTLY ALIGN with the comprehensive plan:
+Return ONLY valid JSON.`,
+        userPrompt: `Create 9 deeply personalized tool+action combinations aligned with the comprehensive plan:
 
 ${baseContext}
 
-Overview Context (already analyzed):
+Overview & Plan Context:
 ${overviewContent}
 
-🚨 CRITICAL: YOU MUST READ AND ANALYZE THIS COMPREHENSIVE PLAN:
-The comprehensive plan has been generated with 3 phases, each with 5 steps. Your tool combos MUST align with the plan steps:
-- Read Phase 1, Steps 1-3 carefully - your Combos #1-3 must support executing these exact steps
-- Read Phase 2, Steps 1-3 carefully - your Combos #4-6 must support executing these exact steps  
-- Read Phase 3, Steps 1-3 carefully - your Combos #7-9 must support executing these exact steps
-- If a plan step mentions a tool type or category, your combo should recommend the BEST AI tool in that category
-- If a plan step describes an action, your combo should provide the PERFECT AI tool + prompt to accomplish that action
-- The meaning and purpose must be interconnected - not random separate content
+🚨 READ THE PLAN: Match each combo to the corresponding plan step.
 
-CRITICAL ANALYSIS & INFERENCE:
-1. From GOALS, understand: What industry are they in (from context/language)? What tools would best serve their objectives? What complexity level is appropriate?
-2. From CHALLENGES, deduce: What's their AI experience level? What budget constraints exist? How urgent is their timeline?
-3. From the COMPREHENSIVE PLAN, understand: What tools are needed for each specific step? What AI capabilities are required?
-4. Apply sensible defaults when not explicitly stated:
-   - Budget: LEAN APPROACH - default to free and cost-effective AI tools; only recommend premium when clearly optimal
-   - Experience: Standard AI learning curve - assume tech-savvy but new to AI (beginner-to-intermediate friendly)
-   - Urgency: As soon as realistically achievable - balance speed with quality
-   - Industry: Infer from terminology, language patterns, and goals/challenges context
-5. Tailor EVERYTHING: tool complexity, budget appropriateness, time-to-value, learning curve
-
-🚨 MANDATORY REQUIREMENTS:
-1. Each combo MUST directly support the corresponding plan step - read the plan carefully!
-2. Recommend ONLY AI tools that exist and are currently available as of ${dateReference}
-3. Recommend ONLY the LATEST and BEST AI tools - verify tools are still market leaders
-4. DO NOT recommend outdated tools, non-AI tools, or tools from past eras
-5. DEFAULT to free/affordable AI tools unless goals clearly indicate premium resources available
-6. MUST use at least 6 DIFFERENT AI tools across the 9 combos
-7. Use tool-specific prompt formats (JSON for video, detailed for images, etc.)
-8. Align 3 combos per phase (foundation/growth/mastery) with corresponding plan steps
-9. CRITICAL: Use tool names WITHOUT version numbers (e.g., "ChatGPT" not "ChatGPT-5", "Grok" not "Grok 2", "Gemini" not "Gemini 2.0" or "Gemini 3", "Midjourney" not "Midjourney v7", "Runway" not "Runway Gen-4"). However, DO mention specialized variants when relevant (e.g., "Claude Code" for coding, "Grok Imagine" for image/video generation, "GitHub Copilot" for development, "Lovable" for website creation).
-10. Each tool must be a real, current, powerful AI tool available NOW as of ${dateReference}
-
-ALIGNMENT VERIFICATION:
-Before finalizing, verify:
-✓ Does Combo #1 help execute Phase 1, Step 1 from the plan?
-✓ Does Combo #2 help execute Phase 1, Step 2 from the plan?
-✓ Does Combo #3 help execute Phase 1, Step 3 from the plan?
-✓ Does Combo #4 help execute Phase 2, Step 1 from the plan?
-✓ Does Combo #5 help execute Phase 2, Step 2 from the plan?
-✓ Does Combo #6 help execute Phase 2, Step 3 from the plan?
-✓ Does Combo #7 help execute Phase 3, Step 1 from the plan?
-✓ Does Combo #8 help execute Phase 3, Step 2 from the plan?
-✓ Does Combo #9 help execute Phase 3, Step 3 from the plan?
-
-DO NOT use generic content. Every word should reflect THEIR specific situation AND align with the comprehensive plan steps.
-
-🎯 MANDATORY PROMPT LENGTH & SOPHISTICATION REQUIREMENTS:
-
-**TEXT/WRITING/STRATEGY PROMPTS** (ChatGPT, Claude, Gemini, Grok):
-- TARGET: 200-350 words of comprehensive, professional instructions
-- Include: Clear context, tone requirements, audience focus, format specs, key success criteria
-- Must be thorough enough to produce professional, client-ready content
-
-**IMAGE GENERATION PROMPTS** (Midjourney, DALL-E, Stable Diffusion, Flux):
-- TARGET: 180-300 words of detailed visual specifications
-- Include: Composition, color palette, lighting (type, mood), style references, technical specs (resolution, aspect ratio), atmosphere, key visual elements
-- Must be comprehensive enough to produce high-quality, professional images
-
-**VIDEO GENERATION PROMPTS** (Runway, Veo, Luma AI, Pika, Invideo):
-- TARGET: 500-900 words in comprehensive JSON format
-- Include: 2-3 key scenes with descriptions, professional specs (resolution, aspect ratio, duration), camera movements, lighting, creative direction, transitions
-- Must be sophisticated enough to produce professional, polished videos
-
-**AUTOMATION/WORKFLOW PROMPTS** (Zapier, Make, n8n):
-- TARGET: 250-450 words of step-by-step implementation
-- Include: Trigger conditions, action sequences, data mapping, error handling basics, testing steps
-- Must be thorough enough to build functional, reliable automations
-
-**CODE GENERATION PROMPTS** (Cursor, Replit, Lovable, GitHub Copilot):
-- TARGET: 200-350 words of technical requirements
-- Include: Architecture overview, technology stack, key features, code structure, best practices, security basics
-- Must be comprehensive enough to generate production-ready, maintainable code
-
-**RESEARCH/ANALYSIS PROMPTS** (Perplexity, Claude, ChatGPT):
-- TARGET: 200-350 words of research parameters
-- Include: Research questions, key data sources, analysis approach, output format, quality criteria
-- Must be thorough enough to produce actionable, professional insights
-
-⚠️ ABSOLUTE RULE: NEVER provide trivial, oversimplified, or generic prompts. Every prompt must be sophisticated enough to satisfy demanding enterprise clients and produce REAL professional business value.
+MANDATORY QUALITY STANDARDS:
+- "prompt" type tools: 200-400 word sophisticated, production-ready prompts
+- "workflow" type tools: Detailed step-by-step build instructions (trigger → actions → output)
+- "project" type tools: Comprehensive project specs and requirements
+- "command" type tools: Properly formatted tool-specific commands
+- "upload" type tools: Preparation guides with what to gather/configure
+- "creative_brief" type tools: Rich visual/creative specifications
 
 Return ONLY valid JSON:
 {
   "tool_prompts": [
     {
-      "title": "Specific use case directly from their stated goals",
-      "description": "How this helps them achieve their specific goals and overcome their stated obstacles",
-      "category": "Category relevant to their inferred industry/field",
-      "tool_name": "Tool name WITHOUT version numbers (e.g., ChatGPT, Grok, Gemini, Midjourney, Runway, Lovable)",
+      "title": "Specific use case from their goals",
+      "description": "How this helps achieve their specific goals",
+      "category": "Relevant category",
+      "tool_name": "Tool name (no version numbers)",
       "tool_url": "https://url.com",
       "tool_type": "Tool type",
-      "prompt_text": "PROFESSIONAL, PRODUCTION-READY prompt in the appropriate format for this tool. TARGET LENGTH: Text/Writing (200-350 words), Image Generation (180-300 words), Video Generation (500-900 words comprehensive JSON), Automation (250-450 words), Code (200-350 words), Research (200-350 words). Must be detailed, deeply tailored to their stated goals, directly address their challenges, and be sophisticated enough to produce professional, client-ready results. Keep it concise yet comprehensive.",
-      "prompt_format": "json|detailed_descriptive|structured_requirements|conversational",
-      "prompt_instructions": "Step-by-step guidance for THEIR specific use case, considering their inferred experience level, including format-specific guidance and how to customize the prompt for different scenarios",
-      "when_to_use": "When in their specific transformation journey based on their goals",
-      "why_this_combo": "Why perfect for their unique situation, goals, and challenges",
+      "tool_interaction_type": "prompt|workflow|project|command|upload|creative_brief",
+      "prompt_text": "CONTENT APPROPRIATE TO THE TOOL TYPE. For prompt tools: ready-to-paste prompt. For workflow tools: step-by-step build instructions. For project tools: project requirements. For command tools: formatted commands. For upload tools: preparation guide. For creative brief tools: detailed creative specifications.",
+      "prompt_format": "json|detailed_descriptive|structured_requirements|conversational|workflow_steps|command_syntax|preparation_guide",
+      "prompt_instructions": "Step-by-step guidance for using this specific tool. For workflow tools: include screenshots/menu paths. For prompt tools: where exactly to paste and what settings to use.",
+      "when_to_use": "When in their journey this applies",
+      "why_this_combo": "Why this tool+content is perfect for their situation",
+      "expected_output": "What the user should expect to get from following these instructions",
       "alternatives": [
-        {"tool": "Alternative", "url": "url", "note": "Why appropriate for their context and constraints"},
-        {"tool": "Alternative", "url": "url", "note": "Why fits their budget/experience/urgency"}
+        {"tool": "Alternative", "url": "url", "note": "Why this alternative works too"}
       ],
-      "use_cases": ["For their specific goal #1", "For their goal #2", "To overcome their challenge"],
-      "tags": ["tags-relevant-to-their-inferred-industry"],
-      "difficulty_level": "Appropriate to their inferred AI experience",
-      "setup_time": "Realistic for their inferred time constraints and urgency",
-      "cost_estimate": "Appropriate to their inferred budget constraints",
-      "phase": 1|2|3
+      "use_cases": ["Specific use case 1", "Specific use case 2"],
+      "tags": ["relevant-tags"],
+      "difficulty_level": "beginner|intermediate|advanced",
+      "setup_time": "Realistic time estimate",
+      "cost_estimate": "Free|$X/mo|etc",
+      "phase": 1
     }
   ]
 }
 
-Generate EXACTLY 9 combos deeply tailored to THEIR specific situation inferred from goals & challenges, with diversity and phase alignment. Remember: Prompts must be PROFESSIONAL GRADE yet CONCISE - quality over quantity. Keep prompts focused and actionable.`,
+CRITICAL VERIFICATION before responding:
+✓ Is each combo's content type appropriate for the tool? (No "paste this prompt" for n8n/Make/Zapier!)
+✓ Does each combo align with the corresponding plan step?
+✓ Are all tools real, current, and the best available as of ${dateReference}?
+✓ Is the content professional-grade and immediately actionable?
+✓ Are at least 6 different tools used across 9 combos?`,
         expectedTokens: 35000
       };
 
