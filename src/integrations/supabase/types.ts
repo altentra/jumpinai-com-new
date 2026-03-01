@@ -14,6 +14,42 @@ export type Database = {
   }
   public: {
     Tables: {
+      ai_model_registry: {
+        Row: {
+          category: string
+          created_at: string
+          id: string
+          latest_models: Json
+          notes: string | null
+          provider: string
+          source: string | null
+          tool_name: string
+          updated_at: string
+        }
+        Insert: {
+          category?: string
+          created_at?: string
+          id?: string
+          latest_models?: Json
+          notes?: string | null
+          provider: string
+          source?: string | null
+          tool_name: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          id?: string
+          latest_models?: Json
+          notes?: string | null
+          provider?: string
+          source?: string | null
+          tool_name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       api_usage_logs: {
         Row: {
           created_at: string
