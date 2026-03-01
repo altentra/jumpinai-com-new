@@ -51,6 +51,19 @@ serve(async (req) => {
     }
 
     const jumpData: JumpData = await req.json();
+
+    // Input validation - enforce length limits
+    const MAX_TEXT = 5000;
+    if (!jumpData.jumpId || !jumpData.jumpTitle || jumpData.jumpTitle.length > 500) {
+      return new Response(JSON.stringify({ error: 'Invalid jump data' }), { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    }
+    if (jumpData.jumpSummary && jumpData.jumpSummary.length > MAX_TEXT) {
+      return new Response(JSON.stringify({ error: 'Jump summary too long' }), { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    }
+    if (jumpData.fullContent && jumpData.fullContent.length > 50000) {
+      return new Response(JSON.stringify({ error: 'Content too long' }), { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    }
+
     console.log('📊 Analyzing jump for agent opportunities:', jumpData.jumpTitle);
 
     // Check if analysis already exists for this jump

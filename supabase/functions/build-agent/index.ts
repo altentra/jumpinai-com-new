@@ -875,7 +875,35 @@ Deno.serve(async (req) => {
       );
     }
 
-    const { opportunity, jump, analysisId, platform = 'n8n', automationType = 'workflow' } = await req.json() as AgentBuildRequest;
+    const rawBody = await req.json();
+    const { opportunity, jump, analysisId, platform = 'n8n', automationType = 'workflow' } = rawBody as AgentBuildRequest;
+
+    // Input validation - enforce length limits to prevent resource abuse
+    const MAX_TEXT_LENGTH = 5000;
+    if (!opportunity?.title || opportunity.title.length > 500) {
+      return new Response(JSON.stringify({ error: 'Invalid opportunity title' }), { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    }
+    if (opportunity.description && opportunity.description.length > MAX_TEXT_LENGTH) {
+      return new Response(JSON.stringify({ error: 'Opportunity description too long' }), { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    }
+    if (!jump?.id || !jump?.title || jump.title.length > 500) {
+      return new Response(JSON.stringify({ error: 'Invalid jump data' }), { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    }
+    if (jump.goals && jump.goals.length > MAX_TEXT_LENGTH) {
+      return new Response(JSON.stringify({ error: 'Jump goals too long' }), { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    }
+    if (jump.challenges && jump.challenges.length > MAX_TEXT_LENGTH) {
+      return new Response(JSON.stringify({ error: 'Jump challenges too long' }), { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    }
+    if (jump.summary && jump.summary.length > MAX_TEXT_LENGTH) {
+      return new Response(JSON.stringify({ error: 'Jump summary too long' }), { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    }
+    if (!['n8n', 'make', 'both'].includes(platform)) {
+      return new Response(JSON.stringify({ error: 'Invalid platform' }), { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    }
+    if (!['workflow', 'ai-agent'].includes(automationType)) {
+      return new Response(JSON.stringify({ error: 'Invalid automation type' }), { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    }
 
     const isAIAgent = automationType === 'ai-agent';
     const buildTypeName = isAIAgent ? 'AI Agent' : 'Workflow';
