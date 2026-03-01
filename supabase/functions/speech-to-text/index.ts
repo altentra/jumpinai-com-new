@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.57.4';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -15,6 +16,41 @@ serve(async (req) => {
     const ELEVENLABS_API_KEY = Deno.env.get('ELEVENLABS_API_KEY');
     if (!ELEVENLABS_API_KEY) {
       throw new Error('ELEVENLABS_API_KEY is not configured');
+    }
+
+    // Rate limiting via IP
+    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+    const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
+    const ipAddress = req.headers.get('x-forwarded-for')?.split(',')[0] || 
+                      req.headers.get('x-real-ip') || 'unknown';
+    
+    // Check auth status
+    const authHeader = req.headers.get('authorization');
+    let userId: string | null = null;
+    if (authHeader) {
+      try {
+        const { data: { user } } = await supabase.auth.getUser(authHeader.replace('Bearer ', ''));
+        userId = user?.id || null;
+      } catch (_) { /* guest user */ }
+    }
+
+    // Rate limit check (reuse existing RPC)
+    const { data: rateLimitData, error: rateLimitError } = await supabase.rpc('check_stt_rate_limit', {
+      p_user_id: userId,
+      p_ip_address: ipAddress
+    });
+
+    if (rateLimitError) {
+      console.error('Rate limit check error:', rateLimitError);
+    } else if (!rateLimitData.allowed) {
+      return new Response(JSON.stringify({ 
+        error: `Rate limit exceeded. ${rateLimitData.current_usage}/${rateLimitData.limit} requests this hour.`
+      }), {
+        status: 429,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      });
     }
 
     const { audio, language } = await req.json();
@@ -54,6 +90,18 @@ serve(async (req) => {
 
     const result = await response.json();
     console.log('Transcription successful');
+
+    // Log usage
+    try {
+      await supabase.from('stt_usage_logs').insert({
+        user_id: userId,
+        ip_address: ipAddress,
+        user_agent: req.headers.get('user-agent') || 'unknown',
+        transcript_length: result.text?.length || 0
+      });
+    } catch (e) {
+      console.error('Failed to log STT usage:', e);
+    }
 
     return new Response(
       JSON.stringify({ text: result.text || '' }),
