@@ -59,6 +59,20 @@ serve(async (req) => {
       throw new Error('No audio data provided');
     }
 
+    // Validate audio size (max ~10MB base64 ≈ ~7.5MB audio)
+    if (typeof audio !== 'string' || audio.length > 10_000_000) {
+      return new Response(JSON.stringify({ error: 'Audio data too large (max 10MB)' }), {
+        status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      });
+    }
+
+    // Validate language code if provided
+    if (language && (typeof language !== 'string' || language.length > 10)) {
+      return new Response(JSON.stringify({ error: 'Invalid language code' }), {
+        status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      });
+    }
+
     console.log('Processing audio transcription request');
 
     // Convert base64 audio to binary

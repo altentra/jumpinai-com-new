@@ -8,7 +8,7 @@ export interface StudioFormData {
 
 export const StudioFormSchema = z.object({
   goals: z.string().trim().min(10, 'Please share more details (at least 10 characters)').max(4000, 'Input must be less than 4000 characters'),
-  challenges: z.string().optional()
+  challenges: z.string().max(4000, 'Challenges must be less than 4000 characters').optional()
 });
 
 export async function verifyTurnstile(token: string, secretKey: string, ipAddress: string): Promise<boolean> {
