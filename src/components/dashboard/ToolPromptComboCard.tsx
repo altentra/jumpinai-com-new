@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Copy, ExternalLink, Sparkles, CheckCircle, Clock, DollarSign, ArrowLeftRight, MessageSquare, Workflow, Code, Terminal, Upload, Film } from "lucide-react";
+import { Copy, ExternalLink, Sparkles, CheckCircle, Clock, DollarSign, ArrowLeftRight, MessageSquare, Workflow, Upload } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { trackToolClick, trackPromptCopy, trackComboUsage } from "@/services/jumpTrackingService";
@@ -143,10 +143,8 @@ export function ToolPromptComboCard({ combo, onClick, index, jumpId }: ToolPromp
   const getContentMeta = () => {
     switch (toolInteractionType) {
       case 'workflow': return { label: 'Workflow Instructions', Icon: Workflow, copyLabel: 'Copy Instructions', badgeColor: 'bg-purple-500/10 text-purple-500 border-purple-500/20' };
-      case 'project': return { label: 'Project Specification', Icon: Code, copyLabel: 'Copy Spec', badgeColor: 'bg-cyan-500/10 text-cyan-500 border-cyan-500/20' };
-      case 'command': return { label: 'Ready-to-Use Command', Icon: Terminal, copyLabel: 'Copy Command', badgeColor: 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' };
       case 'upload': return { label: 'Setup & Usage Guide', Icon: Upload, copyLabel: 'Copy Guide', badgeColor: 'bg-amber-500/10 text-amber-500 border-amber-500/20' };
-      case 'creative_brief': return { label: 'Creative Brief', Icon: Film, copyLabel: 'Copy Brief', badgeColor: 'bg-pink-500/10 text-pink-500 border-pink-500/20' };
+      // Everything else (prompt, project, command, creative_brief) = prompt-based tools
       default: return { label: 'Ready-to-Use Prompt', Icon: MessageSquare, copyLabel: 'Copy Prompt', badgeColor: 'bg-primary/10 text-primary border-primary/20' };
     }
   };
@@ -243,13 +241,14 @@ export function ToolPromptComboCard({ combo, onClick, index, jumpId }: ToolPromp
                 <contentMeta.Icon className="w-4 h-4 text-primary" />
                 {contentMeta.label}
               </span>
-              {toolInteractionType !== 'prompt' && (
+              {toolInteractionType === 'workflow' && (
                 <Badge variant="outline" className={`text-[10px] w-fit ${contentMeta.badgeColor}`}>
-                  {toolInteractionType === 'workflow' ? '⚙️ No prompt needed' : 
-                   toolInteractionType === 'project' ? '🏗️ Project specs' :
-                   toolInteractionType === 'command' ? '⌨️ Command' :
-                   toolInteractionType === 'upload' ? '📁 Setup guide' :
-                   toolInteractionType === 'creative_brief' ? '🎬 Brief' : ''}
+                  ⚙️ No prompt needed — follow the steps
+                </Badge>
+              )}
+              {toolInteractionType === 'upload' && (
+                <Badge variant="outline" className={`text-[10px] w-fit ${contentMeta.badgeColor}`}>
+                  📁 Preparation & setup guide
                 </Badge>
               )}
               <div 
