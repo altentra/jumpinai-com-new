@@ -129,6 +129,19 @@ Deno.serve(async (req) => {
       const mapping = keyMap[key];
       if (!mapping || !value || value === 'unknown') continue;
 
+      // Skip manual_verified entries — never overwrite human-corrected data
+      const { data: existing } = await supabase
+        .from('ai_model_registry')
+        .select('source')
+        .eq('provider', mapping.provider)
+        .eq('tool_name', mapping.toolName)
+        .single();
+
+      if (existing?.source === 'manual_verified') {
+        console.log(`⏭️ Skipping ${mapping.provider}/${mapping.toolName} — manual_verified`);
+        continue;
+      }
+
       const { error } = await supabase
         .from('ai_model_registry')
         .update({
