@@ -2,7 +2,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { Copy, Sparkles, ExternalLink, Clock, CheckCircle, DollarSign, AlertTriangle, MessageSquare, ArrowLeftRight } from "lucide-react";
+import { Copy, Sparkles, ExternalLink, Clock, CheckCircle, DollarSign, AlertTriangle, MessageSquare, ArrowLeftRight, Workflow, Code, Terminal, Upload, Film } from "lucide-react";
 import type { Database } from "@/integrations/supabase/types";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
@@ -29,6 +29,21 @@ export function ToolPromptDetailModal({ toolPrompt, isOpen, onClose, index }: To
   } catch (e) {
     console.error('Error parsing content:', e);
   }
+
+  // Determine tool interaction type
+  const toolInteractionType = content?.tool_interaction_type || 'prompt';
+  
+  const getContentMeta = () => {
+    switch (toolInteractionType) {
+      case 'workflow': return { label: 'Workflow Instructions', Icon: Workflow, copyLabel: 'Copy Instructions' };
+      case 'project': return { label: 'Project Specification', Icon: Code, copyLabel: 'Copy Spec' };
+      case 'command': return { label: 'Ready-to-Use Command', Icon: Terminal, copyLabel: 'Copy Command' };
+      case 'upload': return { label: 'Setup & Usage Guide', Icon: Upload, copyLabel: 'Copy Guide' };
+      case 'creative_brief': return { label: 'Creative Brief', Icon: Film, copyLabel: 'Copy Brief' };
+      default: return { label: 'Ready-to-Use Prompt', Icon: MessageSquare, copyLabel: 'Copy Prompt' };
+    }
+  };
+  const contentMeta = getContentMeta();
 
   const copyToClipboard = async () => {
     try {
@@ -140,8 +155,8 @@ export function ToolPromptDetailModal({ toolPrompt, isOpen, onClose, index }: To
             {toolPrompt.prompt_text && (
               <div className="space-y-3 animate-fade-in">
                 <span className="text-sm font-medium flex items-center gap-2">
-                  <MessageSquare className="w-4 h-4 text-primary" />
-                  Ready-to-Use Prompt
+                  <contentMeta.Icon className="w-4 h-4 text-primary" />
+                  {contentMeta.label}
                 </span>
                 <div 
                   onClick={copyToClipboard}
@@ -169,7 +184,7 @@ export function ToolPromptDetailModal({ toolPrompt, isOpen, onClose, index }: To
                     
                     {/* Content */}
                     <span className="relative text-sm font-bold text-foreground group-hover/copy:text-primary transition-colors duration-300 whitespace-nowrap">
-                      {copied ? "Copied!" : "Copy Prompt"}
+                      {copied ? "Copied!" : contentMeta.copyLabel}
                     </span>
                     
                     {/* Icon */}
@@ -182,6 +197,26 @@ export function ToolPromptDetailModal({ toolPrompt, isOpen, onClose, index }: To
                     </div>
                   </div>
                 </button>
+              </div>
+            )}
+
+            {/* Expected Output */}
+            {content.expected_output && (
+              <div className="relative group animate-fade-in">
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-violet-500/20 to-purple-500/20 rounded-2xl blur opacity-30 group-hover:opacity-50 transition duration-300"></div>
+                <div className="relative p-4 bg-gradient-to-br from-violet-500/10 via-violet-500/5 to-purple-500/10 backdrop-blur-sm border border-violet-500/20 rounded-2xl hover:border-violet-500/30 transition-all duration-300">
+                  <div className="flex items-start gap-3">
+                    <div className="p-2 bg-violet-500/10 rounded-xl">
+                      <CheckCircle className="w-4 h-4 text-violet-600 dark:text-violet-400 shrink-0" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm font-semibold text-violet-600 dark:text-violet-400 mb-2">Expected Output</p>
+                      <p className="text-xs text-foreground leading-relaxed">
+                        {String(content.expected_output)}
+                      </p>
+                    </div>
+                  </div>
+                </div>
               </div>
             )}
 
