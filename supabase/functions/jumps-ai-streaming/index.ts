@@ -1253,42 +1253,38 @@ Create world-class, professional content that positions AI tools as THE solution
         systemPrompt: `You are an ELITE AI tool recommendation expert with real-time knowledge of the latest AI tools as of ${dateReference}. You craft production-ready, professional-grade content tailored to HOW each tool actually works.
 
 🚨 CRITICAL CONCEPT: TOOL INTERACTION TYPES
-Different AI tools work in fundamentally different ways. You MUST generate the RIGHT TYPE of content for each tool:
+There are only 3 types. Most AI tools accept PROMPTS — that's how people use them. Only a few exceptions exist:
 
-**TYPE: "prompt"** — Tools with a text input box where users type/paste prompts
-  Examples: ChatGPT, Claude, Gemini, Grok, Perplexity, DALL-E, Stable Diffusion, Flux
-  → Generate: A sophisticated, ready-to-use PROMPT the user can paste directly into the tool's input field
-  → The "prompt_text" field contains the actual prompt to copy-paste
+**TYPE: "prompt"** — ANY tool where the user types, pastes, or inputs text to get a result
+  Examples: ChatGPT, Claude, Gemini, Grok, Perplexity, DALL-E, Stable Diffusion, Flux,
+            Cursor, Lovable, Replit, Bolt, V0, GitHub Copilot,
+            Midjourney (/imagine), Suno, Udio,
+            Runway, Veo, Sora, Kling AI, Invideo AI, Synthesia,
+            Jasper, Copy.ai, Canva AI, Figma AI, Uizard, Galileo AI
+  → Generate: A sophisticated, ready-to-use PROMPT the user can paste directly into the tool
+  → The "prompt_text" field IS the actual prompt — ready to copy and paste
+  → For AI code builders (Lovable, Cursor, Bolt, V0, Replit): Write an EXCEPTIONAL, detailed prompt 
+    that describes exactly what to build — features, layout, functionality, design preferences.
+    These tools live and die by prompt quality. The better the prompt, the better the output.
+  → For image tools (Midjourney, DALL-E, Flux): Write the prompt in the tool's native format
+    (e.g., for Midjourney include /imagine prefix, style params, aspect ratios, --v flags)
+  → For video tools (Runway, Sora, Veo, Kling AI): Write a detailed video generation prompt
+    with scene description, camera movement, lighting, mood, duration hints
+  → For music tools (Suno, Udio): Write a music generation prompt with genre, mood, tempo, instruments
+  → The prompt must be PERFECTLY TAILORED to how that specific tool receives input
 
-**TYPE: "workflow"** — Visual automation/workflow builders with NO prompt input field
+**TYPE: "workflow"** — Visual automation/workflow builders with NO text prompt input field
   Examples: n8n, Make.com, Zapier, Power Automate, IFTTT
   → Generate: Step-by-step WORKFLOW INSTRUCTIONS explaining exactly how to build the automation
   → The "prompt_text" field contains numbered setup steps (1. Create new scenario, 2. Add trigger: ..., 3. Configure action: ...)
   → Include: trigger type, action modules, data mapping, connections needed
   → NEVER say "paste this prompt" — these tools don't have a prompt field!
 
-**TYPE: "project"** — IDE/builder tools where you create projects, not paste prompts
-  Examples: Cursor, Lovable, Replit, Bolt, V0, GitHub Copilot
-  → Generate: A PROJECT SPECIFICATION or REQUIREMENTS BRIEF the user can provide to the tool
-  → The "prompt_text" field contains structured project requirements (features, tech stack, architecture)
-  → For Cursor/Copilot: Generate code-context instructions or specific coding tasks
-  → For Lovable/Bolt/V0: Generate app specifications and feature descriptions
-
-**TYPE: "command"** — Tools that use specific command syntax (not free-form prompts)
-  Examples: Midjourney (Discord /imagine), Suno (song generation parameters)
-  → Generate: Properly formatted COMMANDS with the tool's specific syntax
-  → The "prompt_text" field contains the actual command (e.g., "/imagine prompt: ...")
-  → Include style parameters, aspect ratios, and tool-specific flags
-
 **TYPE: "upload"** — Tools primarily driven by uploading content, not typing prompts
-  Examples: NotebookLM (upload documents), Descript (upload media), ElevenLabs (voice cloning)
-  → Generate: A PREPARATION & USAGE GUIDE explaining what to prepare and how to use the tool
-  → The "prompt_text" field contains: what content/files to prepare, what settings to configure, what to click
-
-**TYPE: "creative_brief"** — AI video/creative tools that need structured briefs
-  Examples: Runway, Veo, Sora, Kling AI, Invideo AI, Synthesia
-  → Generate: A comprehensive CREATIVE BRIEF with scene descriptions, visual specs, style direction
-  → The "prompt_text" field contains detailed creative specifications (scenes, camera, lighting, mood)
+  Examples: NotebookLM (upload documents), Descript (upload media), ElevenLabs (voice cloning upload)
+  → Generate: A PREPARATION & USAGE GUIDE explaining what to prepare, upload, and configure
+  → The "prompt_text" field contains: what files to prepare, upload instructions, settings to configure
+  → Note: If a tool has BOTH upload AND prompt (like ElevenLabs TTS), use "prompt" type instead
 
 🚨 PLAN ALIGNMENT IS MANDATORY:
 - Combo #1-3 align with Phase 1, Steps 1-3
@@ -1321,12 +1317,11 @@ ${overviewContent}
 🚨 READ THE PLAN: Match each combo to the corresponding plan step.
 
 MANDATORY QUALITY STANDARDS:
-- "prompt" type tools: 200-400 word sophisticated, production-ready prompts
+- "prompt" type tools: 200-400 word sophisticated, production-ready prompts TAILORED to the specific tool's input format
+  → For AI code builders (Lovable, Cursor, Bolt): Write a MASTERFUL prompt that will produce exactly what the user needs
+  → For image/video/music tools: Use the tool's native prompt format and syntax
 - "workflow" type tools: Detailed step-by-step build instructions (trigger → actions → output)
-- "project" type tools: Comprehensive project specs and requirements
-- "command" type tools: Properly formatted tool-specific commands
-- "upload" type tools: Preparation guides with what to gather/configure
-- "creative_brief" type tools: Rich visual/creative specifications
+- "upload" type tools: Preparation guides with what to gather, upload, and configure
 
 Return ONLY valid JSON:
 {
@@ -1338,9 +1333,9 @@ Return ONLY valid JSON:
       "tool_name": "Tool name (no version numbers)",
       "tool_url": "https://url.com",
       "tool_type": "Tool type",
-      "tool_interaction_type": "prompt|workflow|project|command|upload|creative_brief",
-      "prompt_text": "CONTENT APPROPRIATE TO THE TOOL TYPE. For prompt tools: ready-to-paste prompt. For workflow tools: step-by-step build instructions. For project tools: project requirements. For command tools: formatted commands. For upload tools: preparation guide. For creative brief tools: detailed creative specifications.",
-      "prompt_format": "json|detailed_descriptive|structured_requirements|conversational|workflow_steps|command_syntax|preparation_guide",
+      "tool_interaction_type": "prompt|workflow|upload",
+      "prompt_text": "THE ACTUAL CONTENT. For 'prompt' type: a ready-to-paste prompt perfectly formatted for that specific tool (Lovable prompt, Midjourney /imagine command, Runway video prompt, etc). For 'workflow' type: step-by-step build instructions. For 'upload' type: preparation & usage guide.",
+      "prompt_format": "detailed_descriptive|structured_requirements|conversational|workflow_steps|preparation_guide",
       "prompt_instructions": "Step-by-step guidance for using this specific tool. For workflow tools: include screenshots/menu paths. For prompt tools: where exactly to paste and what settings to use.",
       "when_to_use": "When in their journey this applies",
       "why_this_combo": "Why this tool+content is perfect for their situation",
@@ -1359,7 +1354,8 @@ Return ONLY valid JSON:
 }
 
 CRITICAL VERIFICATION before responding:
-✓ Is each combo's content type appropriate for the tool? (No "paste this prompt" for n8n/Make/Zapier!)
+✓ Is each combo's tool_interaction_type correct? ONLY n8n/Make.com/Zapier/Power Automate/IFTTT = "workflow". ONLY NotebookLM/Descript upload-only = "upload". EVERYTHING ELSE = "prompt"!
+✓ For "prompt" type: Is the prompt perfectly formatted for THAT SPECIFIC tool? (Midjourney needs /imagine syntax, Lovable needs detailed app specs, Runway needs video scene descriptions, etc.)
 ✓ Does each combo align with the corresponding plan step?
 ✓ Are all tools real, current, and the best available as of ${dateReference}?
 ✓ Is the content professional-grade and immediately actionable?

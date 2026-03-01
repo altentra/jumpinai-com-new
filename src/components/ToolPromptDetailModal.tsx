@@ -2,7 +2,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { Copy, Sparkles, ExternalLink, Clock, CheckCircle, DollarSign, AlertTriangle, MessageSquare, ArrowLeftRight, Workflow, Code, Terminal, Upload, Film } from "lucide-react";
+import { Copy, Sparkles, ExternalLink, Clock, CheckCircle, DollarSign, AlertTriangle, MessageSquare, ArrowLeftRight, Workflow, Upload } from "lucide-react";
 import type { Database } from "@/integrations/supabase/types";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
@@ -36,10 +36,8 @@ export function ToolPromptDetailModal({ toolPrompt, isOpen, onClose, index }: To
   const getContentMeta = () => {
     switch (toolInteractionType) {
       case 'workflow': return { label: 'Workflow Instructions', Icon: Workflow, copyLabel: 'Copy Instructions' };
-      case 'project': return { label: 'Project Specification', Icon: Code, copyLabel: 'Copy Spec' };
-      case 'command': return { label: 'Ready-to-Use Command', Icon: Terminal, copyLabel: 'Copy Command' };
       case 'upload': return { label: 'Setup & Usage Guide', Icon: Upload, copyLabel: 'Copy Guide' };
-      case 'creative_brief': return { label: 'Creative Brief', Icon: Film, copyLabel: 'Copy Brief' };
+      // Everything else (prompt, project, command, creative_brief) = prompt-based
       default: return { label: 'Ready-to-Use Prompt', Icon: MessageSquare, copyLabel: 'Copy Prompt' };
     }
   };
