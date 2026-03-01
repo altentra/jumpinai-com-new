@@ -124,6 +124,9 @@ verify_jwt = false
 [functions.send-jump-generation-notification]
 verify_jwt = false
 
+[functions.refresh-model-registry]
+verify_jwt = false
+
 [realtime]
 enabled = true
 port = 54323

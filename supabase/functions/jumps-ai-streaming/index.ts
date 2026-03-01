@@ -30,6 +30,45 @@ Deno.serve(async (req) => {
     const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
     const supabase = createClient(supabaseUrl, supabaseKey);
 
+    // Fetch AI model registry for real-time model info injection
+    let modelContextString = '';
+    try {
+      const { data: modelRegistry } = await supabase
+        .from('ai_model_registry')
+        .select('provider, tool_name, latest_models, category, updated_at')
+        .order('provider');
+      
+      if (modelRegistry && modelRegistry.length > 0) {
+        const hasModels = modelRegistry.some((r: any) => 
+          r.latest_models && Object.keys(r.latest_models).length > 0 && 
+          !Object.values(r.latest_models).every((v: any) => v === 'unknown')
+        );
+        
+        if (hasModels) {
+          const updatedAt = modelRegistry[0]?.updated_at;
+          const lines = modelRegistry
+            .filter((r: any) => r.latest_models && Object.keys(r.latest_models).length > 0)
+            .map((r: any) => {
+              const models = Object.entries(r.latest_models)
+                .filter(([_, v]) => v && v !== 'unknown')
+                .map(([k, v]) => `${k}: ${v}`)
+                .join(', ');
+              return models ? `- ${r.tool_name} (${r.provider}): ${models}` : null;
+            })
+            .filter(Boolean);
+          
+          if (lines.length > 0) {
+            modelContextString = `\n\nVERIFIED LATEST AI MODELS (auto-updated ${updatedAt ? new Date(updatedAt).toLocaleDateString() : 'recently'}):\n${lines.join('\n')}\nUse these verified model names when mentioning specific models. If a model is not listed here, use only the base tool name without version numbers.`;
+            console.log('📊 Model registry loaded:', lines.length, 'providers with model data');
+          }
+        } else {
+          console.log('📊 Model registry exists but no model data yet — using base tool names only');
+        }
+      }
+    } catch (regError) {
+      console.warn('⚠️ Could not fetch model registry, will use base tool names:', regError);
+    }
+
     // Check if user is authenticated
     const authHeader = req.headers.get('Authorization');
     let user = null;
@@ -364,7 +403,8 @@ Deno.serve(async (req) => {
              (delta) => {
                // Token-by-token visible streaming in the Overview tab
                sendEvent(2, 'delta', { stepName: 'overview', delta });
-             }
+             },
+             modelContextString
            );
           console.log('✅ Overview response:', overviewResponse);
           sendEvent(2, 'overview', overviewResponse);
@@ -391,7 +431,8 @@ Deno.serve(async (req) => {
                (delta) => {
                  // Token-by-token visible streaming in the Plan tab
                  sendEvent(3, 'delta', { stepName: 'plan', delta });
-               }
+               },
+               modelContextString
              );
             console.log('✅ Step 3 response:', planResponse);
             comprehensivePlan = typeof planResponse === 'string' 
@@ -432,7 +473,8 @@ Deno.serve(async (req) => {
                (delta) => {
                  // Token-by-token visible streaming in the Tools & Prompts tab
                  sendEvent(4, 'delta', { stepName: 'tool_prompts', delta });
-               }
+               },
+               modelContextString
              );
             console.log('✅ Step 4 response:', toolsResponse);
             
@@ -604,7 +646,8 @@ async function callGeminiWithRetry(
   context: StudioFormData,
   overviewContent: string,
   maxRetries: number = 3,
-  onDelta?: (delta: string) => void
+  onDelta?: (delta: string) => void,
+  modelContext: string = ''
 ): Promise<any> {
   let lastError: Error | null = null;
   
@@ -613,7 +656,7 @@ async function callGeminiWithRetry(
       console.log(`🔄 Step ${step}: Attempt ${attempt}/${maxRetries}`);
       const startTime = Date.now();
       
-      const result = await callGemini(apiKey, step, context, overviewContent, onDelta);
+      const result = await callGemini(apiKey, step, context, overviewContent, onDelta, modelContext);
       
       const duration = Date.now() - startTime;
       console.log(`✅ Step ${step}: Success on attempt ${attempt} (${duration}ms)`);
@@ -622,7 +665,6 @@ async function callGeminiWithRetry(
     } catch (error: any) {
       lastError = error;
       
-      // Check if it's a retryable error (5xx server errors or rate limits)
       const isRetryable = error.message?.includes('502') || 
                           error.message?.includes('503') || 
                           error.message?.includes('504') ||
@@ -634,7 +676,6 @@ async function callGeminiWithRetry(
         throw error;
       }
       
-      // Exponential backoff: 2s, 4s, 8s
       const backoffMs = Math.pow(2, attempt) * 1000;
       console.warn(`⚠️ Step ${step}: Attempt ${attempt} failed (${error.message}), retrying in ${backoffMs}ms...`);
       
@@ -650,9 +691,10 @@ async function callGemini(
   step: number,
   context: StudioFormData,
   overviewContent: string,
-  onDelta?: (delta: string) => void
+  onDelta?: (delta: string) => void,
+  modelContext: string = ''
 ): Promise<any> {
-  const { systemPrompt, userPrompt, expectedTokens } = getStepPrompts(step, context, overviewContent);
+  const { systemPrompt, userPrompt, expectedTokens } = getStepPrompts(step, context, overviewContent, modelContext);
   
   console.log(`🚀 Step ${step}: Calling Google Gemini API (model: gemini-3-flash-preview, maxOutputTokens: ${expectedTokens})`);
 
@@ -902,7 +944,7 @@ function getCurrentDate(): { month: string; year: number } {
   };
 }
 
-function getStepPrompts(step: number, context: StudioFormData, overviewContent: string) {
+function getStepPrompts(step: number, context: StudioFormData, overviewContent: string, modelContext: string = '') {
   // Get current date dynamically
   const currentDate = getCurrentDate();
   const dateReference = `${currentDate.month} ${currentDate.year}`;
@@ -995,9 +1037,10 @@ AI TOOL GUIDANCE (${dateReference}):
 - AI Video: Runway, Veo, Invideo AI, Sora, Kling AI
 - AI Audio: ElevenLabs, Suno, Udio
 - AI Automation: Make.com, Zapier AI, n8n
-- NEVER mention specific model versions. Use ONLY base tool names.
+- NEVER mention specific model versions unless verified data is provided below. Use ONLY base tool names.
 - PREFER Lovable for web app development. Recommend Manus for agentic work.
 - Select the BEST and MOST APPROPRIATE tools for their specific needs
+${modelContext}
 
 Return ONLY this JSON structure:
 {
@@ -1081,7 +1124,8 @@ ${overviewContent}
    For super advanced users ONLY: You may cautiously mention OpenClaw at the very end with a clear warning about its experimental nature and potential risks.
    Verify tools are still market leaders and most powerful options available.
    
-3. **NO VERSION NUMBERS — CRITICAL**: NEVER use specific model versions (e.g., "GPT-5.2", "Claude Opus 4.6", "Gemini 3.1", "Grok 3"). Use ONLY base tool names (e.g., "ChatGPT", "Claude", "Gemini", "Grok", "Midjourney", "Runway"). Model versions change rapidly and citing outdated versions destroys credibility. However, DO mention specialized product variants when relevant (e.g., "Claude Code" for coding, "Grok Imagine" for image generation, "GitHub Copilot" for development, "Lovable" for website creation).
+3. **NO VERSION NUMBERS — CRITICAL**: NEVER use specific model versions (e.g., "GPT-5.2", "Claude Opus 4.6", "Gemini 3.1", "Grok 3") UNLESS verified model data is provided below. Use ONLY base tool names by default. However, DO mention specialized product variants when relevant (e.g., "Claude Code" for coding, "Grok Imagine" for image generation, "GitHub Copilot" for development, "Lovable" for website creation).
+${modelContext}
 
 4. **STEP STRUCTURE - EACH STEP MUST**:
    - Have ONE clear strategic action/idea centered around AI tool usage
@@ -1313,7 +1357,8 @@ PREFER Lovable for web app development. For agentic work, recommend Manus.
 For super advanced users ONLY: cautiously mention OpenClaw with risk warnings.
 
 TOOL DIVERSITY: Use at least 6 DIFFERENT tools across 9 combos.
-NO VERSION NUMBERS — CRITICAL: NEVER cite specific model versions. Use ONLY base tool names. Specialized product variants OK (e.g., "Claude Code", "GitHub Copilot").
+NO VERSION NUMBERS — CRITICAL: NEVER cite specific model versions UNLESS verified data is provided below. Use ONLY base tool names by default. Specialized product variants OK (e.g., "Claude Code", "GitHub Copilot").
+${modelContext}
 
 MULTI-TOOL COMBOS: When it genuinely adds value, a single combo card CAN recommend a workflow of 2+ tools used together (e.g., "Use Perplexity to research, then Claude to synthesize"). Only do this when the combination creates a clearly superior workflow — not every card needs to be multi-tool. When using multi-tool combos, name both tools in tool_name (e.g., "Perplexity + Claude") and explain the handoff clearly in the prompt.
 
