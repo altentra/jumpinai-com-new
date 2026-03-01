@@ -1270,6 +1270,7 @@ export type Database = {
         Returns: undefined
       }
       allocate_monthly_credits: { Args: never; Returns: undefined }
+      anonymize_guest_data: { Args: never; Returns: undefined }
       check_and_record_guest_usage: {
         Args: { p_ip_address: string; p_user_agent?: string }
         Returns: Json
@@ -1289,6 +1290,7 @@ export type Database = {
         Args: { p_ip_address: string; p_user_id: string }
         Returns: Json
       }
+      clean_old_guest_jumps: { Args: never; Returns: undefined }
       clean_old_guest_usage: { Args: never; Returns: undefined }
       deduct_user_credit: {
         Args: {
