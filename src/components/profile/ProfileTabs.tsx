@@ -58,7 +58,7 @@ export default function ProfileTabs() {
   useEffect(() => {
     if (!authLoading) {
       if (!isAuthenticated) {
-        login('/dashboard/profile');
+        login('/dashboard/settings');
       } else if (user) {
         setEmail(user.email || "");
         fetchSupabaseUser();
@@ -430,73 +430,95 @@ export default function ProfileTabs() {
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-3 sm:px-6 pb-8">
+    <div className="max-w-6xl mx-auto px-2 sm:px-6 pb-6 sm:pb-8">
       {/* Header */}
       <header>
-        <div className="rounded-2xl border border-border glass p-4 sm:p-6 md:p-8 animate-fade-in">
-          <div className="flex flex-col gap-4 sm:gap-6">
-            {/* Account Header */}
-            <div className="flex flex-col gap-4">
-              <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
-                <div className="min-w-0 flex-1">
-                  <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold flex items-center gap-2 sm:gap-3">
-                    <User className="h-6 w-6 sm:h-7 sm:w-7 text-primary flex-shrink-0" />
-                    <span className="truncate">Account</span>
-                  </h1>
-                  <p className="text-muted-foreground mt-1 sm:mt-2 text-sm sm:text-base truncate">{email}</p>
+        <div className="rounded-xl sm:rounded-2xl border border-border/50 glass p-4 sm:p-6 md:p-8 animate-fade-in relative overflow-hidden">
+          {/* Premium gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5 pointer-events-none" />
+          <div className="absolute -top-20 -right-20 w-40 h-40 bg-gradient-to-br from-primary/10 to-transparent rounded-full blur-3xl pointer-events-none" />
+          
+          <div className="relative flex flex-col gap-6 sm:gap-8">
+            {/* Premium Account Header with Avatar */}
+            <div className="flex items-start gap-4 sm:gap-6">
+              {/* Avatar - Circular */}
+              {profile.avatar_url ? (
+                <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full overflow-hidden border-2 border-primary/20 flex-shrink-0 shadow-lg ring-2 ring-primary/10 hover:ring-primary/20 transition-all duration-300 hover-scale">
+                  <img 
+                    src={profile.avatar_url} 
+                    alt="Profile Avatar" 
+                    className="w-full h-full object-cover"
+                  />
                 </div>
-                <div className="flex items-center gap-2 sm:self-start">
-                  {subInfo?.subscribed ? (
-                    <Badge className="bg-primary/10 text-primary text-xs sm:text-sm whitespace-nowrap">
-                      {subInfo.subscription_tier || 'Pro'} Active
-                    </Badge>
-                  ) : (
-                    <Badge variant="secondary" className="text-xs sm:text-sm whitespace-nowrap">Free plan</Badge>
-                  )}
+              ) : (
+                <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-gradient-to-br from-primary/20 via-primary/10 to-accent/20 flex items-center justify-center flex-shrink-0 shadow-lg ring-2 ring-primary/10">
+                  <User className="h-6 w-6 sm:h-8 sm:w-8 text-primary/60" />
+                </div>
+              )}
+              
+              {/* Account Info & Status */}
+              <div className="flex-1 min-w-0">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-4">
+                  <div className="min-w-0">
+                    <h1 className="text-xl sm:text-3xl md:text-4xl font-bold flex items-center gap-2 sm:gap-3 mb-1">
+                      <span className="truncate bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text text-transparent">Account</span>
+                    </h1>
+                    {/* Display Name First */}
+                    <div className="text-sm sm:text-base font-semibold text-foreground/90 mb-1">
+                      {profile.display_name || 'Set your display name'}
+                    </div>
+                    {/* Email Second */}
+                    <p className="text-muted-foreground text-xs sm:text-sm truncate flex items-center gap-2">
+                      <span className="inline-flex items-center gap-1.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+                        {email}
+                      </span>
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2 sm:self-start">
+                    {subInfo?.subscribed ? (
+                      <Badge className="bg-gradient-to-r from-primary to-primary/80 text-primary-foreground border-primary/30 text-xs sm:text-sm whitespace-nowrap shadow-sm hover-scale">
+                        <Crown className="w-3 h-3 sm:w-3.5 sm:h-3.5 mr-1" />
+                        {subInfo.subscription_tier || 'Pro'}
+                      </Badge>
+                    ) : (
+                      <Badge variant="secondary" className="text-xs sm:text-sm whitespace-nowrap bg-secondary text-secondary-foreground border-border">Free Plan</Badge>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
 
-            {/* Profile Management Section */}
-            <div className="space-y-4">
-              {/* Avatar Section */}
-              <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-                <div className="flex items-center gap-3 sm:gap-4 min-w-0 flex-1">
-                  {profile.avatar_url ? (
-                    <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden border-2 border-border flex-shrink-0">
-                      <img 
-                        src={profile.avatar_url} 
-                        alt="Profile Avatar" 
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                  ) : (
-                    <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-muted flex items-center justify-center border-2 border-border flex-shrink-0">
-                      <User className="h-6 w-6 sm:h-8 sm:w-8 text-muted-foreground" />
-                    </div>
-                  )}
-                  <div className="flex-1 min-w-0 space-y-2">
-                    <Label htmlFor="display_name" className="text-sm">Display Name</Label>
-                    <Input 
-                      id="display_name" 
-                      value={profile.display_name} 
-                      onChange={(e) => setProfile({ ...profile, display_name: e.target.value })}
-                      disabled={user?.isGoogleUser}
-                      className={user?.isGoogleUser ? "bg-muted/50" : ""}
-                    />
-                  </div>
-                </div>
+            {/* Elegant Separator */}
+            <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent" />
 
-                {/* Save Button */}
-                <div className="flex justify-start sm:justify-end">
-                  {!user?.isGoogleUser && (
-                    <Button onClick={saveProfile} size="sm" className="hover-scale w-full sm:w-auto">
-                      <Save className="mr-2 h-4 w-4" /> 
-                      <span className="sm:inline">Save Changes</span>
-                    </Button>
-                  )}
-                </div>
+            {/* Profile Management - Compact & Refined */}
+            <div className="space-y-4 sm:space-y-5">
+              {/* Display Name Input */}
+              <div className="space-y-2">
+                <Label htmlFor="display_name" className="text-xs sm:text-sm font-medium text-muted-foreground">Display Name</Label>
+                <Input
+                  id="display_name"
+                  value={profile.display_name}
+                  onChange={(e) => setProfile({ ...profile, display_name: e.target.value })}
+                  placeholder="Your display name"
+                  disabled={user?.isGoogleUser}
+                  className={`text-sm bg-background/50 backdrop-blur-sm border-border/50 focus:border-primary/50 transition-all ${user?.isGoogleUser ? 'opacity-60' : ''}`}
+                />
+                {user?.isGoogleUser && (
+                  <p className="text-xs text-muted-foreground">Display name is managed by Google</p>
+                )}
               </div>
+
+              {/* Save Button - Premium styling */}
+              {!user?.isGoogleUser && (
+                <Button 
+                  onClick={saveProfile} 
+                  className="w-full sm:w-auto bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary shadow-lg hover:shadow-xl transition-all duration-300 hover-scale"
+                >
+                  <Save className="mr-2 h-4 w-4" /> Save Profile
+                </Button>
+              )}
             </div>
           </div>
         </div>
@@ -505,28 +527,28 @@ export default function ProfileTabs() {
       {/* Tabs */}
       <section className="mt-4 sm:mt-6">
         <Tabs defaultValue="profile" className="w-full">
-          <TabsList className="flex flex-col sm:flex-row w-full gap-2 rounded-2xl glass border border-border/50 p-1.5 h-auto sm:justify-center sm:max-w-4xl sm:mx-auto backdrop-blur-sm">
+          <TabsList className="flex flex-row w-full gap-1 sm:gap-2 rounded-xl sm:rounded-2xl glass border border-border/50 p-1 sm:p-1.5 h-auto justify-center backdrop-blur-sm">
             <TabsTrigger 
               value="profile" 
-              className="w-full sm:flex-1 sm:max-w-52 flex items-center justify-center gap-2 text-xs sm:text-sm py-3.5 px-4 sm:px-6 transition-all duration-300 hover:bg-background/60 data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary/10 data-[state=active]:to-accent/10 data-[state=active]:border data-[state=active]:border-primary/20 data-[state=active]:shadow-sm rounded-xl font-medium"
+              className="flex-1 sm:max-w-52 flex items-center justify-center gap-1.5 sm:gap-2 text-[11px] sm:text-sm py-2.5 sm:py-3.5 px-2 sm:px-6 transition-all duration-300 hover:bg-background/60 data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary/10 data-[state=active]:to-accent/10 data-[state=active]:border data-[state=active]:border-primary/20 data-[state=active]:shadow-sm rounded-lg sm:rounded-xl font-medium"
             >
-              <User className="h-4 w-4 flex-shrink-0" /> 
-              <span className="sm:hidden">Overview</span>
-              <span className="hidden sm:inline">Profile & Overview</span>
+              <User className="h-3.5 w-3.5 sm:h-4 sm:w-4 flex-shrink-0" /> 
+              <span className="leading-tight">Profile</span>
             </TabsTrigger>
             <TabsTrigger 
               value="security" 
-              className="w-full sm:flex-1 sm:max-w-52 flex items-center justify-center gap-2 text-xs sm:text-sm py-3.5 px-4 sm:px-6 transition-all duration-300 hover:bg-background/60 data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary/10 data-[state=active]:to-accent/10 data-[state=active]:border data-[state=active]:border-primary/20 data-[state=active]:shadow-sm rounded-xl font-medium"
+              className="flex-1 sm:max-w-52 flex items-center justify-center gap-1.5 sm:gap-2 text-[11px] sm:text-sm py-2.5 sm:py-3.5 px-2 sm:px-6 transition-all duration-300 hover:bg-background/60 data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary/10 data-[state=active]:to-accent/10 data-[state=active]:border data-[state=active]:border-primary/20 data-[state=active]:shadow-sm rounded-lg sm:rounded-xl font-medium"
             >
-              <Shield className="h-4 w-4 flex-shrink-0" /> 
-              <span>Security</span>
+              <Shield className="h-3.5 w-3.5 sm:h-4 sm:w-4 flex-shrink-0" /> 
+              <span className="leading-tight">Security</span>
             </TabsTrigger>
             <TabsTrigger 
               value="orders" 
-              className="w-full sm:flex-1 sm:max-w-52 flex items-center justify-center gap-2 text-xs sm:text-sm py-3.5 px-4 sm:px-6 transition-all duration-300 hover:bg-background/60 data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary/10 data-[state=active]:to-accent/10 data-[state=active]:border data-[state=active]:border-primary/20 data-[state=active]:shadow-sm rounded-xl font-medium"
+              className="flex-1 sm:max-w-52 flex items-center justify-center gap-1.5 sm:gap-2 text-[11px] sm:text-sm py-2.5 sm:py-3.5 px-2 sm:px-6 transition-all duration-300 hover:bg-background/60 data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary/10 data-[state=active]:to-accent/10 data-[state=active]:border data-[state=active]:border-primary/20 data-[state=active]:shadow-sm rounded-lg sm:rounded-xl font-medium"
             >
-              <History className="h-4 w-4 flex-shrink-0" /> 
-              <span>Order History</span>
+              <History className="h-3.5 w-3.5 sm:h-4 sm:w-4 flex-shrink-0" /> 
+              <span className="leading-tight hidden xs:inline">Orders</span>
+              <span className="leading-tight xs:hidden">History</span>
             </TabsTrigger>
           </TabsList>
 
@@ -534,8 +556,8 @@ export default function ProfileTabs() {
           <TabsContent value="profile" className="mt-4 sm:mt-6 animate-fade-in space-y-4 sm:space-y-6">
             {/* Email & Account Status */}
             <Card className="glass border-border/40 shadow-modern">
-              <CardHeader className="pb-3 sm:pb-6">
-                <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+              <CardHeader className="pb-2 sm:pb-6">
+                <CardTitle className="flex items-center gap-2 text-sm sm:text-lg">
                   <User className="h-4 w-4 sm:h-5 sm:w-5 text-primary flex-shrink-0" /> 
                   Account Information
                 </CardTitle>
@@ -654,8 +676,8 @@ export default function ProfileTabs() {
           {/* Security */}
           <TabsContent value="security" className="mt-4 sm:mt-6 animate-fade-in">
             <Card className="glass border-border/40 shadow-modern">
-              <CardHeader className="pb-3 sm:pb-6">
-                <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+              <CardHeader className="pb-2 sm:pb-6">
+                <CardTitle className="flex items-center gap-2 text-sm sm:text-lg">
                   <Shield className="h-4 w-4 sm:h-5 sm:w-5 text-primary flex-shrink-0" /> 
                   Security
                 </CardTitle>
@@ -708,8 +730,8 @@ export default function ProfileTabs() {
           {/* Order History */}
           <TabsContent value="orders" className="mt-4 sm:mt-6 animate-fade-in">
             <Card className="glass border-border/40 shadow-modern">
-              <CardHeader className="pb-3 sm:pb-6">
-                <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+              <CardHeader className="pb-2 sm:pb-6">
+                <CardTitle className="flex items-center gap-2 text-sm sm:text-lg">
                   <History className="h-4 w-4 sm:h-5 sm:w-5 text-primary flex-shrink-0" /> 
                   Order History
                 </CardTitle>

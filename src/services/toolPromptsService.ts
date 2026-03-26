@@ -4,6 +4,17 @@ import type { Database } from "@/integrations/supabase/types";
 type UserToolPrompt = Database['public']['Tables']['user_tool_prompts']['Row'];
 type UserToolPromptInsert = Database['public']['Tables']['user_tool_prompts']['Insert'];
 
+// Normalize tool URLs for specific partners
+const normalizeToolUrl = (url: string | undefined | null): string => {
+  if (!url) return '';
+  const lowerUrl = url.toLowerCase().trim();
+  // Replace any lovable.dev URL with the partner link
+  if (lowerUrl.includes('lovable.dev') || lowerUrl.includes('lovable.app')) {
+    return 'https://lovable.dev/?via=altentra-holding';
+  }
+  return url;
+};
+
 export const toolPromptsService = {
   async getUserToolPrompts(userId: string, forceRefresh: boolean = false): Promise<UserToolPrompt[]> {
     console.log('🔍 toolPromptsService.getUserToolPrompts - userId:', userId);
@@ -83,7 +94,7 @@ export const toolPromptsService = {
     return data;
   },
 
-  async saveToolPrompts(toolPrompts: any[], userId: string, jumpId: string): Promise<string[]> {
+  async saveToolPrompts(toolPrompts: any[], userId: string | null, jumpId: string): Promise<string[]> {
     console.log('💾 STARTING saveToolPrompts with', toolPrompts.length, 'items');
     console.log('📋 Raw tool prompts data:', JSON.stringify(toolPrompts, null, 2));
     
@@ -103,7 +114,7 @@ export const toolPromptsService = {
           title: item.title || item.name || item.tool || item.tool_name || `Tool Combo ${index + 1}`,
           description: item.description || 'No description available',
           tool_name: item.tool_name || item.name || item.tool || `Tool ${index + 1}`,
-          tool_url: item.tool_url || item.website_url || item.url || item.website || '',
+          tool_url: normalizeToolUrl(item.tool_url || item.website_url || item.url || item.website),
           tool_type: item.tool_type || item.category || 'General',
           category: item.category || 'General',
           prompt_text: item.prompt_text || item.custom_prompt || item.prompt || '',
@@ -122,13 +133,16 @@ export const toolPromptsService = {
             name: item.tool_name || item.name,
             description: item.description,
             tool_name: item.tool_name || item.name,
-            tool_url: item.tool_url || item.website_url || item.url,
+            tool_url: normalizeToolUrl(item.tool_url || item.website_url || item.url),
             tool_type: item.tool_type,
+            tool_interaction_type: item.tool_interaction_type || 'prompt',
             category: item.category,
             prompt_text: item.prompt_text || item.custom_prompt || item.prompt,
+            prompt_format: item.prompt_format || 'conversational',
             prompt_instructions: item.prompt_instructions || item.instructions,
             when_to_use: item.when_to_use || '',
             why_this_combo: item.why_this_combo || item.why_this_tool || '',
+            expected_output: item.expected_output || '',
             alternatives: Array.isArray(item.alternatives) ? item.alternatives : [],
             use_cases: Array.isArray(item.use_cases) ? item.use_cases : [],
             features: Array.isArray(item.features) ? item.features : [],

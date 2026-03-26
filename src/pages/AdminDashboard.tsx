@@ -2,10 +2,12 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
+import { guestLimitService } from "@/services/guestLimitService";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
+import { format } from "date-fns";
 import { 
   Users, 
   CreditCard, 
@@ -30,16 +32,88 @@ import ThemeToggle from "@/components/ThemeToggle";
 interface AdminStats {
   totalUsers: number;
   totalSubscribers: number;
+  starterSubscribers: number;
+  proSubscribers: number;
+  growthSubscribers: number;
   totalOrders: number;
   totalRevenue: number;
   totalContacts: number;
   totalNewsletterSubscribers: number;
-  totalLeadMagnetDownloads: number;
+  totalJumps: number;
+  successfulJumps: number;
+  failedJumps: number;
+  generatingJumps: number;
+  guestJumps: number;
   abandonedCarts: number;
   completedOrders: number;
   monthlyRevenue: number;
   dailyRevenue: number;
+  last7DaysRevenue: number;
+  ytdRevenue: number;
   averageOrderValue: number;
+}
+
+interface JumpGeneration {
+  id: string;
+  user_id: string | null;
+  user_email: string | null;
+  title: string;
+  full_content: string;
+  status: string;
+  completion_percentage: number;
+  status_description: string;
+  created_at: string;
+  ip_address?: string;
+  location?: string;
+  is_guest: boolean;
+  form_goals?: string;
+  form_challenges?: string;
+  stt_used?: boolean;
+  input_method?: 'typed' | 'narrated' | 'mixed';
+  goals_stt_seconds?: number;
+  challenges_stt_seconds?: number;
+}
+
+interface CreditOverview {
+  user_id: string;
+  user_email: string;
+  credits_balance: number;
+  total_credits_purchased: number;
+  recent_transactions: CreditTransaction[];
+}
+
+interface CreditTransaction {
+  id: string;
+  transaction_type: string;
+  credits_amount: number;
+  description: string;
+  created_at: string;
+}
+
+interface GuestUser {
+  ip_address: string;
+  user_agent: string | null;
+  usage_count: number;
+  remaining_uses: number;
+  last_used_at: string;
+  created_at: string;
+  location?: string;
+  jump_attempts: Array<{
+    id: string;
+    title: string;
+    full_content: string;
+    status: string;
+    completion_percentage: number;
+    status_description: string;
+    created_at: string;
+    location?: string;
+    form_goals?: string;
+    form_challenges?: string;
+    stt_used?: boolean;
+    input_method?: 'typed' | 'narrated' | 'mixed';
+    goals_stt_seconds?: number;
+    challenges_stt_seconds?: number;
+  }>;
 }
 
 interface RecentOrder {
@@ -50,19 +124,40 @@ interface RecentOrder {
   created_at: string;
   product_name: string;
   is_completed: boolean;
+  is_subscription: boolean;
 }
 
 interface RecentSubscriber {
   id: string;
+  user_id: string | null;
   email: string;
-  subscription_tier: string;
   subscribed: boolean;
+  subscription_end: string | null;
+  subscription_tier: string | null;
   created_at: string;
+  stripe_customer_id: string | null;
   last_login: string | null;
   total_paid: number;
+  total_subscription_paid: number;
   total_downloads: number;
   completed_orders: number;
-  subscription_end?: string | null;
+  subscription_payments: number;
+  product_purchases: number;
+  subscription_payment_history: Array<{
+    id: string;
+    amount: number;
+    created_at: string;
+    product_name: string;
+  }>;
+  audit_logs: Array<{
+    id: string;
+    action: string;
+    old_data: any;
+    new_data: any;
+    created_at: string;
+    changed_by: string | null;
+    change_source: string;
+  }>;
 }
 
 interface Contact {
@@ -108,6 +203,8 @@ interface User {
   newsletter_subscribed?: boolean;
   lead_magnet_downloaded?: boolean;
   last_login?: string;
+  latestIpAddress?: string | null;
+  latestLocation?: string | null;
   completed_orders?: Array<{
     id: string;
     amount: number;
@@ -127,15 +224,24 @@ export default function AdminDashboard() {
   const [stats, setStats] = useState<AdminStats>({
     totalUsers: 0,
     totalSubscribers: 0,
+    starterSubscribers: 0,
+    proSubscribers: 0,
+    growthSubscribers: 0,
     totalOrders: 0,
     totalRevenue: 0,
     totalContacts: 0,
     totalNewsletterSubscribers: 0,
-    totalLeadMagnetDownloads: 0,
+    totalJumps: 0,
+    successfulJumps: 0,
+    failedJumps: 0,
+    generatingJumps: 0,
+    guestJumps: 0,
     abandonedCarts: 0,
     completedOrders: 0,
     monthlyRevenue: 0,
     dailyRevenue: 0,
+    last7DaysRevenue: 0,
+    ytdRevenue: 0,
     averageOrderValue: 0
   });
   
@@ -144,12 +250,60 @@ export default function AdminDashboard() {
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [authLogs, setAuthLogs] = useState<AuthLog[]>([]);
   const [users, setUsers] = useState<User[]>([]);
+  const [jumpGenerations, setJumpGenerations] = useState<JumpGeneration[]>([]);
+  const [creditOverviews, setCreditOverviews] = useState<CreditOverview[]>([]);
+  const [guestUsers, setGuestUsers] = useState<GuestUser[]>([]);
   const [loading, setLoading] = useState(true);
   const [syncing, setSyncing] = useState(false);
+  const [resettingGuests, setResettingGuests] = useState(false);
   
   const { user, isAuthenticated, isLoading } = useAuth();
   const navigate = useNavigate();
   const [isCheckingAdmin, setIsCheckingAdmin] = useState(true);
+  
+  // Column widths state for Jump Generations table
+  const defaultColumnWidths = {
+    user: 120,
+    title: 80,
+    status: 100,
+    type: 100,
+    input: 80,
+    goals: 250,
+    challenges: 250,
+    location: 150,
+    date: 180
+  };
+  
+  const [columnWidths, setColumnWidths] = useState(() => {
+    const saved = localStorage.getItem('admin-jump-columns-width-v2');
+    return saved ? JSON.parse(saved) : defaultColumnWidths;
+  });
+  
+  useEffect(() => {
+    localStorage.setItem('admin-jump-columns-width-v2', JSON.stringify(columnWidths));
+  }, [columnWidths]);
+
+  const handleMouseDown = (columnKey: string) => (e: React.MouseEvent) => {
+    e.preventDefault();
+    const startX = e.pageX;
+    const startWidth = columnWidths[columnKey as keyof typeof columnWidths];
+
+    const handleMouseMove = (e: MouseEvent) => {
+      const diff = e.pageX - startX;
+      setColumnWidths(prev => ({
+        ...prev,
+        [columnKey]: Math.max(50, startWidth + diff)
+      }));
+    };
+
+    const handleMouseUp = () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
+  };
   
   useEffect(() => {
     const meta = document.createElement('meta');
@@ -333,11 +487,46 @@ export default function AdminDashboard() {
     }
   };
 
-  const fetchAdminData = async () => {
+  const fetchAdminData = async (retryCount = 0) => {
     setLoading(true);
     try {
-      const { data, error } = await supabase.functions.invoke('admin-dashboard-data');
-      if (error) throw error;
+      // Use getSession() which doesn't trigger auth state changes
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+      
+      if (sessionError || !session) {
+        console.error('Session error:', sessionError);
+        toast.error('Your session has expired. Please log in again.');
+        await supabase.auth.signOut();
+        navigate('/auth?next=/admin');
+        return;
+      }
+      
+      // Call edge function with validated session token
+      const { data, error } = await supabase.functions.invoke('admin-dashboard-data', {
+        headers: {
+          Authorization: `Bearer ${session.access_token}`,
+        },
+      });
+      
+      if (error) {
+        console.error('Edge function error:', error);
+        
+        // If we get a 401 and haven't retried yet, try one more time
+        if (error.message?.includes('401') && retryCount === 0) {
+          console.log('Got 401 error, retrying once...');
+          return fetchAdminData(retryCount + 1);
+        }
+        
+        // After retry or different error, check if it's an auth issue
+        if (error.message?.includes('401') || error.message?.includes('Authentication failed')) {
+          toast.error('Authentication failed. Please log in again.');
+          await supabase.auth.signOut();
+          navigate('/auth?next=/admin');
+          return;
+        }
+        
+        throw error;
+      }
 
       // Set state from edge function payload
       setStats(data.stats);
@@ -346,9 +535,20 @@ export default function AdminDashboard() {
       setContacts(data.contacts);
       setUsers(data.users);
       setAuthLogs(data.authLogs);
-    } catch (error) {
-      console.error('Error fetching admin data:', error);
-      toast.error('Failed to load admin data');
+      setJumpGenerations(data.jumpGenerations || []);
+      setCreditOverviews(data.creditOverviews || []);
+      setGuestUsers(data.guestUsers || []);
+      
+      console.log('✅ Admin data loaded successfully');
+    } catch (error: any) {
+      console.error('❌ Error fetching admin data:', error);
+      
+      // Provide helpful error message
+      const errorMessage = error.message?.includes('Authentication') || error.message?.includes('401')
+        ? 'Authentication failed. Please log out and log back in.'
+        : 'Failed to load admin data. Please try again.';
+      
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -372,14 +572,40 @@ export default function AdminDashboard() {
     }
   };
 
+  const resetGuestUsers = async () => {
+    setResettingGuests(true);
+    try {
+      // Call the edge function to clear database records
+      const { data, error } = await supabase.functions.invoke('reset-guest-users');
+      
+      if (error) throw error;
+      
+      // Clear all client-side guest limit tracking on THIS BROWSER ONLY
+      guestLimitService.clearAllGuestLimits();
+      
+      toast.success(
+        '✅ Guest database records cleared\n\n⚠️ Note: This only clears server records and your browser. Other users must clear their browser cache/storage to reset their limits.',
+        { duration: 8000 }
+      );
+      
+      // Refresh the admin data to reflect changes
+      await fetchAdminData();
+    } catch (error) {
+      console.error('Reset error:', error);
+      toast.error('Failed to reset guest users');
+    } finally {
+      setResettingGuests(false);
+    }
+  };
+
   if (isCheckingAdmin) {
     return (
-      <div className="container mx-auto p-6">
+      <div className="container mx-auto p-3 sm:p-6">
         <Card>
-          <CardContent className="flex items-center justify-center p-12">
+          <CardContent className="flex items-center justify-center p-8 sm:p-12">
             <div className="text-center space-y-3">
-              <Loader2 className="h-8 w-8 animate-spin mx-auto text-primary" />
-              <p className="text-muted-foreground">Verifying admin access...</p>
+              <Loader2 className="h-6 w-6 sm:h-8 sm:w-8 animate-spin mx-auto text-primary" />
+              <p className="text-sm sm:text-base text-muted-foreground">Verifying admin access...</p>
             </div>
           </CardContent>
         </Card>
@@ -387,14 +613,14 @@ export default function AdminDashboard() {
     );
   }
 
-  if (loading) {
+      if (loading) {
     return (
-      <div className="container mx-auto p-6">
+      <div className="container mx-auto p-3 sm:p-6">
         <Card>
-          <CardContent className="flex items-center justify-center p-12">
-            <Loader2 className="h-8 w-8 animate-spin mx-auto text-primary" />
+          <CardContent className="flex items-center justify-center p-8 sm:p-12">
             <div className="text-center space-y-3">
-              <p className="text-muted-foreground">Loading admin dashboard...</p>
+              <Loader2 className="h-6 w-6 sm:h-8 sm:w-8 animate-spin mx-auto text-primary" />
+              <p className="text-sm sm:text-base text-muted-foreground">Loading admin dashboard...</p>
             </div>
           </CardContent>
         </Card>
@@ -403,132 +629,868 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold flex items-center gap-2">
-            <BarChart3 className="h-7 w-7 text-primary" />
-            Admin Dashboard
-          </h1>
-          <p className="text-muted-foreground">JumpinAI Business Analytics & Management</p>
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
+      <div className="container mx-auto p-2 sm:p-6 space-y-3 sm:space-y-6">
+        {/* Header with Liquid Glass Effect - Mobile Optimized */}
+        <div className="glass rounded-lg sm:rounded-xl p-3 sm:p-6 border border-border/50 backdrop-blur-xl">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
+            <div className="flex-1">
+              <h1 className="text-xl sm:text-3xl lg:text-4xl font-bold flex items-center gap-2 sm:gap-3 mb-1 sm:mb-2">
+                <div className="p-1.5 sm:p-2 rounded-lg bg-primary/10 backdrop-blur-sm">
+                  <BarChart3 className="h-5 w-5 sm:h-7 sm:w-7 text-primary" />
+                </div>
+                <span className="gradient-text">Admin Dashboard</span>
+              </h1>
+              <p className="text-xs sm:text-sm text-muted-foreground ml-8 sm:ml-14">JumpinAI Business Analytics & Management</p>
+            </div>
+            <div className="flex gap-2 items-center flex-wrap">
+              <ThemeToggle />
+              <Button 
+                onClick={() => fetchAdminData()} 
+                variant="outline" 
+                size="sm"
+                className="glass border-border/50 hover:bg-primary/5 flex-1 sm:flex-none"
+              >
+                <RefreshCcw className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-2" />
+                <span className="hidden sm:inline">Refresh</span>
+              </Button>
+              <Button 
+                onClick={syncToGoogleSheets} 
+                disabled={syncing}
+                size="sm"
+                className="bg-primary/90 hover:bg-primary flex-1 sm:flex-none"
+              >
+                <FileSpreadsheet className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-2" />
+                <span className="hidden sm:inline">{syncing ? 'Syncing...' : 'Sync to Sheets'}</span>
+                <span className="sm:hidden">{syncing ? 'Sync...' : 'Sync'}</span>
+              </Button>
+            </div>
+          </div>
         </div>
-        <div className="flex gap-2">
-          <ThemeToggle />
-          <Button onClick={fetchAdminData} variant="outline">
-            <RefreshCcw className="h-4 w-4 mr-2" />
-            Refresh
-          </Button>
-          <Button onClick={syncToGoogleSheets} disabled={syncing}>
-            <FileSpreadsheet className="h-4 w-4 mr-2" />
-            {syncing ? 'Syncing...' : 'Sync to Sheets'}
-          </Button>
+
+        {/* Stats Cards with Enhanced Design - Mobile Optimized */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4">
+          <Card className="glass border-border/50 hover:border-primary/50 transition-all duration-300 hover:shadow-lg group">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 sm:pb-3 p-3 sm:p-6">
+              <CardTitle className="text-xs sm:text-sm font-medium text-muted-foreground">Total Users</CardTitle>
+              <div className="p-1.5 sm:p-2 rounded-lg bg-blue-500/10 group-hover:bg-blue-500/20 transition-colors">
+                <Users className="h-4 w-4 sm:h-5 sm:w-5 text-blue-500" />
+              </div>
+            </CardHeader>
+            <CardContent className="p-3 sm:p-6 pt-0">
+              <div className="text-2xl sm:text-3xl font-bold mb-0.5 sm:mb-1">{stats.totalUsers}</div>
+              <p className="text-[10px] sm:text-xs text-muted-foreground">Registered accounts</p>
+            </CardContent>
+          </Card>
+
+          <Card className="glass border-border/50 hover:border-primary/50 transition-all duration-300 hover:shadow-lg group">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 sm:pb-3 p-3 sm:p-6">
+              <CardTitle className="text-xs sm:text-sm font-medium text-muted-foreground">Paid Subscribers</CardTitle>
+              <div className="p-1.5 sm:p-2 rounded-lg bg-amber-500/10 group-hover:bg-amber-500/20 transition-colors">
+                <Crown className="h-4 w-4 sm:h-5 sm:w-5 text-amber-500" />
+              </div>
+            </CardHeader>
+            <CardContent className="p-3 sm:p-6 pt-0">
+              <div className="text-2xl sm:text-3xl font-bold text-primary mb-0.5 sm:mb-1">{stats.totalSubscribers}</div>
+              <div className="flex gap-1 sm:gap-2 text-[10px] sm:text-xs text-muted-foreground flex-wrap">
+                <span>S:{stats.starterSubscribers}</span>
+                <span>•</span>
+                <span>P:{stats.proSubscribers}</span>
+                <span>•</span>
+                <span>G:{stats.growthSubscribers}</span>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="glass border-border/50 hover:border-primary/50 transition-all duration-300 hover:shadow-lg group">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 sm:pb-3 p-3 sm:p-6">
+              <CardTitle className="text-xs sm:text-sm font-medium text-muted-foreground">Total Orders</CardTitle>
+              <div className="p-1.5 sm:p-2 rounded-lg bg-purple-500/10 group-hover:bg-purple-500/20 transition-colors">
+                <ShoppingBag className="h-4 w-4 sm:h-5 sm:w-5 text-purple-500" />
+              </div>
+            </CardHeader>
+            <CardContent className="p-3 sm:p-6 pt-0">
+              <div className="text-2xl sm:text-3xl font-bold mb-0.5 sm:mb-1">{stats.totalOrders}</div>
+              <p className="text-[10px] sm:text-xs text-muted-foreground">
+                {stats.completedOrders} paid • {stats.abandonedCarts} abandoned
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card className="glass border-border/50 hover:border-primary/50 transition-all duration-300 hover:shadow-lg group">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 sm:pb-3 p-3 sm:p-6">
+              <CardTitle className="text-xs sm:text-sm font-medium text-muted-foreground">Total Revenue</CardTitle>
+              <div className="p-1.5 sm:p-2 rounded-lg bg-green-500/10 group-hover:bg-green-500/20 transition-colors">
+                <DollarSign className="h-4 w-4 sm:h-5 sm:w-5 text-green-500" />
+              </div>
+            </CardHeader>
+            <CardContent className="p-3 sm:p-6 pt-0">
+              <div className="text-2xl sm:text-3xl font-bold text-green-600 dark:text-green-400 mb-0.5 sm:mb-1">
+                ${stats.totalRevenue.toFixed(2)}
+              </div>
+              <p className="text-[10px] sm:text-xs text-muted-foreground">
+                ${stats.monthlyRevenue.toFixed(2)} this month
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card className="glass border-border/50 hover:border-primary/50 transition-all duration-300 hover:shadow-lg group">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 sm:pb-3 p-3 sm:p-6">
+              <CardTitle className="text-xs sm:text-sm font-medium text-muted-foreground">Newsletter</CardTitle>
+              <div className="p-1.5 sm:p-2 rounded-lg bg-pink-500/10 group-hover:bg-pink-500/20 transition-colors">
+                <Mail className="h-4 w-4 sm:h-5 sm:w-5 text-pink-500" />
+              </div>
+            </CardHeader>
+            <CardContent className="p-3 sm:p-6 pt-0">
+              <div className="text-2xl sm:text-3xl font-bold mb-0.5 sm:mb-1">{stats.totalNewsletterSubscribers}</div>
+              <p className="text-[10px] sm:text-xs text-muted-foreground">Active subscribers</p>
+            </CardContent>
+          </Card>
+
+          <Card className="glass border-border/50 hover:border-primary/50 transition-all duration-300 hover:shadow-lg group">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 sm:pb-3 p-3 sm:p-6">
+              <CardTitle className="text-xs sm:text-sm font-medium text-muted-foreground">Jump Generations</CardTitle>
+              <div className="p-1.5 sm:p-2 rounded-lg bg-cyan-500/10 group-hover:bg-cyan-500/20 transition-colors">
+                <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5 text-cyan-500" />
+              </div>
+            </CardHeader>
+            <CardContent className="p-3 sm:p-6 pt-0">
+              <div className="text-2xl sm:text-3xl font-bold mb-0.5 sm:mb-1">{stats.totalJumps}</div>
+              <div className="flex gap-1 sm:gap-2 text-[10px] sm:text-xs text-muted-foreground flex-wrap">
+                <span className="text-green-600 dark:text-green-400">✓{stats.successfulJumps}</span>
+                <span>•</span>
+                <span className="text-yellow-600 dark:text-yellow-400">🔄{stats.generatingJumps}</span>
+                <span>•</span>
+                <span className="text-red-600 dark:text-red-400">✗{stats.failedJumps}</span>
+                <span>•</span>
+                <span>Guest:{stats.guestJumps}</span>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="glass border-border/50 hover:border-primary/50 transition-all duration-300 hover:shadow-lg group">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 sm:pb-3 p-3 sm:p-6">
+              <CardTitle className="text-xs sm:text-sm font-medium text-muted-foreground">Daily Revenue</CardTitle>
+              <div className="p-1.5 sm:p-2 rounded-lg bg-emerald-500/10 group-hover:bg-emerald-500/20 transition-colors">
+                <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5 text-emerald-500" />
+              </div>
+            </CardHeader>
+            <CardContent className="p-3 sm:p-6 pt-0">
+              <div className="text-2xl sm:text-3xl font-bold text-emerald-600 dark:text-emerald-400 mb-0.5 sm:mb-1">
+                ${stats.dailyRevenue.toFixed(2)}
+              </div>
+              <p className="text-[10px] sm:text-xs text-muted-foreground">Today's earnings</p>
+            </CardContent>
+          </Card>
+
+          <Card className="glass border-border/50 hover:border-primary/50 transition-all duration-300 hover:shadow-lg group">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 sm:pb-3 p-3 sm:p-6">
+              <CardTitle className="text-xs sm:text-sm font-medium text-muted-foreground">Avg Order Value</CardTitle>
+              <div className="p-1.5 sm:p-2 rounded-lg bg-orange-500/10 group-hover:bg-orange-500/20 transition-colors">
+                <DollarSign className="h-4 w-4 sm:h-5 sm:w-5 text-orange-500" />
+              </div>
+            </CardHeader>
+            <CardContent className="p-3 sm:p-6 pt-0">
+              <div className="text-2xl sm:text-3xl font-bold mb-0.5 sm:mb-1">${stats.averageOrderValue.toFixed(2)}</div>
+              <p className="text-[10px] sm:text-xs text-muted-foreground">Per completed order</p>
+            </CardContent>
+          </Card>
         </div>
-      </div>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Users</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.totalUsers}</div>
-            <p className="text-xs text-muted-foreground">Registered accounts</p>
-          </CardContent>
-        </Card>
+      {/* Detailed Tables - Responsive Tabs with Horizontal Scroll */}
+      <Tabs defaultValue="jumps" className="space-y-3 sm:space-y-4">
+        {/* Horizontal scrollable tabs for all screen sizes */}
+        <div className="w-full overflow-x-auto pb-2 -mx-4 px-4 sm:mx-0 sm:px-0">
+          <TabsList className="inline-flex w-max h-auto p-1 gap-1">
+            <TabsTrigger value="jumps" className="whitespace-nowrap px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm data-[state=active]:bg-primary/20">
+              <TrendingUp className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+              <span className="hidden sm:inline">Jump Generations</span>
+              <span className="sm:hidden">Jumps</span>
+            </TabsTrigger>
+            <TabsTrigger value="guests" className="whitespace-nowrap px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm data-[state=active]:bg-primary/20">
+              <UserCheck className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+              <span className="hidden sm:inline">Guest Users</span>
+              <span className="sm:hidden">Guests</span>
+            </TabsTrigger>
+            <TabsTrigger value="revenue" className="whitespace-nowrap px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm data-[state=active]:bg-primary/20">
+              <DollarSign className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+              Revenue
+            </TabsTrigger>
+            <TabsTrigger value="credits" className="whitespace-nowrap px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm data-[state=active]:bg-primary/20">
+              <CreditCard className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+              <span className="hidden sm:inline">Credits Overview</span>
+              <span className="sm:hidden">Credits</span>
+            </TabsTrigger>
+            <TabsTrigger value="orders" className="whitespace-nowrap px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm data-[state=active]:bg-primary/20">
+              <ShoppingBag className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+              Orders
+            </TabsTrigger>
+            <TabsTrigger value="subscribers" className="whitespace-nowrap px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm data-[state=active]:bg-primary/20">
+              <Crown className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+              <span className="hidden sm:inline">Subscribers</span>
+              <span className="sm:hidden">Subs</span>
+            </TabsTrigger>
+            <TabsTrigger value="contacts" className="whitespace-nowrap px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm data-[state=active]:bg-primary/20">
+              <Mail className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+              Contacts
+            </TabsTrigger>
+            <TabsTrigger value="users" className="whitespace-nowrap px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm data-[state=active]:bg-primary/20">
+              <Users className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+              <span className="hidden sm:inline">All Users</span>
+              <span className="sm:hidden">Users</span>
+            </TabsTrigger>
+            <TabsTrigger value="auth-logs" className="whitespace-nowrap px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm data-[state=active]:bg-primary/20">
+              <Shield className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+              <span className="hidden sm:inline">Login Logs</span>
+              <span className="sm:hidden">Logs</span>
+            </TabsTrigger>
+          </TabsList>
+        </div>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Pro Subscribers</CardTitle>
-            <Crown className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-primary">{stats.totalSubscribers}</div>
-            <p className="text-xs text-muted-foreground">Active subscriptions</p>
-          </CardContent>
-        </Card>
+        <TabsContent value="jumps">
+          <Card className="glass border-border/50">
+            <CardHeader className="p-3 sm:p-6">
+              <CardTitle className="text-base sm:text-lg">Jump Generation Logs ({stats.totalJumps})</CardTitle>
+              <p className="text-xs sm:text-sm text-muted-foreground mt-1">
+                Track all jump generation attempts including successes, failures, and guest usage
+              </p>
+            </CardHeader>
+            <CardContent className="p-0 sm:p-6 sm:pt-0">
+              {jumpGenerations.length === 0 ? (
+                <div className="text-center py-8 text-muted-foreground px-4">
+                  <TrendingUp className="h-10 w-10 sm:h-12 sm:w-12 mx-auto mb-4 opacity-50" />
+                  <p className="text-base sm:text-lg font-medium mb-2">No jump generations yet</p>
+                  <p className="text-xs sm:text-sm">Jump generation logs will appear here</p>
+                </div>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full caption-bottom text-xs sm:text-sm">
+                    <thead className="[&_tr]:border-b">
+                      <tr className="border-b transition-colors hover:bg-muted/50">
+                        <th
+                          className="h-12 px-4 text-left align-middle font-medium text-muted-foreground"
+                          style={{ width: `${columnWidths.user}px`, minWidth: `${columnWidths.user}px`, position: 'relative' }}
+                        >
+                          User
+                          <div 
+                            className="absolute top-0 h-full w-4 cursor-col-resize bg-border hover:bg-primary transition-colors"
+                            style={{ right: '-8px', zIndex: 999 }}
+                            onMouseDown={handleMouseDown('user')}
+                          />
+                        </th>
+                        <th 
+                          className="h-12 px-4 text-left align-middle font-medium text-muted-foreground"
+                          style={{ width: `${columnWidths.title}px`, minWidth: `${columnWidths.title}px`, position: 'relative' }}
+                        >
+                          Title
+                          <div 
+                            className="absolute top-0 h-full w-4 cursor-col-resize bg-border hover:bg-primary transition-colors"
+                            style={{ right: '-8px', zIndex: 999 }}
+                            onMouseDown={handleMouseDown('title')}
+                          />
+                        </th>
+                        <th 
+                          className="h-12 px-4 text-left align-middle font-medium text-muted-foreground"
+                          style={{ width: `${columnWidths.status}px`, minWidth: `${columnWidths.status}px`, position: 'relative' }}
+                        >
+                          Status
+                          <div 
+                            className="absolute top-0 h-full w-4 cursor-col-resize bg-border hover:bg-primary transition-colors"
+                            style={{ right: '-8px', zIndex: 999 }}
+                            onMouseDown={handleMouseDown('status')}
+                          />
+                        </th>
+                        <th 
+                          className="h-12 px-4 text-left align-middle font-medium text-muted-foreground relative group"
+                          style={{ width: `${columnWidths.type}px`, minWidth: `${columnWidths.type}px` }}
+                        >
+                          Type
+                          <div 
+                            className="absolute right-0 top-0 h-full w-2 cursor-col-resize bg-border/50 hover:bg-primary transition-colors z-10"
+                            onMouseDown={handleMouseDown('type')}
+                          />
+                        </th>
+                        <th 
+                          className="h-12 px-4 text-left align-middle font-medium text-muted-foreground relative group"
+                          style={{ width: `${columnWidths.input}px`, minWidth: `${columnWidths.input}px` }}
+                        >
+                          Input
+                          <div 
+                            className="absolute right-0 top-0 h-full w-2 cursor-col-resize bg-border/50 hover:bg-primary transition-colors z-10"
+                            onMouseDown={handleMouseDown('input')}
+                          />
+                        </th>
+                        <th 
+                          className="h-12 px-4 text-left align-middle font-medium text-muted-foreground relative group"
+                          style={{ width: `${columnWidths.goals}px`, minWidth: `${columnWidths.goals}px` }}
+                        >
+                          Goals Input
+                          <div 
+                            className="absolute right-0 top-0 h-full w-2 cursor-col-resize bg-border/50 hover:bg-primary transition-colors z-10"
+                            onMouseDown={handleMouseDown('goals')}
+                          />
+                        </th>
+                        <th 
+                          className="h-12 px-4 text-left align-middle font-medium text-muted-foreground relative group"
+                          style={{ width: `${columnWidths.challenges}px`, minWidth: `${columnWidths.challenges}px` }}
+                        >
+                          Challenges Input
+                          <div 
+                            className="absolute right-0 top-0 h-full w-2 cursor-col-resize bg-border/50 hover:bg-primary transition-colors z-10"
+                            onMouseDown={handleMouseDown('challenges')}
+                          />
+                        </th>
+                        <th 
+                          className="h-12 px-4 text-left align-middle font-medium text-muted-foreground relative group"
+                          style={{ width: `${columnWidths.location}px`, minWidth: `${columnWidths.location}px` }}
+                        >
+                          Location
+                          <div 
+                            className="absolute right-0 top-0 h-full w-2 cursor-col-resize bg-border/50 hover:bg-primary transition-colors z-10"
+                            onMouseDown={handleMouseDown('location')}
+                          />
+                        </th>
+                        <th 
+                          className="h-12 px-4 text-left align-middle font-medium text-muted-foreground relative group"
+                          style={{ width: `${columnWidths.date}px`, minWidth: `${columnWidths.date}px` }}
+                        >
+                          Date/Time (PST)
+                          <div 
+                            className="absolute right-0 top-0 h-full w-2 cursor-col-resize bg-border/50 hover:bg-primary transition-colors z-10"
+                            onMouseDown={handleMouseDown('date')}
+                          />
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="[&_tr:last-child]:border-0">
+                      {jumpGenerations.map((jump) => (
+                        <tr key={jump.id} className="border-b transition-colors hover:bg-muted/50">
+                          <td 
+                            className="p-2 sm:p-4 align-middle"
+                            style={{ width: `${columnWidths.user}px`, minWidth: `${columnWidths.user}px` }}
+                          >
+                            {jump.is_guest ? (
+                              <div>
+                                <Badge variant="outline" className="text-[10px] sm:text-xs">Guest</Badge>
+                                {jump.ip_address && (
+                                  <p className="text-[10px] sm:text-xs text-muted-foreground mt-1 break-all">
+                                    IP: {jump.ip_address}
+                                  </p>
+                                )}
+                              </div>
+                            ) : (
+                              <div className="font-medium text-xs sm:text-sm break-all">{jump.user_email || 'Unknown'}</div>
+                            )}
+                          </td>
+                          <td 
+                            className="p-4 align-middle truncate"
+                            style={{ width: `${columnWidths.title}px`, minWidth: `${columnWidths.title}px` }}
+                          >
+                            {jump.title}
+                          </td>
+                          <td 
+                            className="p-4 align-middle"
+                            style={{ width: `${columnWidths.status}px`, minWidth: `${columnWidths.status}px` }}
+                          >
+                            {(jump.status === 'completed' || jump.status === 'active') && (
+                              <Badge variant="default" className="whitespace-normal">
+                                ✓ Success
+                              </Badge>
+                            )}
+                            {jump.status === 'generating' && (
+                              <Badge variant="secondary" className="whitespace-normal">
+                                🔄 {jump.completion_percentage}%
+                              </Badge>
+                            )}
+                            {(jump.status === 'failed' || jump.status === 'error') && (
+                              <Badge variant="destructive" className="whitespace-normal">
+                                ✗ Failed
+                              </Badge>
+                            )}
+                            {jump.status !== 'completed' && jump.status !== 'active' && jump.status !== 'generating' && jump.status !== 'failed' && jump.status !== 'error' && (
+                              <Badge variant="outline" className="whitespace-normal">
+                                {jump.status}
+                              </Badge>
+                            )}
+                            <p className="text-xs text-muted-foreground mt-1">
+                              {jump.status_description}
+                            </p>
+                          </td>
+                          <td 
+                            className="p-4 align-middle"
+                            style={{ width: `${columnWidths.type}px`, minWidth: `${columnWidths.type}px` }}
+                          >
+                            <Badge variant={jump.is_guest ? 'secondary' : 'default'}>
+                              {jump.is_guest ? 'Guest' : 'User'}
+                            </Badge>
+                          </td>
+                          <td 
+                            className="p-4 align-middle"
+                            style={{ width: `${columnWidths.input}px`, minWidth: `${columnWidths.input}px` }}
+                          >
+                            <div className="flex flex-col gap-1">
+                              <Badge 
+                                variant={jump.input_method === 'narrated' ? 'default' : jump.input_method === 'mixed' ? 'outline' : 'secondary'} 
+                                className="text-xs"
+                              >
+                                {jump.input_method === 'narrated' ? '🎤 Voice' : jump.input_method === 'mixed' ? '🔄 Mixed' : '⌨️ Typed'}
+                              </Badge>
+                              {(jump.goals_stt_seconds > 0 || jump.challenges_stt_seconds > 0) && (
+                                <span className="text-xs text-muted-foreground">
+                                  🎤 {(jump.goals_stt_seconds || 0) + (jump.challenges_stt_seconds || 0)}s
+                                  <span className="text-[10px] ml-1">(G:{jump.goals_stt_seconds || 0}s C:{jump.challenges_stt_seconds || 0}s)</span>
+                                </span>
+                              )}
+                            </div>
+                          </td>
+                          <td 
+                            className="p-4 align-middle"
+                            style={{ width: `${columnWidths.goals}px`, minWidth: `${columnWidths.goals}px` }}
+                          >
+                            <div className="text-sm">
+                              <p className="whitespace-normal break-words">{jump.form_goals || 'N/A'}</p>
+                            </div>
+                          </td>
+                          <td 
+                            className="p-4 align-middle"
+                            style={{ width: `${columnWidths.challenges}px`, minWidth: `${columnWidths.challenges}px` }}
+                          >
+                            <div className="text-sm">
+                              <p className="whitespace-normal break-words">{jump.form_challenges || 'N/A'}</p>
+                            </div>
+                          </td>
+                          <td 
+                            className="p-4 align-middle text-sm"
+                            style={{ width: `${columnWidths.location}px`, minWidth: `${columnWidths.location}px` }}
+                          >
+                            {jump.location || '-'}
+                          </td>
+                          <td 
+                            className="p-4 align-middle text-sm"
+                            style={{ width: `${columnWidths.date}px`, minWidth: `${columnWidths.date}px` }}
+                          >
+                            {new Date(jump.created_at).toLocaleString('en-US', {
+                              timeZone: 'America/Los_Angeles',
+                              month: 'short',
+                              day: 'numeric',
+                              year: 'numeric',
+                              hour: '2-digit',
+                              minute: '2-digit'
+                            })}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Orders</CardTitle>
-            <ShoppingBag className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.totalOrders}</div>
-            <p className="text-xs text-muted-foreground">
-              {stats.completedOrders} paid, {stats.abandonedCarts} abandoned
-            </p>
-          </CardContent>
-        </Card>
+        <TabsContent value="guests">
+          <Card>
+            <CardHeader>
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                <div className="flex-1">
+                  <CardTitle className="text-lg sm:text-xl">Guest Users Activity</CardTitle>
+                  <p className="text-xs sm:text-sm text-muted-foreground mt-1">
+                    Track all guest user activity, jump attempts, usage limits, and detailed logs
+                  </p>
+                </div>
+                <div className="flex flex-col gap-2">
+                  <Button 
+                    onClick={resetGuestUsers} 
+                    disabled={resettingGuests}
+                    variant="destructive"
+                    size="sm"
+                    className="w-full sm:w-auto"
+                  >
+                    {resettingGuests ? (
+                      <>
+                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                        <span className="text-xs sm:text-sm">Resetting...</span>
+                      </>
+                    ) : (
+                      <>
+                        <RefreshCcw className="h-4 w-4 mr-2" />
+                        <span className="text-xs sm:text-sm">Reset Guest Database</span>
+                      </>
+                    )}
+                  </Button>
+                  <p className="text-[10px] sm:text-xs text-muted-foreground">
+                    Clears server records & your browser. Guests must clear their own cache to reset limits.
+                  </p>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              {/* Guest Usage Summary */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+                <div className="text-center p-3 sm:p-4 bg-muted/50 rounded-lg">
+                  <Users className="h-5 w-5 sm:h-6 sm:w-6 mx-auto mb-2 text-primary" />
+                  <div className="text-xl sm:text-2xl font-bold">{guestUsers.length}</div>
+                  <p className="text-xs sm:text-sm text-muted-foreground">Unique Guests</p>
+                </div>
+                <div className="text-center p-3 sm:p-4 bg-muted/50 rounded-lg">
+                  <TrendingUp className="h-5 w-5 sm:h-6 sm:w-6 mx-auto mb-2 text-green-600" />
+                  <div className="text-xl sm:text-2xl font-bold">
+                    {guestUsers.reduce((sum, g) => sum + (g.jump_attempts?.length || 0), 0)}
+                  </div>
+                  <p className="text-xs sm:text-sm text-muted-foreground">Total Jump Attempts</p>
+                </div>
+                <div className="text-center p-3 sm:p-4 bg-muted/50 rounded-lg">
+                  <Clock className="h-5 w-5 sm:h-6 sm:w-6 mx-auto mb-2 text-orange-600" />
+                  <div className="text-xl sm:text-2xl font-bold">
+                    {guestUsers.filter(g => g.remaining_uses === 0).length}
+                  </div>
+                  <p className="text-xs sm:text-sm text-muted-foreground">Limit Reached</p>
+                </div>
+              </div>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
-            <DollarSign className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">${stats.totalRevenue.toFixed(2)}</div>
-            <p className="text-xs text-muted-foreground">
-              ${stats.monthlyRevenue.toFixed(2)} this month
-            </p>
-          </CardContent>
-        </Card>
+              {/* Guest User Tracking */}
+              <div>
+                <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">Guest Activity Logs</h3>
+                {guestUsers.length === 0 ? (
+                  <div className="text-center py-8 text-muted-foreground">
+                    <Users className="h-10 w-10 sm:h-12 sm:w-12 mx-auto mb-4 opacity-50" />
+                    <p className="text-base sm:text-lg font-medium mb-2">No guest users yet</p>
+                    <p className="text-xs sm:text-sm">Guest user activity will appear here</p>
+                  </div>
+                ) : (
+                  <div className="space-y-3 sm:space-y-4">
+                    {guestUsers.map((guest) => (
+                      <Card key={guest.ip_address} className="border-l-4 border-l-primary/30">
+                        <CardHeader className="pb-3 px-3 sm:px-6 pt-3 sm:pt-6">
+                          <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                            <div className="flex-1 space-y-2">
+                              <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                                <Badge variant="outline" className="font-mono text-[10px] sm:text-xs break-all">
+                                  {guest.ip_address}
+                                </Badge>
+                                <Badge variant="outline" className="text-[10px] sm:text-xs">
+                                  📍 {guest.location || 'Unknown'}
+                                </Badge>
+                                <Badge variant={guest.remaining_uses > 0 ? 'secondary' : 'destructive'} className="text-[10px] sm:text-xs">
+                                  {guest.usage_count}/3 uses
+                                </Badge>
+                                {guest.remaining_uses === 0 && (
+                                  <Badge variant="destructive" className="text-[10px] sm:text-xs">Limit Reached</Badge>
+                                )}
+                              </div>
+                              {guest.user_agent && (
+                                <p className="text-[10px] sm:text-xs text-muted-foreground break-words line-clamp-2">
+                                  {guest.user_agent}
+                                </p>
+                              )}
+                            </div>
+                            <div className="text-left sm:text-right">
+                              <div className="text-[10px] sm:text-xs text-muted-foreground">Last Activity</div>
+                              <div className="text-xs sm:text-sm font-medium whitespace-nowrap">
+                                {new Date(guest.last_used_at).toLocaleString('en-US', {
+                                  timeZone: 'America/Los_Angeles',
+                                  month: 'short',
+                                  day: 'numeric',
+                                  hour: '2-digit',
+                                  minute: '2-digit'
+                                })} PST
+                              </div>
+                            </div>
+                          </div>
+                        </CardHeader>
+                        
+                        {/* Jump Generation Attempts */}
+                        {guest.jump_attempts && guest.jump_attempts.length > 0 && (
+                          <CardContent className="pt-0 px-3 sm:px-6 pb-3 sm:pb-6">
+                            <div className="space-y-2">
+                              <h4 className="text-xs sm:text-sm font-semibold mb-2 sm:mb-3">
+                                Jump Generation Attempts ({guest.jump_attempts.length})
+                              </h4>
+                              <div className="space-y-2 sm:space-y-3">
+                                {guest.jump_attempts.map((attempt) => (
+                                  <div key={attempt.id} className="p-2 sm:p-3 bg-muted/30 rounded-lg space-y-2 border">
+                                    <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between sm:gap-3">
+                                      <div className="flex-1 space-y-1.5 sm:space-y-2">
+                                        <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
+                                          {/* Status Badge with improved logic */}
+                                          {(attempt.status === 'completed' || attempt.status === 'active') && (
+                                            <Badge variant="default" className="text-[10px] sm:text-xs">✓ Success</Badge>
+                                          )}
+                                          {attempt.status === 'generating' && (
+                                            <Badge variant="secondary" className="text-[10px] sm:text-xs">🔄 {attempt.completion_percentage}%</Badge>
+                                          )}
+                                          {(attempt.status === 'failed' || attempt.status === 'error') && (
+                                            <Badge variant="destructive" className="text-[10px] sm:text-xs">✗ Failed</Badge>
+                                          )}
+                                          {attempt.status !== 'completed' && attempt.status !== 'active' && 
+                                           attempt.status !== 'generating' && attempt.status !== 'failed' && 
+                                           attempt.status !== 'error' && (
+                                            <Badge variant="outline" className="text-[10px] sm:text-xs">{attempt.status}</Badge>
+                                          )}
+                                          <span className="text-xs sm:text-sm font-medium break-words">{attempt.title}</span>
+                                          {attempt.location && (
+                                            <Badge variant="outline" className="text-[10px] sm:text-xs">
+                                              {attempt.location}
+                                            </Badge>
+                                          )}
+                                        </div>
+                                        {attempt.status_description && (
+                                          <p className="text-[10px] sm:text-xs text-muted-foreground break-words">{attempt.status_description}</p>
+                                        )}
+                                      </div>
+                                      <span className="text-[10px] sm:text-xs text-muted-foreground whitespace-nowrap">
+                                        {new Date(attempt.created_at).toLocaleTimeString('en-US', {
+                                          timeZone: 'America/Los_Angeles',
+                                          hour: '2-digit',
+                                          minute: '2-digit'
+                                        })} PST
+                                      </span>
+                                    </div>
+                                    
+                                    {/* Form Inputs - Compact Display */}
+                                    <div className="grid grid-cols-1 gap-1.5 sm:gap-2 text-[10px] sm:text-xs pt-2 border-t">
+                                      {/* Input Method Badge */}
+                                      <div className="flex items-center gap-2 flex-wrap">
+                                        <Badge 
+                                          variant={attempt.input_method === 'narrated' ? 'default' : attempt.input_method === 'mixed' ? 'outline' : 'secondary'} 
+                                          className="text-[10px]"
+                                        >
+                                          {attempt.input_method === 'narrated' ? '🎤 Voice' : attempt.input_method === 'mixed' ? '🔄 Mixed' : '⌨️ Typed'}
+                                        </Badge>
+                                        {((attempt.goals_stt_seconds || 0) > 0 || (attempt.challenges_stt_seconds || 0) > 0) && (
+                                          <span className="text-[10px] text-muted-foreground">
+                                            🎤 {(attempt.goals_stt_seconds || 0) + (attempt.challenges_stt_seconds || 0)}s total
+                                            (G:{attempt.goals_stt_seconds || 0}s C:{attempt.challenges_stt_seconds || 0}s)
+                                          </span>
+                                        )}
+                                      </div>
+                                      <div className="break-words">
+                                        <span className="font-medium text-muted-foreground">Goals: </span>
+                                        <span className="text-foreground">{attempt.form_goals || 'N/A'}</span>
+                                      </div>
+                                      <div className="break-words">
+                                        <span className="font-medium text-muted-foreground">Challenges: </span>
+                                        <span className="text-foreground">{attempt.form_challenges || 'N/A'}</span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                            
+                            <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between pt-2 sm:pt-3 mt-2 sm:mt-3 border-t text-[10px] sm:text-xs text-muted-foreground">
+                              <span className="break-words">First Seen: {new Date(guest.created_at).toLocaleString('en-US', {
+                                timeZone: 'America/Los_Angeles',
+                                month: 'short',
+                                day: 'numeric',
+                                year: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit'
+                              })} PST</span>
+                            </div>
+                          </CardContent>
+                        )}
+                      </Card>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Newsletter Subscribers</CardTitle>
-            <Mail className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.totalNewsletterSubscribers}</div>
-            <p className="text-xs text-muted-foreground">Active newsletter subs</p>
-          </CardContent>
-        </Card>
+        <TabsContent value="revenue">
+          <Card>
+            <CardHeader>
+              <CardTitle>Revenue Overview</CardTitle>
+              <p className="text-sm text-muted-foreground">
+                Track all successful transactions and revenue breakdowns
+              </p>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              {/* Revenue Breakdown Stats */}
+              <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+                <Card>
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-sm font-medium text-muted-foreground">Today</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold">${(stats.dailyRevenue || 0).toFixed(2)}</div>
+                  </CardContent>
+                </Card>
+                
+                <Card>
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-sm font-medium text-muted-foreground">Last 7 Days</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold">${(stats.last7DaysRevenue || 0).toFixed(2)}</div>
+                  </CardContent>
+                </Card>
+                
+                <Card>
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-sm font-medium text-muted-foreground">This Month</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold">${(stats.monthlyRevenue || 0).toFixed(2)}</div>
+                  </CardContent>
+                </Card>
+                
+                <Card>
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-sm font-medium text-muted-foreground">Year-to-Date</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold">${(stats.ytdRevenue || 0).toFixed(2)}</div>
+                  </CardContent>
+                </Card>
+                
+                <Card>
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-sm font-medium text-muted-foreground">Lifetime</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold text-primary">${(stats.totalRevenue || 0).toFixed(2)}</div>
+                  </CardContent>
+                </Card>
+              </div>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Lead Downloads</CardTitle>
-            <Download className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.totalLeadMagnetDownloads}</div>
-            <p className="text-xs text-muted-foreground">Lead magnet downloads</p>
-          </CardContent>
-        </Card>
+              {/* All Successful Transactions */}
+              <div>
+                <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4 px-4 sm:px-0">All Successful Transactions ({recentOrders.filter(o => o.is_completed).length})</h3>
+                {recentOrders.filter(o => o.is_completed).length === 0 ? (
+                  <div className="text-center py-8 text-muted-foreground px-4">
+                    <DollarSign className="h-10 w-10 sm:h-12 sm:w-12 mx-auto mb-4 opacity-50" />
+                    <p className="text-base sm:text-lg font-medium mb-2">No transactions yet</p>
+                    <p className="text-xs sm:text-sm">Successful transactions will appear here</p>
+                  </div>
+                ) : (
+                  <div className="overflow-x-auto">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead className="text-xs sm:text-sm">Email</TableHead>
+                          <TableHead className="text-xs sm:text-sm">Product/Description</TableHead>
+                          <TableHead className="text-xs sm:text-sm">Type</TableHead>
+                          <TableHead className="text-xs sm:text-sm">Amount</TableHead>
+                          <TableHead className="text-xs sm:text-sm whitespace-nowrap">Date/Time (PST)</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {recentOrders
+                          .filter(o => o.is_completed)
+                          .map((order) => (
+                            <TableRow key={order.id}>
+                              <TableCell className="font-medium text-xs sm:text-sm break-all">{order.user_email}</TableCell>
+                              <TableCell>
+                                <div>
+                                  <div className="font-medium text-xs sm:text-sm">{order.product_name}</div>
+                                  {order.is_subscription && (
+                                    <Badge variant="secondary" className="mt-1 text-[10px] sm:text-xs">Subscription</Badge>
+                                  )}
+                                </div>
+                              </TableCell>
+                              <TableCell>
+                                {order.is_subscription ? (
+                                  <Badge variant="default" className="text-[10px] sm:text-xs">Subscription</Badge>
+                                ) : (
+                                  <Badge variant="outline" className="text-[10px] sm:text-xs">One-time</Badge>
+                                )}
+                              </TableCell>
+                              <TableCell className="font-bold text-green-600 text-xs sm:text-sm whitespace-nowrap">
+                                ${(order.amount / 100).toFixed(2)}
+                              </TableCell>
+                              <TableCell className="text-xs sm:text-sm whitespace-nowrap">
+                                {new Date(order.created_at).toLocaleString('en-US', {
+                                  timeZone: 'America/Los_Angeles',
+                                  month: 'short',
+                                  day: 'numeric',
+                                  year: 'numeric',
+                                  hour: '2-digit',
+                                  minute: '2-digit'
+                                })} PST
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                      </TableBody>
+                    </Table>
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Daily Revenue</CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">${stats.dailyRevenue.toFixed(2)}</div>
-            <p className="text-xs text-muted-foreground">Today's earnings</p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Avg Order Value</CardTitle>
-            <CreditCard className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">${stats.averageOrderValue.toFixed(2)}</div>
-            <p className="text-xs text-muted-foreground">Per completed order</p>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Detailed Tables */}
-      <Tabs defaultValue="orders" className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="orders">Recent Orders</TabsTrigger>
-          <TabsTrigger value="subscribers">Subscribers</TabsTrigger>
-          <TabsTrigger value="contacts">Contacts</TabsTrigger>
-          <TabsTrigger value="users">All Users</TabsTrigger>
-          <TabsTrigger value="auth-logs">Login Logs</TabsTrigger>
-        </TabsList>
+        <TabsContent value="credits">
+          <Card>
+            <CardHeader>
+              <CardTitle>Credits Overview</CardTitle>
+              <p className="text-sm text-muted-foreground">
+                Monitor user credit balances and transaction history
+              </p>
+            </CardHeader>
+            <CardContent>
+              {creditOverviews.length === 0 ? (
+                <div className="text-center py-8 text-muted-foreground">
+                  <CreditCard className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                  <p className="text-lg font-medium mb-2">No credit data yet</p>
+                  <p className="text-sm">User credit information will appear here</p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {creditOverviews.map((overview) => (
+                    <Card key={overview.user_id} className="p-4">
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <p className="font-medium text-lg">{overview.user_email}</p>
+                            <div className="flex gap-2 mt-1">
+                              <Badge variant="default" className="bg-primary">
+                                Balance: {overview.credits_balance} credits
+                              </Badge>
+                              <Badge variant="secondary">
+                                Purchased: {overview.total_credits_purchased} credits
+                              </Badge>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        {overview.recent_transactions.length > 0 && (
+                          <div className="pt-2 border-t">
+                            <p className="text-sm font-medium mb-2">Recent Transactions</p>
+                            <div className="space-y-1">
+                              {overview.recent_transactions.slice(0, 5).map((transaction) => (
+                                <div key={transaction.id} className="flex items-center justify-between text-sm">
+                                  <div className="flex items-center gap-2">
+                                    <Badge variant="outline" className="text-xs">
+                                      {transaction.transaction_type}
+                                    </Badge>
+                                    <span className="text-muted-foreground">
+                                      {transaction.description}
+                                    </span>
+                                  </div>
+                                  <div className="flex items-center gap-2">
+                                    <span className={transaction.credits_amount > 0 ? 'text-green-600 font-medium' : 'text-red-600 font-medium'}>
+                                      {transaction.credits_amount > 0 ? '+' : ''}{transaction.credits_amount}
+                                    </span>
+                                    <span className="text-xs text-muted-foreground">
+                                      {new Date(transaction.created_at).toLocaleDateString()}
+                                    </span>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </Card>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
 
         <TabsContent value="orders">
           <Card>
@@ -571,9 +1533,9 @@ export default function AdminDashboard() {
         <TabsContent value="subscribers">
           <Card>
             <CardHeader>
-              <CardTitle>Paid Subscribers ($10/month Plan)</CardTitle>
+              <CardTitle>Active Subscribers</CardTitle>
               <p className="text-sm text-muted-foreground">
-                Comprehensive details for all users with active paid subscriptions
+                Comprehensive subscription details including billing history and activity logs
               </p>
             </CardHeader>
             <CardContent>
@@ -584,56 +1546,163 @@ export default function AdminDashboard() {
                   <p className="text-sm">Users with active subscriptions will appear here</p>
                 </div>
               ) : (
-                <div className="space-y-4">
-                  {recentSubscribers.map((subscriber) => (
-                    <Card key={subscriber.id} className="p-4">
-                      <div className="space-y-3">
+                <div className="space-y-6">
+                  {recentSubscribers.map((sub) => (
+                    <Card key={sub.id} className="border-l-4" style={{
+                      borderLeftColor: 
+                        sub.subscription_tier === 'JumpinAI Growth' ? 'hsl(var(--primary))' :
+                        sub.subscription_tier === 'JumpinAI Pro' ? 'hsl(var(--secondary))' : 
+                        'hsl(var(--muted))'
+                    }}>
+                      <CardHeader>
                         <div className="flex items-center justify-between">
-                          <div>
-                            <p className="font-medium text-lg">{subscriber.email}</p>
-                            <div className="flex gap-2 mt-1">
-                              <Badge variant="secondary" className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100">
-                                {subscriber.subscription_tier || 'Pro'}
+                          <div className="space-y-1">
+                            <CardTitle className="text-lg">{sub.email}</CardTitle>
+                            <div className="flex items-center gap-2">
+                              <Badge variant={
+                                sub.subscription_tier === 'JumpinAI Growth' ? 'default' :
+                                sub.subscription_tier === 'JumpinAI Pro' ? 'secondary' : 
+                                'outline'
+                              }>
+                                {sub.subscription_tier || 'N/A'}
                               </Badge>
-                              <Badge variant={subscriber.subscribed ? "default" : "secondary"}>
-                                {subscriber.subscribed ? 'Active' : 'Inactive'}
+                              <Badge variant={sub.subscribed ? "default" : "secondary"}>
+                                {sub.subscribed ? "Active" : "Inactive"}
                               </Badge>
                             </div>
                           </div>
-                          <div className="text-right text-sm text-muted-foreground">
-                            Subscribed: {new Date(subscriber.created_at).toLocaleDateString()}
+                          <div className="text-right space-y-1">
+                            <div className="text-2xl font-bold">${(sub.total_subscription_paid || 0).toFixed(2)}</div>
+                            <div className="text-sm text-muted-foreground">Total Subscription Revenue</div>
                           </div>
                         </div>
-                        
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-2 border-t">
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        {/* Subscription Details */}
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 bg-muted/50 rounded-lg">
                           <div>
-                            <p className="text-sm text-muted-foreground">Total Paid</p>
-                            <p className="font-medium text-lg">${subscriber.total_paid.toFixed(2)}</p>
+                            <div className="text-sm text-muted-foreground">Subscribed On</div>
+                            <div className="font-medium">{new Date(sub.created_at).toLocaleDateString('en-US', {
+                              month: 'short',
+                              day: 'numeric',
+                              year: 'numeric',
+                              hour: '2-digit',
+                              minute: '2-digit'
+                            })}</div>
                           </div>
                           <div>
-                            <p className="text-sm text-muted-foreground">Orders</p>
-                            <p className="font-medium text-lg">{subscriber.completed_orders}</p>
+                            <div className="text-sm text-muted-foreground">Expires On</div>
+                            <div className="font-medium">
+                              {sub.subscription_end 
+                                ? new Date(sub.subscription_end).toLocaleDateString('en-US', {
+                                    month: 'short',
+                                    day: 'numeric',
+                                    year: 'numeric',
+                                    hour: '2-digit',
+                                    minute: '2-digit'
+                                  })
+                                : "N/A"}
+                            </div>
                           </div>
                           <div>
-                            <p className="text-sm text-muted-foreground">Downloads</p>
-                            <p className="font-medium text-lg">{subscriber.total_downloads}</p>
+                            <div className="text-sm text-muted-foreground">Last Login</div>
+                            <div className="font-medium">
+                              {sub.last_login 
+                                ? new Date(sub.last_login).toLocaleDateString('en-US', {
+                                    month: 'short',
+                                    day: 'numeric',
+                                    year: 'numeric',
+                                    hour: '2-digit',
+                                    minute: '2-digit'
+                                  })
+                                : "Never"}
+                            </div>
                           </div>
                           <div>
-                            <p className="text-sm text-muted-foreground">Last Login</p>
-                            <p className="font-medium">
-                              {subscriber.last_login ? new Date(subscriber.last_login).toLocaleDateString() : 'Never'}
-                            </p>
+                            <div className="text-sm text-muted-foreground">Stripe Customer</div>
+                            <div className="font-medium text-xs truncate">{sub.stripe_customer_id || "N/A"}</div>
                           </div>
                         </div>
-                        
-                        {subscriber.subscription_end && (
-                          <div className="pt-2 border-t">
-                            <p className="text-sm text-muted-foreground">
-                              Subscription ends: <span className="font-medium">{new Date(subscriber.subscription_end).toLocaleDateString()}</span>
-                            </p>
+
+                        {/* Payment History */}
+                        {sub.subscription_payment_history && sub.subscription_payment_history.length > 0 && (
+                          <div>
+                            <h4 className="font-semibold mb-2">Payment History ({sub.subscription_payments || 0} payments)</h4>
+                            <div className="space-y-2">
+                              {sub.subscription_payment_history.map((payment) => (
+                                <div key={payment.id} className="flex items-center justify-between p-2 bg-muted/30 rounded">
+                                  <div>
+                                    <div className="font-medium">{payment.product_name}</div>
+                                    <div className="text-sm text-muted-foreground">
+                                      {new Date(payment.created_at).toLocaleDateString('en-US', {
+                                        month: 'short',
+                                        day: 'numeric',
+                                        year: 'numeric',
+                                        hour: '2-digit',
+                                        minute: '2-digit'
+                                      })}
+                                    </div>
+                                  </div>
+                                  <div className="font-bold text-green-600">${(payment.amount || 0).toFixed(2)}</div>
+                                </div>
+                              ))}
+                            </div>
                           </div>
                         )}
-                      </div>
+
+                        {/* Audit Logs */}
+                        {sub.audit_logs && sub.audit_logs.length > 0 && (
+                          <div>
+                            <h4 className="font-semibold mb-2">Subscription Activity Log ({sub.audit_logs.length} events)</h4>
+                            <div className="space-y-2 max-h-60 overflow-y-auto">
+                              {sub.audit_logs.map((log) => (
+                                <div key={log.id} className="p-2 bg-muted/30 rounded text-sm">
+                                  <div className="flex items-center justify-between mb-1">
+                                    <Badge variant="outline">{log.action}</Badge>
+                                    <span className="text-xs text-muted-foreground">
+                                      {new Date(log.created_at).toLocaleDateString('en-US', {
+                                        month: 'short',
+                                        day: 'numeric',
+                                        year: 'numeric',
+                                        hour: '2-digit',
+                                        minute: '2-digit',
+                                        second: '2-digit'
+                                      })}
+                                    </span>
+                                  </div>
+                                  <div className="text-xs space-y-1">
+                                    {log.old_data && (
+                                      <div>
+                                        <span className="text-muted-foreground">From:</span> Tier: {log.old_data.subscription_tier || 'N/A'}, 
+                                        Active: {log.old_data.subscribed ? 'Yes' : 'No'}
+                                      </div>
+                                    )}
+                                    {log.new_data && (
+                                      <div>
+                                        <span className="text-muted-foreground">To:</span> Tier: {log.new_data.subscription_tier || 'N/A'}, 
+                                        Active: {log.new_data.subscribed ? 'Yes' : 'No'}
+                                      </div>
+                                    )}
+                                    <div className="text-muted-foreground">
+                                      Source: {log.change_source} {log.changed_by && `| Changed by: ${log.changed_by}`}
+                                    </div>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Additional Stats */}
+                        <div className="flex items-center justify-between pt-2 border-t">
+                          <div className="text-sm text-muted-foreground">
+                            Total Orders: {sub.completed_orders || 0} | Product Purchases: {sub.product_purchases || 0} | Downloads: {sub.total_downloads || 0}
+                          </div>
+                          <div className="text-sm font-medium">
+                            All-Time Revenue: ${(sub.total_paid || 0).toFixed(2)}
+                          </div>
+                        </div>
+                      </CardContent>
                     </Card>
                   ))}
                 </div>
@@ -648,14 +1717,10 @@ export default function AdminDashboard() {
               <CardTitle>All Contacts ({stats.totalContacts})</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="mb-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="mb-4 grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="text-center p-4 bg-muted rounded-lg">
                   <div className="text-2xl font-bold">{stats.totalNewsletterSubscribers}</div>
                   <p className="text-sm text-muted-foreground">Newsletter Subscribers</p>
-                </div>
-                <div className="text-center p-4 bg-muted rounded-lg">
-                  <div className="text-2xl font-bold">{stats.totalLeadMagnetDownloads}</div>
-                  <p className="text-sm text-muted-foreground">Lead Magnet Downloads</p>
                 </div>
                 <div className="text-center p-4 bg-muted rounded-lg">
                   <div className="text-2xl font-bold">{stats.totalContacts}</div>
@@ -671,7 +1736,6 @@ export default function AdminDashboard() {
                     <TableHead>Source</TableHead>
                     <TableHead>Status</TableHead>
                     <TableHead>Newsletter</TableHead>
-                    <TableHead>Lead Magnet</TableHead>
                     <TableHead>Created</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -695,9 +1759,6 @@ export default function AdminDashboard() {
                       </TableCell>
                       <TableCell>
                         {contact.newsletter_subscribed ? '✅' : '❌'}
-                      </TableCell>
-                      <TableCell>
-                        {contact.lead_magnet_downloaded ? '✅' : '❌'}
                       </TableCell>
                       <TableCell>
                         {new Date(contact.created_at).toLocaleDateString()}
@@ -747,11 +1808,11 @@ export default function AdminDashboard() {
                   <p className="text-sm text-muted-foreground">Newsletter Subscribers</p>
                 </div>
                 <div className="text-center p-4 bg-muted rounded-lg">
-                  <Download className="h-6 w-6 mx-auto mb-2 text-purple-600" />
+                  <TrendingUp className="h-6 w-6 mx-auto mb-2 text-purple-600" />
                   <div className="text-2xl font-bold">
-                    {users.filter(user => user.lead_magnet_downloaded).length}
+                    {stats.totalJumps}
                   </div>
-                  <p className="text-sm text-muted-foreground">Lead Downloads</p>
+                  <p className="text-sm text-muted-foreground">Total Jumps</p>
                 </div>
               </div>
               
@@ -896,6 +1957,24 @@ export default function AdminDashboard() {
                               <span className="text-sm text-muted-foreground">Last Login:</span>
                               <span className="text-sm">
                                 {new Date(user.last_login).toLocaleDateString()}
+                              </span>
+                            </div>
+                          )}
+                          
+                          {user.latestLocation && (
+                            <div className="flex items-center justify-between">
+                              <span className="text-sm text-muted-foreground">Location:</span>
+                              <span className="text-sm">
+                                {user.latestLocation}
+                              </span>
+                            </div>
+                          )}
+                          
+                          {user.latestIpAddress && (
+                            <div className="flex items-center justify-between">
+                              <span className="text-sm text-muted-foreground">IP Address:</span>
+                              <span className="text-sm font-mono text-xs">
+                                {user.latestIpAddress}
                               </span>
                             </div>
                           )}
@@ -1060,6 +2139,7 @@ export default function AdminDashboard() {
           </Card>
         </TabsContent>
       </Tabs>
+      </div>
     </div>
   );
 }

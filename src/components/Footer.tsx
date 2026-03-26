@@ -13,7 +13,7 @@ import { SiThreads } from "react-icons/si";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { PrivacyChoices } from "./PrivacyChoices";
-import logo from "@/assets/logo.png";
+import logo from "@/assets/logo-header-transparent.png";
 
 const Footer = () => {
   const navigate = useNavigate();
@@ -37,7 +37,7 @@ const Footer = () => {
   };
 
   return (
-    <footer id="footer" className="relative bg-background text-foreground overflow-hidden border-t border-border">
+    <footer id="footer" className="dark relative bg-background text-foreground overflow-hidden border-t border-border">
       {/* Premium Background - Light mode friendly */}
       <div className="absolute inset-0 bg-gradient-to-b from-background to-muted/20"></div>
       <div className="absolute inset-0 bg-gradient-to-r from-primary/[0.005] via-transparent to-primary/[0.005]"></div>
@@ -57,21 +57,18 @@ const Footer = () => {
         <div className="grid md:grid-cols-5 gap-8 mb-8">
           {/* Brand */}
           <div className="md:col-span-2 md:pr-4">
-            <Link to="/" className="flex items-center mb-6 group">
-              <div className="relative">
-                <div className="pointer-events-none absolute -inset-1 rounded-2xl bg-primary/20 blur-md opacity-0 group-hover:opacity-60 transition-opacity duration-300"></div>
-                <div className="relative w-10 h-10 rounded-xl overflow-hidden group-hover:scale-105 transition-transform duration-300 ring-1 ring-border">
-                  <img 
-                    src={logo}
-                    alt="JumpinAI Logo"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
+            <Link to="/" className="inline-block mb-6 group">
+              <div className="relative group-hover:scale-105 transition-transform duration-300">
+                <div className="pointer-events-none absolute -inset-1 rounded-lg bg-primary/20 blur-md opacity-0 group-hover:opacity-60 transition-opacity duration-300"></div>
+                <img 
+                  src={logo}
+                  alt="JumpinAI Logo"
+                  className="relative h-10 w-auto object-contain"
+                />
               </div>
-              <span className="ml-3 text-2xl font-black font-display text-foreground">JumpinAI</span>
             </Link>
-            <p className="text-xs text-foreground/70 leading-relaxed mb-8 max-w-md font-light">
-              Empowering creators, professionals, and entrepreneurs to adapt to the era of AI — guiding every step from exploration to confident mastery with clarity and precision.
+            <p className="text-sm text-foreground/70 leading-relaxed mb-8 max-w-md font-light">
+              Empowering creators, professionals, and entrepreneurs to adapt to the era of AI — from strategic clarity to automated implementation, turning your vision into workflows and AI agents that work for you.
             </p>
             
             {/* Social Links - Professional Design */}
@@ -103,73 +100,71 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* What We Do */}
-          <div className="pt-1">
-            <h3 className="text-lg font-bold mb-8 text-foreground font-display leading-relaxed">What We Do</h3>
-            <ul className="space-y-0">
-              <li>
-                <Link to="/jumpinai-studio" className="text-xs text-foreground/70 hover:text-foreground transition-colors duration-300 leading-relaxed block">
-                  JumpinAI Studio
-                </Link>
-              </li>
-              <li>
-                <Link to="/jumps" className="text-xs text-foreground/70 hover:text-foreground transition-colors duration-300 leading-relaxed block">
-                  Guides
-                </Link>
-              </li>
-              <li>
-                <Link to="/resources" className="text-xs text-foreground/70 hover:text-foreground transition-colors duration-300 leading-relaxed block">
-                  Resources
-                </Link>
-              </li>
-            </ul>
-          </div>
+          {/* Navigation Grid - 3 columns on mobile, part of 5-col grid on desktop */}
+          <div className="col-span-1 md:col-span-3 grid grid-cols-3 gap-4 md:gap-8">
+            {/* What We Do */}
+            <div className="pt-1">
+              <h3 className="text-sm md:text-lg font-bold mb-4 md:mb-8 text-foreground font-display leading-relaxed">What We Do</h3>
+              <ul className="space-y-0">
+                <li>
+                  <Link to="/jumpinai-studio" className="text-xs md:text-sm text-foreground/70 hover:text-foreground transition-colors duration-300 leading-relaxed block">
+                    JumpinAI Studio
+                  </Link>
+                </li>
+                <li>
+                  <a href="https://www.arttoadapt.com" target="_blank" rel="noopener noreferrer" className="text-xs md:text-sm text-foreground/70 hover:text-foreground transition-colors duration-300 leading-relaxed block">
+                    Art to Adapt
+                  </a>
+                </li>
+              </ul>
+            </div>
 
-          {/* Who We Are */}
-          <div className="pt-1">
-            <h3 className="text-lg font-bold mb-8 text-foreground font-display leading-relaxed">Who We Are</h3>
-            <ul className="space-y-0">
-              <li>
-                <Link to="/about-us" className="text-xs text-foreground/70 hover:text-foreground transition-colors duration-300 leading-relaxed block">
-                  About Us
-                </Link>
-              </li>
-              <li>
-                <Link to="/contact-us" className="text-xs text-foreground/70 hover:text-foreground transition-colors duration-300 leading-relaxed block">
-                  Contact Us
-                </Link>
-              </li>
-              <li>
-                <Link to="/for-investors" className="text-xs text-foreground/70 hover:text-foreground transition-colors duration-300 leading-relaxed block">
-                  For Investors
-                </Link>
-              </li>
-            </ul>
-          </div>
+            {/* Who We Are */}
+            <div className="pt-1">
+              <h3 className="text-sm md:text-lg font-bold mb-4 md:mb-8 text-foreground font-display leading-relaxed">Who We Are</h3>
+              <ul className="space-y-0">
+                <li>
+                  <Link to="/about-us" className="text-xs md:text-sm text-foreground/70 hover:text-foreground transition-colors duration-300 leading-relaxed block">
+                    About Us
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/contact-us" className="text-xs md:text-sm text-foreground/70 hover:text-foreground transition-colors duration-300 leading-relaxed block">
+                    Contact Us
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/for-investors" className="text-xs md:text-sm text-foreground/70 hover:text-foreground transition-colors duration-300 leading-relaxed block">
+                    For Investors
+                  </Link>
+                </li>
+              </ul>
+            </div>
 
-          {/* Legal */}
-          <div className="pt-1">
-            <h3 className="text-lg font-bold mb-8 text-foreground font-display leading-relaxed">Legal</h3>
-            <ul className="space-y-0">
-              <li>
-                <Link to="/terms-of-use" className="text-xs text-foreground/70 hover:text-foreground transition-colors duration-300 leading-relaxed block">
-                  Terms of Use
-                </Link>
-              </li>
-              <li>
-                <Link to="/privacy-policy" className="text-xs text-foreground/70 hover:text-foreground transition-colors duration-300 leading-relaxed block">
-                  Privacy Policy
-                </Link>
-              </li>
-              <li>
-                <button 
-                  onClick={() => setIsPrivacyChoicesOpen(true)}
-                  className="text-xs text-foreground/70 hover:text-foreground transition-colors duration-300 text-left leading-relaxed block"
-                >
-                  Your Privacy Choices
-                </button>
-              </li>
-            </ul>
+            {/* Legal */}
+            <div className="pt-1">
+              <h3 className="text-sm md:text-lg font-bold mb-4 md:mb-8 text-foreground font-display leading-relaxed">Legal</h3>
+              <ul className="space-y-0">
+                <li>
+                  <Link to="/terms-of-use" className="text-xs md:text-sm text-foreground/70 hover:text-foreground transition-colors duration-300 leading-relaxed block">
+                    Terms of Use
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/privacy-policy" className="text-xs md:text-sm text-foreground/70 hover:text-foreground transition-colors duration-300 leading-relaxed block">
+                    Privacy Policy
+                  </Link>
+                </li>
+                <li>
+                  <button 
+                    onClick={() => setIsPrivacyChoicesOpen(true)}
+                    className="text-xs md:text-sm text-foreground/70 hover:text-foreground transition-colors duration-300 text-left leading-relaxed block"
+                  >
+                    Your Privacy Choices
+                  </button>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
 
@@ -177,7 +172,7 @@ const Footer = () => {
         <div className="border-t border-border pt-6">
           <div className="text-center">
             <p className="text-xs text-foreground/70 font-light">
-              Copyright © 2025 JumpinAI, LLC. All rights reserved.
+              Copyright © 2026 JumpinAI, LLC. All rights reserved.
             </p>
           </div>
         </div>

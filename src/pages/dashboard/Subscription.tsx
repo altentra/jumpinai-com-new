@@ -2,14 +2,15 @@ import { useState, useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { ExternalLink, RefreshCw, CreditCard, Crown, Zap, Star, Rocket, AlertTriangle, ArrowRight, Sparkles, TrendingUp, TrendingDown, Gift, Calendar, Coins, Loader2 } from "lucide-react";
+import { ExternalLink, RefreshCw, CreditCard, Crown, Zap, Star, Rocket, AlertTriangle, ArrowRight, Sparkles, TrendingUp, TrendingDown, Gift, Calendar, Coins, Loader2, Bot } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { useCredits } from "@/hooks/useCredits";
+import { useCredits, dispatchCreditsUpdate } from "@/hooks/useCredits";
 import { creditsService, type CreditPackage, type SubscriptionPlan, type CreditTransaction } from "@/services/creditsService";
 import { Separator } from "@/components/ui/separator";
+import { SubscriptionUpgradeModal } from "@/components/SubscriptionUpgradeModal";
 
 interface SubscriberInfo {
   subscribed: boolean;
@@ -33,6 +34,8 @@ export default function Subscription() {
   const [jumpTitles, setJumpTitles] = useState<Record<string, string>>({});
   const [jumpNumbers, setJumpNumbers] = useState<Record<string, number>>({});
   const [downloadingReceipt, setDownloadingReceipt] = useState<string | null>(null);
+  const [upgradeModalOpen, setUpgradeModalOpen] = useState(false);
+  const [selectedUpgradePlan, setSelectedUpgradePlan] = useState<SubscriptionPlan | null>(null);
 
   useEffect(() => {
     if (!authLoading) {
@@ -55,8 +58,8 @@ export default function Subscription() {
           toast.success("Payment successful! Your credits have been added.", {
             duration: 5000,
           });
-          // Force refresh credits and transactions
-          fetchCredits();
+          // Force refresh credits and transactions, then sync across components
+          fetchCredits().then(() => dispatchCreditsUpdate());
           fetchCreditTransactions();
           window.history.replaceState({}, document.title, window.location.pathname);
         }
@@ -66,7 +69,7 @@ export default function Subscription() {
             duration: 5000,
           });
           // Force refresh both subscription status and credits
-          handleRefreshSubscription();
+          handleRefreshSubscription().then(() => dispatchCreditsUpdate());
           window.history.replaceState({}, document.title, window.location.pathname);
         }
       }
@@ -152,6 +155,118 @@ export default function Subscription() {
     } finally {
       setPlanLoading(prev => ({ ...prev, [planId]: false }));
     }
+  };
+
+  const handleUpgradeClick = (plan: SubscriptionPlan) => {
+    setSelectedUpgradePlan(plan);
+    setUpgradeModalOpen(true);
+  };
+
+  const handleUpgradeConfirm = async () => {
+    if (!selectedUpgradePlan) return;
+    
+    setPlanLoading(prev => ({ ...prev, [selectedUpgradePlan.id]: true }));
+    try {
+      const upgradeDetails = calculateUpgradeDetails(selectedUpgradePlan);
+      if (!upgradeDetails) {
+        throw new Error('Failed to calculate upgrade details');
+      }
+
+      const { data, error } = await supabase.functions.invoke('create-upgrade-checkout', {
+        body: {
+          newPlanId: selectedUpgradePlan.id,
+          priceDifference: upgradeDetails.priceDifference,
+          creditDifference: upgradeDetails.creditDifference,
+        }
+      });
+      
+      if (error) throw error;
+      
+      if (data?.url) {
+        // Redirect to Stripe checkout
+        window.location.href = data.url;
+      } else {
+        throw new Error('No checkout URL received');
+      }
+    } catch (e: any) {
+      console.error('Upgrade error:', e);
+      toast.error(e.message || "Failed to create upgrade checkout");
+      setPlanLoading(prev => ({ ...prev, [selectedUpgradePlan.id]: false }));
+    }
+  };
+
+  const handleDowngradeClick = async (planId: string, planName: string) => {
+    setPlanLoading(prev => ({ ...prev, [planId]: true }));
+    try {
+      const { data, error } = await supabase.functions.invoke('schedule-downgrade', {
+        body: { newPlanId: planId }
+      });
+      
+      if (error) throw error;
+      
+      toast.success(`Downgrade to ${planName} scheduled!`, {
+        description: `Your subscription will change to ${planName} on ${new Date(data.effectiveDate).toLocaleDateString()}.`,
+        duration: 7000,
+      });
+      
+      await handleRefreshSubscription();
+    } catch (e: any) {
+      toast.error(e.message || "Failed to schedule downgrade");
+    } finally {
+      setPlanLoading(prev => ({ ...prev, [planId]: false }));
+    }
+  };
+
+  const getPlanTier = (planName: string): number => {
+    const name = planName.toLowerCase();
+    if (name.includes('free')) return 0;
+    if (name.includes('pro')) return 1;
+    if (name.includes('growth')) return 2;
+    return 0;
+  };
+
+  const getButtonAction = (plan: SubscriptionPlan) => {
+    const isCurrent = isCurrentPlan(plan.name);
+    const isFree = plan.price_cents === 0;
+    const currentTier = getPlanTier(subInfo?.subscription_tier || 'Free Plan');
+    const planTier = getPlanTier(plan.name);
+    const hasSubscription = subInfo?.subscribed;
+
+    if (isCurrent) {
+      return { type: 'current' as const, label: isFree ? 'Free Forever' : 'Current Plan' };
+    }
+
+    if (!hasSubscription && !isFree) {
+      return { type: 'subscribe' as const, label: 'Get Started' };
+    }
+
+    if (isFree) {
+      return { type: 'free' as const, label: 'Free Forever' };
+    }
+
+    if (planTier > currentTier) {
+      return { type: 'upgrade' as const, label: 'Upgrade Now' };
+    }
+
+    if (planTier < currentTier) {
+      return { type: 'downgrade' as const, label: 'Downgrade' };
+    }
+
+    return { type: 'current' as const, label: 'Current Plan' };
+  };
+
+  const getCurrentPlanData = (): SubscriptionPlan | null => {
+    return subscriptionPlans.find(p => p.name === subInfo?.subscription_tier) || null;
+  };
+
+  const calculateUpgradeDetails = (newPlan: SubscriptionPlan) => {
+    const currentPlan = getCurrentPlanData();
+    if (!currentPlan) return { priceDifference: newPlan.price_cents / 100, creditDifference: newPlan.credits_per_month };
+    
+    return {
+      priceDifference: (newPlan.price_cents - currentPlan.price_cents) / 100,
+      creditDifference: newPlan.credits_per_month - currentPlan.credits_per_month,
+    };
   };
 
   const handleBuyCredits = async (packageId: string) => {
@@ -243,7 +358,6 @@ export default function Subscription() {
   const getPlanIcon = (planName: string) => {
     const name = planName.toLowerCase();
     if (name.includes('free')) return Zap;
-    if (name.includes('starter')) return Star;
     if (name.includes('pro')) return Crown;
     if (name.includes('growth')) return Rocket;
     return Zap;
@@ -284,64 +398,339 @@ export default function Subscription() {
       </div>
       
       <div className="relative animate-fade-in space-y-4 sm:space-y-6 px-3 sm:px-0">
-      {/* Header */}
+      {/* Compact Header with Credits Balance */}
       <header>
-        <div className="rounded-2xl border border-border glass p-4 sm:p-6 md:p-8 shadow-modern">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 sm:gap-4">
-            <div className="min-w-0">
-              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold flex items-center gap-2 sm:gap-3 gradient-text-primary">
-                <CreditCard className="h-6 w-6 sm:h-7 sm:w-7 flex-shrink-0" />
-                <span className="truncate">Subscription & Credits</span>
-              </h1>
-              <p className="text-muted-foreground mt-1 sm:mt-2 text-sm sm:text-base truncate">{email}</p>
+        <div className="rounded-2xl border border-border glass p-4 sm:p-5 shadow-modern">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="p-2 rounded-xl bg-primary/10">
+                <CreditCard className="h-5 w-5 text-primary" />
+              </div>
+              <div className="min-w-0">
+                <h1 className="text-lg sm:text-xl font-bold text-foreground truncate">Subscription & Credits</h1>
+                <p className="text-xs text-muted-foreground truncate">{email}</p>
+              </div>
             </div>
-            <div className="flex items-center gap-2 sm:gap-3">
+            <div className="flex items-center gap-3 flex-wrap">
               {subInfo?.subscribed ? (
-                <Badge className="bg-primary/10 text-primary border-primary/20 text-xs sm:text-sm px-2 sm:px-3 py-1 whitespace-nowrap">
+                <Badge className="bg-primary/10 text-primary border-primary/20 text-xs px-2 py-1">
                   {subInfo.subscription_tier || 'Pro Plan'}
                 </Badge>
               ) : (
-                <Badge variant="secondary" className="border-muted text-xs sm:text-sm px-2 sm:px-3 py-1 whitespace-nowrap">
+                <Badge variant="secondary" className="border-muted text-xs px-2 py-1">
                   Free Plan
                 </Badge>
               )}
+              <div className="flex items-center gap-2 bg-gradient-to-r from-primary/10 to-accent/10 rounded-lg px-3 py-1.5 border border-primary/20">
+                <Zap className="w-4 h-4 text-primary" />
+                <span className="text-lg font-bold text-foreground">
+                  {creditsLoading ? "..." : credits?.credits_balance || 0}
+                </span>
+                <span className="text-xs text-muted-foreground">credits</span>
+                <Button 
+                  variant="ghost"
+                  onClick={fetchCredits} 
+                  size="sm"
+                  className="h-6 w-6 p-0 ml-1"
+                >
+                  <RefreshCw className="h-3 w-3 hover:rotate-180 transition-transform duration-500" />
+                </Button>
+              </div>
             </div>
           </div>
         </div>
       </header>
 
-      {/* Credits Balance Card */}
-      <Card className="glass border-primary/20 shadow-modern">
-        <CardHeader className="pb-3 sm:pb-6">
+      {/* Need More Credits? - Credit Packages */}
+      <div>
+        <div className="text-center mb-4 sm:mb-6">
+          <h2 className="text-lg sm:text-xl md:text-2xl font-bold gradient-text-primary mb-1 sm:mb-2">
+            Need More Credits?
+          </h2>
+          <p className="text-xs sm:text-sm text-muted-foreground max-w-2xl mx-auto">
+            Purchase additional credits anytime to supplement your subscription or as a one-time boost.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-3">
+          {creditPackages.map((pkg) => {
+            const isLoading = packageLoading[pkg.id];
+
+            return (
+              <Card 
+                key={pkg.id} 
+                className="relative flex flex-col glass transition-all duration-300 shadow-modern hover:shadow-modern-lg rounded-xl border-border/40"
+              >
+                <CardHeader className="text-center p-3 pb-2">
+                  <CardTitle className="text-xs sm:text-sm font-semibold">{pkg.name}</CardTitle>
+                  <div className="mt-2">
+                    <div className="text-base sm:text-lg font-bold gradient-text-primary">
+                      {pkg.credits} credits
+                    </div>
+                    <div className="text-sm font-medium text-muted-foreground">
+                      {formatPrice(pkg.price_cents)}
+                    </div>
+                  </div>
+                </CardHeader>
+                
+                <CardContent className="p-3 pt-0">
+                  <Button 
+                    onClick={() => handleBuyCredits(pkg.id)}
+                    disabled={isLoading}
+                    variant="glass"
+                    size="sm"
+                    className="w-full hover:scale-[1.02] group text-xs"
+                  >
+                    {isLoading ? (
+                      <>
+                        <div className="w-3 h-3 border-2 border-current border-t-transparent rounded-full animate-spin mr-1" />
+                        ...
+                      </>
+                    ) : (
+                      <>
+                        <Zap className="w-3 h-3 mr-1 group-hover:scale-110 transition-transform duration-300" />
+                        Buy
+                      </>
+                    )}
+                  </Button>
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
+      </div>
+
+      <Separator className="my-4 sm:my-6" />
+
+      {/* Subscription Plans */}
+      <div>
+        <div className="text-center mb-4 sm:mb-6">
+          <h2 className="text-lg sm:text-xl md:text-2xl font-bold gradient-text-primary mb-1 sm:mb-2">
+            Subscription Plans
+          </h2>
+          <p className="text-xs sm:text-sm text-muted-foreground max-w-2xl mx-auto">
+            Get monthly credits that roll over, plus access to all our resources and tools. 
+            <span className="font-semibold text-foreground"> 1 credit = 1 comprehensive Jump</span>
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+          {subscriptionPlans.map((plan) => {
+            const PlanIcon = getPlanIcon(plan.name);
+            const badge = getPlanBadge(plan.name);
+            const buttonAction = getButtonAction(plan);
+            const isLoading = planLoading[plan.id];
+
+            return (
+              <Card 
+                key={plan.id} 
+                className={`relative flex flex-col glass transition-all duration-300 shadow-modern hover:shadow-modern-lg rounded-2xl ${
+                  buttonAction.type === 'current' ? 'ring-2 ring-primary/40 border-primary/60' : 'border-border/40'
+                }`}
+              >
+                {badge && buttonAction.type !== 'current' && (
+                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
+                    <Badge className={`${badge.color} shadow-modern rounded-full px-3 py-1 text-xs`}>
+                      {badge.text}
+                    </Badge>
+                  </div>
+                )}
+                {buttonAction.type === 'current' && (
+                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
+                    <Badge className="bg-primary text-primary-foreground shadow-modern rounded-full px-3 py-1 text-xs">
+                      Current Plan
+                    </Badge>
+                  </div>
+                )}
+                
+                <CardHeader className="text-center pb-4">
+                  <div className="mx-auto mb-3 p-3 rounded-full bg-primary/10 text-primary w-fit">
+                    <PlanIcon className="w-5 h-5" />
+                  </div>
+                  <CardTitle className="text-lg font-bold">{plan.name}</CardTitle>
+                  <CardDescription className="text-xs min-h-[40px]">{plan.description}</CardDescription>
+                  <div className="mt-3">
+                    {plan.price_cents === 0 ? (
+                      <div className="text-3xl font-bold gradient-text-primary">Free</div>
+                    ) : (
+                      <div className="flex items-center justify-center gap-2">
+                        <span className="text-lg line-through text-muted-foreground/60">
+                          {plan.name.toLowerCase().includes('pro') ? '$20' : '$35'}
+                        </span>
+                        <span className="text-3xl font-bold gradient-text-primary">{formatPrice(plan.price_cents)}</span>
+                        <span className="text-sm font-normal text-muted-foreground">/mo</span>
+                      </div>
+                    )}
+                    {plan.price_cents > 0 && (
+                      <Badge className="mt-1 bg-emerald-500/10 text-emerald-600 border-emerald-500/20 text-xs">
+                        Launch Promo
+                      </Badge>
+                    )}
+                    <div className="text-sm text-muted-foreground mt-1">
+                      {plan.credits_per_month} credits {plan.price_cents > 0 && 'monthly'}
+                    </div>
+                  </div>
+                </CardHeader>
+                
+                <CardContent className="flex-1">
+                  <ul className="space-y-2">
+                    {plan.features.map((feature, index) => (
+                      <li key={index} className="flex items-start gap-2 text-xs">
+                        <Zap className="w-3 h-3 text-primary mt-0.5 flex-shrink-0" />
+                        <span className="text-foreground/90">{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </CardContent>
+                
+                <CardFooter className="mt-auto pt-4">
+                  {buttonAction.type === 'current' ? (
+                    <Button 
+                      className="w-full backdrop-blur-xl bg-transparent border-2 border-primary/50 text-primary rounded-2xl font-semibold shadow-md hover:bg-transparent hover:border-primary/60 hover:shadow-lg transition-all duration-300"
+                      disabled
+                    >
+                      <Crown className="w-4 h-4 mr-2" />
+                      {buttonAction.label}
+                    </Button>
+                  ) : buttonAction.type === 'free' ? (
+                    <Button 
+                      variant="outline" 
+                      className="w-full backdrop-blur-xl bg-transparent border border-white/20 text-foreground rounded-2xl font-medium hover:bg-transparent hover:border-white/30 hover:shadow-md transition-all duration-300"
+                      disabled
+                    >
+                      {buttonAction.label}
+                    </Button>
+                  ) : buttonAction.type === 'subscribe' ? (
+                    <Button
+                      onClick={() => handleSubscribe(plan.id)}
+                      disabled={isLoading}
+                      variant="glass"
+                      className="w-full hover:scale-[1.02] group"
+                    >
+                      {isLoading ? (
+                        <>
+                          <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin mr-2" />
+                          Processing...
+                        </>
+                      ) : (
+                        <>
+                          {buttonAction.label}
+                          <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-0.5 transition-transform duration-300" />
+                        </>
+                      )}
+                    </Button>
+                  ) : buttonAction.type === 'upgrade' ? (
+                    <Button
+                      onClick={() => handleUpgradeClick(plan)}
+                      disabled={isLoading}
+                      variant="glass"
+                      className="w-full hover:scale-[1.02] group bg-primary/10 hover:bg-primary/20"
+                    >
+                      {isLoading ? (
+                        <>
+                          <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin mr-2" />
+                          Processing...
+                        </>
+                      ) : (
+                        <>
+                          <TrendingUp className="w-4 h-4 mr-2" />
+                          {buttonAction.label}
+                          <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-0.5 transition-transform duration-300" />
+                        </>
+                      )}
+                    </Button>
+                  ) : (
+                    <Button
+                      onClick={() => handleDowngradeClick(plan.id, plan.name)}
+                      disabled={isLoading}
+                      variant="outline"
+                      className="w-full hover:scale-[1.02] group"
+                    >
+                      {isLoading ? (
+                        <>
+                          <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin mr-2" />
+                          Processing...
+                        </>
+                      ) : (
+                        <>
+                          <TrendingDown className="w-4 h-4 mr-2" />
+                          {buttonAction.label}
+                        </>
+                      )}
+                    </Button>
+                  )}
+                </CardFooter>
+              </Card>
+            );
+          })}
+        </div>
+      </div>
+
+      <Separator className="my-4 sm:my-6" />
+
+      {/* Current Subscription Status */}
+      <Card className="glass shadow-modern">
+        <CardHeader className="pb-3">
           <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
-            <Zap className="h-4 w-4 sm:h-5 sm:w-5 text-primary flex-shrink-0" />
-            <span>Your Credits Balance</span>
+            <Crown className="h-4 w-4 sm:h-5 sm:w-5 text-primary flex-shrink-0" />
+            <span>Current Subscription Status</span>
           </CardTitle>
         </CardHeader>
-        <CardContent>
-          <div className="flex items-center justify-between gap-4">
-            <div className="min-w-0 flex-1">
-              <div className="text-3xl sm:text-4xl font-bold gradient-text-primary">
-                {creditsLoading ? "..." : credits?.credits_balance || 0}
+        <CardContent className="space-y-3">
+          {subInfo?.subscribed ? (
+            <div className="space-y-3">
+              <div className="flex items-center justify-between p-3 bg-primary/5 rounded-lg border border-primary/10">
+                <div>
+                  <p className="text-sm font-semibold text-foreground">Plan</p>
+                  <p className="text-xs text-muted-foreground">{subInfo.subscription_tier || 'Pro Plan'}</p>
+                </div>
+                <Badge className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20">
+                  Active
+                </Badge>
               </div>
-              <p className="text-xs sm:text-sm text-muted-foreground mt-1">
-                Available credits for generating Jumps
-              </p>
+              
+              {subInfo.subscription_end && (
+                <div className="p-3 bg-card/50 rounded-lg border border-border/50">
+                  <p className="text-sm font-semibold text-foreground mb-1">Next Billing Date</p>
+                  <p className="text-xs text-muted-foreground">
+                    {new Date(subInfo.subscription_end).toLocaleDateString('en-US', { 
+                      year: 'numeric', 
+                      month: 'long', 
+                      day: 'numeric',
+                      weekday: 'long'
+                    })}
+                  </p>
+                </div>
+              )}
             </div>
-            <Button 
-              variant="glass"
-              onClick={fetchCredits} 
-              size="sm"
-              className="flex-shrink-0 group"
-            >
-              <RefreshCw className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-2 group-hover:rotate-180 transition-transform duration-500" />
-              <span className="hidden sm:inline">Refresh</span>
-            </Button>
-          </div>
+          ) : (
+            <p className="text-sm text-muted-foreground">
+              You are on the Free Plan. Subscribe above to receive monthly credits.
+            </p>
+          )}
         </CardContent>
+        <CardFooter className="flex flex-col items-center gap-2 pt-3">
+          {subInfo?.subscribed && (
+            <>
+              <Button 
+                onClick={manage}
+                variant="glass"
+                className="w-full max-w-md hover:scale-[1.01] group"
+              >
+                <ExternalLink className="mr-2 h-4 w-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-300" />
+                Manage Billing & Subscription
+              </Button>
+              <p className="text-xs text-center text-muted-foreground max-w-md">
+                Access your Stripe Customer Portal to update payment methods, view invoices, or cancel anytime
+              </p>
+            </>
+          )}
+        </CardFooter>
       </Card>
 
-      {/* Credits Use History and Log */}
+      <Separator className="my-4 sm:my-6" />
+
+      {/* Credit Use History & Log */}
       <Card className="glass border-border/40 shadow-modern">
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
@@ -358,22 +747,36 @@ export default function Subscription() {
         </CardHeader>
         <CardContent>
           {loadingTransactions ? (
-            <div className="flex items-center justify-center py-12">
-              <div className="w-8 h-8 border-4 border-primary/30 border-t-primary rounded-full animate-spin" />
+            <div className="flex items-center justify-center py-8">
+              <div className="w-6 h-6 border-4 border-primary/30 border-t-primary rounded-full animate-spin" />
             </div>
           ) : creditTransactions.length === 0 ? (
-            <div className="text-center py-12">
-              <Coins className="w-12 h-12 mx-auto mb-4 text-muted-foreground/50" />
-              <p className="text-muted-foreground">No transaction history yet</p>
-              <p className="text-sm text-muted-foreground/70 mt-1">Your credit activity will appear here</p>
+            <div className="text-center py-8">
+              <Coins className="w-10 h-10 mx-auto mb-3 text-muted-foreground/50" />
+              <p className="text-muted-foreground text-sm">No transaction history yet</p>
+              <p className="text-xs text-muted-foreground/70 mt-1">Your credit activity will appear here</p>
             </div>
           ) : (
-            <div className="space-y-2 max-h-[600px] overflow-y-auto">
+            <div className="space-y-2 max-h-[400px] overflow-y-auto">
               {creditTransactions.map((transaction) => {
                 const isPositive = transaction.credits_amount > 0;
+                
+                // Determine if this is an AI Agent build based on description
+                const isAgentBuild = transaction.description?.startsWith('AI Agent build:');
+                const isJumpGeneration = transaction.transaction_type === 'usage' && 
+                  transaction.reference_id && 
+                  jumpTitles[transaction.reference_id] && 
+                  !isAgentBuild;
+                
                 const typeConfig = {
                   purchase: { icon: Sparkles, label: 'Credit Purchase', color: 'text-emerald-500', bgColor: 'bg-emerald-500/10' },
-                  usage: { icon: Zap, label: 'Credit Used', color: 'text-blue-500', bgColor: 'bg-blue-500/10' },
+                  usage: { 
+                    icon: isAgentBuild ? Bot : Zap, 
+                    label: isAgentBuild ? 'AI Agent Built' : 'Credit Used', 
+                    color: isAgentBuild ? 'text-yellow-500' : 'text-blue-500', 
+                    bgColor: isAgentBuild ? 'bg-yellow-500/10' : 'bg-blue-500/10' 
+                  },
+                  refund: { icon: TrendingUp, label: 'Credit Refund', color: 'text-emerald-500', bgColor: 'bg-emerald-500/10' },
                   welcome_bonus: { icon: Gift, label: 'Welcome Bonus', color: 'text-violet-500', bgColor: 'bg-violet-500/10' },
                   monthly_allocation: { icon: Calendar, label: 'Monthly Credits', color: 'text-cyan-500', bgColor: 'bg-cyan-500/10' },
                   drip_bonus: { icon: TrendingUp, label: 'Bonus credit 48hr', color: 'text-amber-500', bgColor: 'bg-amber-500/10' },
@@ -386,33 +789,39 @@ export default function Subscription() {
                 };
                 const Icon = config.icon;
 
+                // Format the description for display
+                const getDisplayDescription = () => {
+                  if (isAgentBuild && transaction.description) {
+                    // Extract agent name from "AI Agent build: AgentName"
+                    const agentName = transaction.description.replace('AI Agent build: ', '');
+                    return `🤖 ${agentName}`;
+                  }
+                  if (isJumpGeneration) {
+                    return `Jump #${jumpNumbers[transaction.reference_id!] || '?'}: ${jumpTitles[transaction.reference_id!]}`;
+                  }
+                  return transaction.description || null;
+                };
+
                 return (
                   <div
                     key={transaction.id}
-                    className="group flex items-center justify-between p-4 rounded-xl border border-border/50 hover:border-primary/30 hover:bg-accent/5 transition-all duration-300 hover:shadow-sm"
+                    className="group flex items-center justify-between p-3 rounded-xl border border-border/50 hover:border-primary/30 hover:bg-accent/5 transition-all duration-300"
                   >
-                    <div className="flex items-center gap-4 flex-1 min-w-0">
-                      <div className={`p-2.5 rounded-lg ${config.bgColor} flex-shrink-0`}>
-                        <Icon className={`w-4 h-4 ${config.color}`} />
+                    <div className="flex items-center gap-3 flex-1 min-w-0">
+                      <div className={`p-2 rounded-lg ${config.bgColor} flex-shrink-0`}>
+                        <Icon className={`w-3.5 h-3.5 ${config.color}`} />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-1">
-                          <p className="font-semibold text-sm text-foreground">{config.label}</p>
-                        </div>
-                        {transaction.transaction_type === 'usage' && transaction.reference_id && jumpTitles[transaction.reference_id] ? (
-                          <p className="text-xs text-muted-foreground truncate mb-1">
-                            Generated Jump #{jumpNumbers[transaction.reference_id] || '?'}: {jumpTitles[transaction.reference_id]}
-                          </p>
-                        ) : transaction.description && (
-                          <p className="text-xs text-muted-foreground truncate mb-1">
-                            {transaction.description}
+                        <p className="font-medium text-xs text-foreground">{config.label}</p>
+                        {getDisplayDescription() && (
+                          <p className="text-xs text-muted-foreground truncate">
+                            {getDisplayDescription()}
                           </p>
                         )}
                         <p className="text-xs text-muted-foreground/70">
                           {new Date(transaction.created_at).toLocaleString('en-US', {
                             month: 'short',
                             day: 'numeric',
-                            year: 'numeric',
                             hour: '2-digit',
                             minute: '2-digit'
                           })}
@@ -421,16 +830,16 @@ export default function Subscription() {
                     </div>
                     <div className="flex items-center gap-2 flex-shrink-0">
                       {isPositive ? (
-                        <div className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
-                          <TrendingUp className="w-3.5 h-3.5 text-emerald-500" />
-                          <span className="font-bold text-sm text-emerald-500">
+                        <div className="flex items-center gap-1 px-2 py-1 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
+                          <TrendingUp className="w-3 h-3 text-emerald-500" />
+                          <span className="font-bold text-xs text-emerald-500">
                             +{transaction.credits_amount}
                           </span>
                         </div>
                       ) : (
-                        <div className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-rose-500/10 border border-rose-500/20">
-                          <TrendingDown className="w-3.5 h-3.5 text-rose-500" />
-                          <span className="font-bold text-sm text-rose-500">
+                        <div className="flex items-center gap-1 px-2 py-1 rounded-lg bg-rose-500/10 border border-rose-500/20">
+                          <TrendingDown className="w-3 h-3 text-rose-500" />
+                          <span className="font-bold text-xs text-rose-500">
                             {transaction.credits_amount}
                           </span>
                         </div>
@@ -441,7 +850,7 @@ export default function Subscription() {
                           size="sm"
                           onClick={() => downloadReceipt(transaction.reference_id!)}
                           disabled={downloadingReceipt === transaction.reference_id}
-                          className="h-8 px-3 text-xs backdrop-blur-xl bg-transparent border border-white/20 hover:border-white/30 hover:bg-white/5 rounded-2xl transition-all duration-300 text-white"
+                          className="h-7 px-2 text-xs"
                         >
                           {downloadingReceipt === transaction.reference_id ? (
                             <Loader2 className="w-3 h-3 animate-spin" />
@@ -461,321 +870,22 @@ export default function Subscription() {
           )}
         </CardContent>
       </Card>
-
-      {/* Current Subscription Overview */}
-      <Card className="glass shadow-modern">
-        <CardHeader className="pb-3 sm:pb-6">
-          <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
-            <Crown className="h-4 w-4 sm:h-5 sm:w-5 text-primary flex-shrink-0" />
-            <span>Current Subscription Status</span>
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3 sm:space-y-4">
-          {subInfo?.subscribed ? (
-            <>
-              <div className="space-y-3">
-                <div className="flex items-center justify-between p-3 bg-primary/5 rounded-lg border border-primary/10">
-                  <div>
-                    <p className="text-sm font-semibold text-foreground">Plan</p>
-                    <p className="text-xs text-muted-foreground">{subInfo.subscription_tier || 'Pro Plan'}</p>
-                  </div>
-                  <Badge className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20">
-                    Active
-                  </Badge>
-                </div>
-                
-                {subInfo.subscription_end && (
-                  <div className="p-3 bg-card/50 rounded-lg border border-border/50">
-                    <p className="text-sm font-semibold text-foreground mb-1">Next Billing Date</p>
-                    <p className="text-xs text-muted-foreground">
-                      {new Date(subInfo.subscription_end).toLocaleDateString('en-US', { 
-                        year: 'numeric', 
-                        month: 'long', 
-                        day: 'numeric',
-                        weekday: 'long'
-                      })}
-                    </p>
-                    <p className="text-xs text-muted-foreground/70 mt-1">
-                      Your monthly credits will automatically renew on this date
-                    </p>
-                  </div>
-                )}
-                
-                <div className="flex items-start gap-2 sm:gap-3 p-3 bg-primary/5 rounded-lg border border-primary/10">
-                  <Sparkles className="h-4 w-4 text-primary flex-shrink-0 mt-0.5" />
-                  <div>
-                    <p className="text-xs sm:text-sm text-foreground font-medium mb-1">
-                      Active Benefits
-                    </p>
-                    <ul className="text-xs text-muted-foreground space-y-1">
-                      <li>• Monthly credits that roll over if unused</li>
-                      <li>• Access to all guides and resources</li>
-                      <li>• Priority customer support</li>
-                      <li>• Cancel anytime from billing portal</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </>
-          ) : (
-            <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
-              You are on the Free Plan. Upgrade to a paid plan to receive monthly credits and access advanced features.
-            </p>
-          )}
-        </CardContent>
-        <CardFooter className="flex flex-col items-center gap-2 sm:gap-3 pt-3 sm:pt-6">
-          {subInfo?.subscribed ? (
-            <>
-              <Button 
-                onClick={manage}
-                variant="glass"
-                size="lg"
-                className="w-full max-w-md text-base sm:text-lg py-5 sm:py-6 hover:scale-[1.01] group"
-              >
-                <ExternalLink className="mr-2 h-4 w-4 sm:h-5 sm:w-5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-300" />
-                Manage Billing & Subscription
-              </Button>
-              <p className="text-xs text-center text-muted-foreground max-w-md">
-                Access your Stripe Customer Portal to update payment methods, view invoices, manage your subscription, or cancel anytime
-              </p>
-              <Button 
-                variant="glass"
-                onClick={handleRefreshSubscription}
-                className="group"
-              >
-                <RefreshCw className="mr-2 h-3 w-3 sm:h-4 sm:w-4 group-hover:rotate-180 transition-transform duration-500" />
-                <span className="text-sm sm:text-base">Refresh Status</span>
-              </Button>
-            </>
-          ) : (
-            <p className="text-xs sm:text-sm text-muted-foreground text-center px-4">
-              Choose a subscription plan below to get started with monthly credits.
-            </p>
-          )}
-        </CardFooter>
-      </Card>
-
-      <Separator className="my-6 sm:my-8" />
-
-      {/* Subscription Plans */}
-      <div>
-        <div className="text-center mb-6 sm:mb-8 px-3">
-          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold gradient-text-primary mb-2 sm:mb-3">
-            Subscription Plans
-          </h2>
-          <p className="text-xs sm:text-sm md:text-base text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-            Get monthly credits that roll over, plus access to all our resources and tools. 
-            <br className="hidden sm:block" />
-            <span className="font-semibold text-foreground">1 credit = 1 comprehensive Jump generation</span>
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 px-3 sm:px-0">
-          {subscriptionPlans.map((plan) => {
-            const PlanIcon = getPlanIcon(plan.name);
-            const badge = getPlanBadge(plan.name);
-            const isCurrent = isCurrentPlan(plan.name);
-            const isFree = plan.price_cents === 0;
-            const isLoading = planLoading[plan.id];
-
-            return (
-              <Card 
-                key={plan.id} 
-                className={`relative flex flex-col glass transition-all duration-300 shadow-modern hover:shadow-modern-lg rounded-2xl ${
-                  isCurrent ? 'ring-2 ring-primary/40 border-primary/60' : 'border-border/40'
-                }`}
-              >
-                {badge && !isCurrent && (
-                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
-                    <Badge className={`${badge.color} shadow-modern rounded-full px-3 py-1 text-xs`}>
-                      {badge.text}
-                    </Badge>
-                  </div>
-                )}
-                {isCurrent && (
-                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
-                    <Badge className="bg-primary text-primary-foreground shadow-modern rounded-full px-3 py-1 text-xs">
-                      Current Plan
-                    </Badge>
-                  </div>
-                )}
-                
-                <CardHeader className="text-center pb-4">
-                  <div className="mx-auto mb-3 p-3 rounded-full bg-primary/10 text-primary w-fit">
-                    <PlanIcon className="w-5 h-5" />
-                  </div>
-                  <CardTitle className="text-lg font-bold">{plan.name}</CardTitle>
-                  <CardDescription className="text-xs min-h-[40px]">{plan.description}</CardDescription>
-                  <div className="mt-3">
-                    <div className="text-3xl font-bold gradient-text-primary">
-                      {isFree ? 'Free' : formatPrice(plan.price_cents)}
-                      {!isFree && <span className="text-sm font-normal text-muted-foreground">/mo</span>}
-                    </div>
-                    <div className="text-sm text-muted-foreground mt-1">
-                      {plan.credits_per_month} credits {!isFree && 'monthly'}
-                    </div>
-                  </div>
-                </CardHeader>
-                
-                <CardContent className="flex-1">
-                  <ul className="space-y-2">
-                    {plan.features.map((feature, index) => (
-                      <li key={index} className="flex items-start gap-2 text-xs">
-                        <Zap className="w-3 h-3 text-primary mt-0.5 flex-shrink-0" />
-                        <span className="text-foreground/90">{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </CardContent>
-                
-                <CardFooter className="mt-auto pt-4">
-                  {isCurrent ? (
-                    <Button 
-                      className="w-full backdrop-blur-xl bg-transparent border-2 border-primary/50 text-primary rounded-2xl font-semibold shadow-md hover:bg-transparent hover:border-primary/60 hover:shadow-lg transition-all duration-300"
-                      disabled
-                    >
-                      <Crown className="w-4 h-4 mr-2" />
-                      Current Plan
-                    </Button>
-                  ) : isFree ? (
-                    <Button 
-                      variant="outline" 
-                      className="w-full backdrop-blur-xl bg-transparent border border-white/20 text-foreground rounded-2xl font-medium hover:bg-transparent hover:border-white/30 hover:shadow-md transition-all duration-300"
-                      disabled
-                    >
-                      Free Forever
-                    </Button>
-                  ) : (
-                    <Button
-                      onClick={() => handleSubscribe(plan.id)}
-                      disabled={isLoading}
-                      variant="glass"
-                      className="w-full hover:scale-[1.02] group"
-                    >
-                      {isLoading ? (
-                        <>
-                          <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin mr-2" />
-                          Processing...
-                        </>
-                      ) : (
-                        <>
-                          Upgrade Now
-                          <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-0.5 transition-transform duration-300" />
-                        </>
-                      )}
-                    </Button>
-                  )}
-                </CardFooter>
-              </Card>
-            );
-          })}
-        </div>
       </div>
 
-      <Separator className="my-6 sm:my-8" />
-
-      {/* Credit Packages */}
-      <div>
-        <div className="text-center mb-6 sm:mb-8 px-3">
-          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold gradient-text-primary mb-2 sm:mb-3">
-            Need More Credits?
-          </h2>
-          <p className="text-xs sm:text-sm md:text-base text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-            Purchase additional credits anytime to supplement your subscription or as a one-time boost.
-          </p>
-        </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 max-w-4xl mx-auto px-3 sm:px-0">
-          {creditPackages.map((pkg) => {
-            const isLoading = packageLoading[pkg.id];
-            const isPopular = pkg.credits === 100;
-            const isBestValue = pkg.credits === 250;
-
-            return (
-              <Card 
-                key={pkg.id} 
-                className="relative flex flex-col glass transition-all duration-300 shadow-modern hover:shadow-modern-lg rounded-2xl border-border/40"
-              >
-                {(isPopular || isBestValue) && (
-                  <div className="absolute -top-2 -right-2 z-10">
-                    <Badge variant="secondary" className="text-xs shadow-modern rounded-full px-2 py-1">
-                      <Sparkles className="w-3 h-3 mr-1" />
-                      {isBestValue ? 'Best Value' : 'Popular'}
-                    </Badge>
-                  </div>
-                )}
-                
-                <CardHeader className="text-center pb-4">
-                  <CardTitle className="text-sm sm:text-base font-semibold">{pkg.name}</CardTitle>
-                  <div className="mt-3">
-                    <div className="text-xl sm:text-2xl font-bold gradient-text-primary">
-                      {pkg.credits} credits
-                    </div>
-                    <div className="text-sm sm:text-base font-medium text-muted-foreground mt-1">
-                      {formatPrice(pkg.price_cents)}
-                    </div>
-                  </div>
-                </CardHeader>
-                
-                <CardContent className="flex-1 flex flex-col justify-end">
-                  <Button 
-                    onClick={() => handleBuyCredits(pkg.id)}
-                    disabled={isLoading}
-                    variant="glass"
-                    className="w-full hover:scale-[1.02] group"
-                  >
-                    {isLoading ? (
-                      <>
-                        <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin mr-2" />
-                        Processing...
-                      </>
-                    ) : (
-                      <>
-                        <Zap className="w-4 h-4 mr-2 group-hover:scale-110 transition-transform duration-300" />
-                        Buy Now
-                      </>
-                    )}
-                  </Button>
-                </CardContent>
-              </Card>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Info Section */}
-      <Card className="glass border-border/40 shadow-modern">
-        <CardContent className="p-6">
-          <div className="space-y-4">
-            <div className="flex items-start gap-3">
-              <div className="p-2 rounded-lg bg-primary/10">
-                <Sparkles className="h-5 w-5 text-primary" />
-              </div>
-              <div>
-                <h3 className="font-semibold text-foreground mb-1">How Credits Work</h3>
-                <p className="text-sm text-muted-foreground">
-                  Each credit allows you to generate one comprehensive Jump in our AI Studio. 
-                  Subscription credits roll over monthly, and purchased credits never expire.
-                </p>
-              </div>
-            </div>
-            <Separator />
-            <div className="flex items-start gap-3">
-              <div className="p-2 rounded-lg bg-primary/10">
-                <Crown className="h-5 w-5 text-primary" />
-              </div>
-              <div>
-                <h3 className="font-semibold text-foreground mb-1">Subscription Benefits</h3>
-                <p className="text-sm text-muted-foreground">
-                  Subscribers get monthly credits that roll over, access to premium resources, 
-                  priority support, and early access to new features. Cancel anytime.
-                </p>
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-      </div>
+      {/* Upgrade Modal */}
+      {selectedUpgradePlan && (
+        <SubscriptionUpgradeModal
+          isOpen={upgradeModalOpen}
+          onClose={() => setUpgradeModalOpen(false)}
+          onConfirm={handleUpgradeConfirm}
+          currentPlan={subInfo?.subscription_tier || 'Free Plan'}
+          newPlan={selectedUpgradePlan.name}
+          priceDifference={calculateUpgradeDetails(selectedUpgradePlan).priceDifference}
+          creditDifference={calculateUpgradeDetails(selectedUpgradePlan).creditDifference}
+          newPlanFeatures={selectedUpgradePlan.features}
+          isLoading={planLoading[selectedUpgradePlan.id]}
+        />
+      )}
     </div>
   );
 }

@@ -20,7 +20,7 @@ interface SubscriberInfo {
 
 const planFeatures = {
   free: [
-    "Create 1 comprehensive Jump plan",
+    "5 free credits to get started",
     "Step clarification and alternative route discovery",
     "Access to JumpinAI Studio",
     "Basic AI transformation planning",
@@ -85,7 +85,8 @@ export default function Pricing() {
 
   const handleSubscribe = async () => {
     if (!isAuthenticated) {
-      login('/pricing');
+      toast.info('Please sign up or log in to subscribe to a plan');
+      navigate('/auth');
       return;
     }
 
@@ -154,7 +155,7 @@ export default function Pricing() {
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-accent/5 to-transparent blur-2xl"></div>
                 <p className="relative text-base sm:text-lg md:text-xl text-muted-foreground/90 mb-8 sm:mb-12 max-w-4xl mx-auto leading-relaxed font-light">
                   Transform your vision into reality with our AI-powered JumpinAI Studio. 
-                  Start creating comprehensive transformation plans today.
+                  Start creating comprehensive transformation plans today. <span className="font-medium text-foreground">1 credit = 1 Jump or 1 AI Agent build.</span>
                 </p>
               </div>
             </div>
@@ -178,10 +179,10 @@ export default function Pricing() {
               
               <CardHeader className="text-center p-3 md:p-5 pb-2">
                 <div className="space-y-2">
-                  <CardTitle className="text-base md:text-lg font-bold text-foreground">Free Starter</CardTitle>
+                  <CardTitle className="text-base md:text-lg font-bold text-foreground">Free</CardTitle>
                   <div className="space-y-1">
                     <div className="text-xl md:text-2xl font-bold text-foreground">$0</div>
-                    <p className="text-muted-foreground text-xs">Perfect for getting started</p>
+                    <p className="text-muted-foreground text-xs">5 credits to get started</p>
                   </div>
                 </div>
               </CardHeader>
@@ -256,8 +257,11 @@ export default function Pricing() {
                     JumpinAI Pro
                   </CardTitle>
                   <div className="space-y-1">
-                    <div className="text-xl md:text-2xl font-bold text-primary">$10</div>
-                    <p className="text-muted-foreground text-xs">per month • Unlimited AI power</p>
+                    <div className="flex items-center justify-center gap-2">
+                      <span className="text-sm line-through text-muted-foreground/60">$20</span>
+                      <div className="text-xl md:text-2xl font-bold text-primary">$15</div>
+                    </div>
+                    <p className="text-muted-foreground text-xs">per month • Launch promo</p>
                   </div>
                 </div>
               </CardHeader>
@@ -431,7 +435,7 @@ export default function Pricing() {
               <div className="space-y-3 p-4 md:p-5 bg-background/50 rounded-xl border border-border/30">
                 <h3 className="font-bold text-base text-foreground">What's the difference between Free and Pro?</h3>
                 <p className="text-muted-foreground text-sm leading-relaxed">
-                  Free users can create 1 Jump plan. Pro users get unlimited Jumps plus AI Chat for continuous 
+                  Free users get 5 credits to start. Pro users get 100 monthly credits plus AI Chat for continuous 
                   refinement, advanced features, and priority support.
                 </p>
               </div>

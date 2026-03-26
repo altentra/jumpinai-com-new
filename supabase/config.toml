@@ -11,7 +11,7 @@ max_rows = 1000
 enabled = true
 port = 54324
 site_url = "https://www.jumpinai.com"
-additional_redirect_urls = ["https://lovable.dev", "http://localhost:3000", "https://4a6994dd-87fd-4337-a29d-8d2d56e25570.lovableproject.com"]
+additional_redirect_urls = ["https://lovable.dev", "http://localhost:3000", "https://4a6994dd-87fd-4337-a29d-8d2d56e25570.lovableproject.com", "https://id-preview--4a6994dd-87fd-4337-a29d-8d2d56e25570.lovable.app", "https://jumpinai-com-new.lovable.app"]
 jwt_expiry = 3600
 refresh_token_rotation_enabled = true
 refresh_token_reuse_interval = 10
@@ -29,6 +29,9 @@ shadow_port = 54320
 major_version = 15
 
 [functions.send-newsletter-email]
+verify_jwt = false
+
+[functions.send-test-newsletter-sample]
 verify_jwt = false
 
 [functions.send-contact-email]
@@ -52,7 +55,7 @@ verify_jwt = false
 [functions.check-email-exists]
 verify_jwt = false
 
-[functions.check-subscription]
+[functions.equip-step]
 verify_jwt = false
 
 [functions.create-checkout]
@@ -73,10 +76,16 @@ verify_jwt = true
 [functions.send-subscription-welcome]
 verify_jwt = false
 
-[functions.jumps-ai-coach]
-verify_jwt = true
+[functions.send-subscription-upgrade-email]
+verify_jwt = false
+
+[functions.send-subscription-downgrade-email]
+verify_jwt = false
 
 [functions.jumps-ai-streaming]
+verify_jwt = false
+
+[functions.get-client-ip]
 verify_jwt = false
 
 [functions.stripe-webhook]
@@ -90,6 +99,33 @@ verify_jwt = true
 
 [functions.reroute-step]
 verify_jwt = true
+
+[functions.admin-fix-subscription]
+verify_jwt = true
+
+[functions.reset-guest-users]
+verify_jwt = true
+
+[functions.speech-to-text]
+verify_jwt = false
+
+[functions.speech-to-text-realtime]
+verify_jwt = false
+
+[functions.build-agent]
+verify_jwt = false
+
+[functions.analyze-for-agents]
+verify_jwt = false
+
+[functions.explore-alternative-routes]
+verify_jwt = false
+
+[functions.send-jump-generation-notification]
+verify_jwt = false
+
+[functions.refresh-model-registry]
+verify_jwt = false
 
 [realtime]
 enabled = true

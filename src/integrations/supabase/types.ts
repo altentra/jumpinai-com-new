@@ -14,6 +14,42 @@ export type Database = {
   }
   public: {
     Tables: {
+      ai_model_registry: {
+        Row: {
+          category: string
+          created_at: string
+          id: string
+          latest_models: Json
+          notes: string | null
+          provider: string
+          source: string | null
+          tool_name: string
+          updated_at: string
+        }
+        Insert: {
+          category?: string
+          created_at?: string
+          id?: string
+          latest_models?: Json
+          notes?: string | null
+          provider: string
+          source?: string | null
+          tool_name: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          id?: string
+          latest_models?: Json
+          notes?: string | null
+          provider?: string
+          source?: string | null
+          tool_name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       api_usage_logs: {
         Row: {
           created_at: string
@@ -223,6 +259,39 @@ export type Database = {
         }
         Relationships: []
       }
+      feature_requests: {
+        Row: {
+          created_at: string
+          credits_rewarded: boolean
+          feature_description: string
+          id: string
+          updated_at: string
+          user_email: string
+          user_id: string | null
+          user_name: string
+        }
+        Insert: {
+          created_at?: string
+          credits_rewarded?: boolean
+          feature_description: string
+          id?: string
+          updated_at?: string
+          user_email: string
+          user_id?: string | null
+          user_name: string
+        }
+        Update: {
+          created_at?: string
+          credits_rewarded?: boolean
+          feature_description?: string
+          id?: string
+          updated_at?: string
+          user_email?: string
+          user_id?: string | null
+          user_name?: string
+        }
+        Relationships: []
+      }
       guest_usage_tracking: {
         Row: {
           created_at: string
@@ -252,6 +321,90 @@ export type Database = {
           user_agent?: string | null
         }
         Relationships: []
+      }
+      jump_analysis: {
+        Row: {
+          created_at: string
+          id: string
+          jump_id: string
+          opportunities: Json
+          overall_potential: string | null
+          summary: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          jump_id: string
+          opportunities?: Json
+          overall_potential?: string | null
+          summary: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          jump_id?: string
+          opportunities?: Json
+          overall_potential?: string | null
+          summary?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "jump_analysis_jump_id_fkey"
+            columns: ["jump_id"]
+            isOneToOne: false
+            referencedRelation: "public_jumps_safe"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "jump_analysis_jump_id_fkey"
+            columns: ["jump_id"]
+            isOneToOne: false
+            referencedRelation: "user_jumps"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      jump_likes: {
+        Row: {
+          created_at: string
+          id: string
+          jump_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          jump_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          jump_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "jump_likes_jump_id_fkey"
+            columns: ["jump_id"]
+            isOneToOne: false
+            referencedRelation: "public_jumps_safe"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "jump_likes_jump_id_fkey"
+            columns: ["jump_id"]
+            isOneToOne: false
+            referencedRelation: "user_jumps"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       lead_magnet_downloads: {
         Row: {
@@ -402,41 +555,99 @@ export type Database = {
       profiles: {
         Row: {
           avatar_url: string | null
+          bio: string | null
           created_at: string
           display_name: string | null
           email_verification_expires_at: string | null
           email_verification_token: string | null
           email_verified: boolean | null
           id: string
+          is_public: boolean | null
           updated_at: string
+          username: string | null
         }
         Insert: {
           avatar_url?: string | null
+          bio?: string | null
           created_at?: string
           display_name?: string | null
           email_verification_expires_at?: string | null
           email_verification_token?: string | null
           email_verified?: boolean | null
           id: string
+          is_public?: boolean | null
           updated_at?: string
+          username?: string | null
         }
         Update: {
           avatar_url?: string | null
+          bio?: string | null
           created_at?: string
           display_name?: string | null
           email_verification_expires_at?: string | null
           email_verification_token?: string | null
           email_verified?: boolean | null
           id?: string
+          is_public?: boolean | null
           updated_at?: string
+          username?: string | null
         }
         Relationships: []
+      }
+      stt_usage_logs: {
+        Row: {
+          created_at: string | null
+          id: string
+          ip_address: string | null
+          jump_id: string | null
+          session_duration_seconds: number | null
+          transcript_length: number | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          ip_address?: string | null
+          jump_id?: string | null
+          session_duration_seconds?: number | null
+          transcript_length?: number | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          ip_address?: string | null
+          jump_id?: string | null
+          session_duration_seconds?: number | null
+          transcript_length?: number | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "stt_usage_logs_jump_id_fkey"
+            columns: ["jump_id"]
+            isOneToOne: false
+            referencedRelation: "public_jumps_safe"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "stt_usage_logs_jump_id_fkey"
+            columns: ["jump_id"]
+            isOneToOne: false
+            referencedRelation: "user_jumps"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       subscribers: {
         Row: {
           created_at: string
           email: string
           id: string
+          manual_subscription: boolean | null
           stripe_customer_id: string | null
           subscribed: boolean
           subscription_end: string | null
@@ -448,6 +659,7 @@ export type Database = {
           created_at?: string
           email: string
           id?: string
+          manual_subscription?: boolean | null
           stripe_customer_id?: string | null
           subscribed?: boolean
           subscription_end?: string | null
@@ -459,11 +671,48 @@ export type Database = {
           created_at?: string
           email?: string
           id?: string
+          manual_subscription?: boolean | null
           stripe_customer_id?: string | null
           subscribed?: boolean
           subscription_end?: string | null
           subscription_tier?: string | null
           updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      subscription_audit_log: {
+        Row: {
+          action: string
+          change_source: string
+          changed_by: string | null
+          created_at: string
+          email: string
+          id: string
+          new_data: Json | null
+          old_data: Json | null
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          change_source: string
+          changed_by?: string | null
+          created_at?: string
+          email: string
+          id?: string
+          new_data?: Json | null
+          old_data?: Json | null
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          change_source?: string
+          changed_by?: string | null
+          created_at?: string
+          email?: string
+          id?: string
+          new_data?: Json | null
+          old_data?: Json | null
           user_id?: string | null
         }
         Relationships: []
@@ -509,6 +758,103 @@ export type Database = {
           updated_at?: string | null
         }
         Relationships: []
+      }
+      user_agents: {
+        Row: {
+          analysis_id: string | null
+          automation_target: string | null
+          automation_type: string | null
+          benefits: string[] | null
+          complexity_level: string | null
+          created_at: string
+          description: string | null
+          detailed_instructions: Json | null
+          download_count: number | null
+          estimated_time_saved: string | null
+          id: string
+          impact_level: string | null
+          jump_id: string
+          last_downloaded_at: string | null
+          platform: string | null
+          required_tools: string[] | null
+          status: string | null
+          title: string
+          updated_at: string
+          user_id: string
+          workflow_filename: string | null
+          workflow_json: Json
+        }
+        Insert: {
+          analysis_id?: string | null
+          automation_target?: string | null
+          automation_type?: string | null
+          benefits?: string[] | null
+          complexity_level?: string | null
+          created_at?: string
+          description?: string | null
+          detailed_instructions?: Json | null
+          download_count?: number | null
+          estimated_time_saved?: string | null
+          id?: string
+          impact_level?: string | null
+          jump_id: string
+          last_downloaded_at?: string | null
+          platform?: string | null
+          required_tools?: string[] | null
+          status?: string | null
+          title: string
+          updated_at?: string
+          user_id: string
+          workflow_filename?: string | null
+          workflow_json: Json
+        }
+        Update: {
+          analysis_id?: string | null
+          automation_target?: string | null
+          automation_type?: string | null
+          benefits?: string[] | null
+          complexity_level?: string | null
+          created_at?: string
+          description?: string | null
+          detailed_instructions?: Json | null
+          download_count?: number | null
+          estimated_time_saved?: string | null
+          id?: string
+          impact_level?: string | null
+          jump_id?: string
+          last_downloaded_at?: string | null
+          platform?: string | null
+          required_tools?: string[] | null
+          status?: string | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+          workflow_filename?: string | null
+          workflow_json?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_agents_analysis_id_fkey"
+            columns: ["analysis_id"]
+            isOneToOne: false
+            referencedRelation: "jump_analysis"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_agents_jump_id_fkey"
+            columns: ["jump_id"]
+            isOneToOne: false
+            referencedRelation: "public_jumps_safe"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_agents_jump_id_fkey"
+            columns: ["jump_id"]
+            isOneToOne: false
+            referencedRelation: "user_jumps"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_credits: {
         Row: {
@@ -564,6 +910,13 @@ export type Database = {
             foreignKeyName: "user_jump_actions_jump_id_fkey"
             columns: ["jump_id"]
             isOneToOne: false
+            referencedRelation: "public_jumps_safe"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_jump_actions_jump_id_fkey"
+            columns: ["jump_id"]
+            isOneToOne: false
             referencedRelation: "user_jumps"
             referencedColumns: ["id"]
           },
@@ -571,52 +924,103 @@ export type Database = {
       }
       user_jumps: {
         Row: {
+          challenges_stt_seconds: number | null
+          clarifications_count: number | null
+          combos_used_count: number | null
           completion_percentage: number | null
           comprehensive_plan: Json | null
           created_at: string
+          form_challenges: string | null
+          form_goals: string | null
           full_content: string
+          goals_stt_seconds: number | null
           id: string
           implemented: boolean | null
+          input_method: string | null
+          ip_address: string | null
+          is_public: boolean | null
           jump_type: string | null
+          likes_count: number
+          location: string | null
+          max_clarification_level: number | null
           profile_id: string | null
+          prompts_copied_count: number | null
+          reroutes_count: number | null
           status: string | null
           structured_plan: Json | null
+          stt_used: boolean | null
           summary: string | null
           title: string
+          tools_clicked_count: number | null
           updated_at: string
-          user_id: string
+          user_id: string | null
+          views_count: number | null
         }
         Insert: {
+          challenges_stt_seconds?: number | null
+          clarifications_count?: number | null
+          combos_used_count?: number | null
           completion_percentage?: number | null
           comprehensive_plan?: Json | null
           created_at?: string
+          form_challenges?: string | null
+          form_goals?: string | null
           full_content: string
+          goals_stt_seconds?: number | null
           id?: string
           implemented?: boolean | null
+          input_method?: string | null
+          ip_address?: string | null
+          is_public?: boolean | null
           jump_type?: string | null
+          likes_count?: number
+          location?: string | null
+          max_clarification_level?: number | null
           profile_id?: string | null
+          prompts_copied_count?: number | null
+          reroutes_count?: number | null
           status?: string | null
           structured_plan?: Json | null
+          stt_used?: boolean | null
           summary?: string | null
           title: string
+          tools_clicked_count?: number | null
           updated_at?: string
-          user_id: string
+          user_id?: string | null
+          views_count?: number | null
         }
         Update: {
+          challenges_stt_seconds?: number | null
+          clarifications_count?: number | null
+          combos_used_count?: number | null
           completion_percentage?: number | null
           comprehensive_plan?: Json | null
           created_at?: string
+          form_challenges?: string | null
+          form_goals?: string | null
           full_content?: string
+          goals_stt_seconds?: number | null
           id?: string
           implemented?: boolean | null
+          input_method?: string | null
+          ip_address?: string | null
+          is_public?: boolean | null
           jump_type?: string | null
+          likes_count?: number
+          location?: string | null
+          max_clarification_level?: number | null
           profile_id?: string | null
+          prompts_copied_count?: number | null
+          reroutes_count?: number | null
           status?: string | null
           structured_plan?: Json | null
+          stt_used?: boolean | null
           summary?: string | null
           title?: string
+          tools_clicked_count?: number | null
           updated_at?: string
-          user_id?: string
+          user_id?: string | null
+          views_count?: number | null
         }
         Relationships: [
           {
@@ -725,7 +1129,7 @@ export type Database = {
           tool_url: string | null
           updated_at: string
           use_cases: string[] | null
-          user_id: string
+          user_id: string | null
         }
         Insert: {
           ai_tools?: string[] | null
@@ -751,7 +1155,7 @@ export type Database = {
           tool_url?: string | null
           updated_at?: string
           use_cases?: string[] | null
-          user_id: string
+          user_id?: string | null
         }
         Update: {
           ai_tools?: string[] | null
@@ -777,13 +1181,119 @@ export type Database = {
           tool_url?: string | null
           updated_at?: string
           use_cases?: string[] | null
-          user_id?: string
+          user_id?: string | null
         }
         Relationships: []
       }
     }
     Views: {
-      [_ in never]: never
+      public_jumps_safe: {
+        Row: {
+          challenges_stt_seconds: number | null
+          clarifications_count: number | null
+          combos_used_count: number | null
+          completion_percentage: number | null
+          comprehensive_plan: Json | null
+          created_at: string | null
+          form_challenges: string | null
+          form_goals: string | null
+          full_content: string | null
+          goals_stt_seconds: number | null
+          id: string | null
+          implemented: boolean | null
+          input_method: string | null
+          is_public: boolean | null
+          jump_type: string | null
+          likes_count: number | null
+          location: string | null
+          max_clarification_level: number | null
+          profile_id: string | null
+          prompts_copied_count: number | null
+          reroutes_count: number | null
+          status: string | null
+          structured_plan: Json | null
+          stt_used: boolean | null
+          summary: string | null
+          title: string | null
+          tools_clicked_count: number | null
+          updated_at: string | null
+          user_id: string | null
+          views_count: number | null
+        }
+        Insert: {
+          challenges_stt_seconds?: number | null
+          clarifications_count?: number | null
+          combos_used_count?: number | null
+          completion_percentage?: number | null
+          comprehensive_plan?: Json | null
+          created_at?: string | null
+          form_challenges?: string | null
+          form_goals?: string | null
+          full_content?: string | null
+          goals_stt_seconds?: number | null
+          id?: string | null
+          implemented?: boolean | null
+          input_method?: string | null
+          is_public?: boolean | null
+          jump_type?: string | null
+          likes_count?: number | null
+          location?: never
+          max_clarification_level?: number | null
+          profile_id?: string | null
+          prompts_copied_count?: number | null
+          reroutes_count?: number | null
+          status?: string | null
+          structured_plan?: Json | null
+          stt_used?: boolean | null
+          summary?: string | null
+          title?: string | null
+          tools_clicked_count?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+          views_count?: number | null
+        }
+        Update: {
+          challenges_stt_seconds?: number | null
+          clarifications_count?: number | null
+          combos_used_count?: number | null
+          completion_percentage?: number | null
+          comprehensive_plan?: Json | null
+          created_at?: string | null
+          form_challenges?: string | null
+          form_goals?: string | null
+          full_content?: string | null
+          goals_stt_seconds?: number | null
+          id?: string | null
+          implemented?: boolean | null
+          input_method?: string | null
+          is_public?: boolean | null
+          jump_type?: string | null
+          likes_count?: number | null
+          location?: never
+          max_clarification_level?: number | null
+          profile_id?: string | null
+          prompts_copied_count?: number | null
+          reroutes_count?: number | null
+          status?: string | null
+          structured_plan?: Json | null
+          stt_used?: boolean | null
+          summary?: string | null
+          title?: string | null
+          tools_clicked_count?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+          views_count?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_jumps_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
       add_user_credits: {
@@ -796,6 +1306,7 @@ export type Database = {
         Returns: undefined
       }
       allocate_monthly_credits: { Args: never; Returns: undefined }
+      anonymize_guest_data: { Args: never; Returns: undefined }
       check_and_record_guest_usage: {
         Args: { p_ip_address: string; p_user_agent?: string }
         Returns: Json
@@ -811,6 +1322,11 @@ export type Database = {
         }
         Returns: boolean
       }
+      check_stt_rate_limit: {
+        Args: { p_ip_address: string; p_user_id: string }
+        Returns: Json
+      }
+      clean_old_guest_jumps: { Args: never; Returns: undefined }
       clean_old_guest_usage: { Args: never; Returns: undefined }
       deduct_user_credit: {
         Args: {
@@ -820,12 +1336,17 @@ export type Database = {
         }
         Returns: boolean
       }
+      get_guest_usage: { Args: { p_ip_address: string }; Returns: Json }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
           _user_id: string
         }
         Returns: boolean
+      }
+      set_config: {
+        Args: { setting_name: string; setting_value: string }
+        Returns: undefined
       }
       upsert_contact: {
         Args: {

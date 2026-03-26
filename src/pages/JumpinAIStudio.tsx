@@ -1,31 +1,193 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import HeroDotMatrix from '@/components/HeroDotMatrix';
 import { Helmet } from 'react-helmet-async';
-import { User, AlertCircle, Loader2, LogIn, Zap } from 'lucide-react';
-import { Turnstile } from '@marsidev/react-turnstile';
+import { AlertCircle, Loader2, LogIn, Zap } from 'lucide-react';
+import { Turnstile, type TurnstileInstance } from '@marsidev/react-turnstile';
+import { Navigate, useLocation } from 'react-router-dom';
 import Navigation from '@/components/Navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { useCredits } from '@/hooks/useCredits';
-import { guestLimitService } from '@/services/guestLimitService';
 import { jumpinAIStudioService, type StudioFormData } from '@/services/jumpinAIStudioService';
 import { toast } from 'sonner';
 import ProgressiveJumpDisplay from '@/components/ProgressiveJumpDisplay';
 import { useProgressiveGeneration } from '@/hooks/useProgressiveGeneration';
-import { CreditsDisplay } from '@/components/CreditsDisplay';
 import { supabase } from '@/integrations/supabase/client';
+import { StudioTextarea } from '@/components/studio/StudioTextarea';
+import { markJumpAsUsingSTT } from '@/services/sttTrackingService';
+import type { AlternativeRoute, RouteExplorationHistory } from '@/types/alternativeRoutes';
+
+const TURNSTILE_TEST_SITE_KEY = '1x00000000000000000000AA';
+
+// Interface for state passed from landing page inline studio
+interface IncomingStudioState {
+  goals?: string;
+  challenges?: string;
+  goalsUsedStt?: boolean;
+  challengesUsedStt?: boolean;
+  goalsSttDuration?: number;
+  challengesSttDuration?: number;
+  goalsTyped?: boolean;
+  challengesTyped?: boolean;
+  turnstileToken?: string | null;
+  autoStart?: boolean;
+}
+
+// Input tracking (simplified for single input)
+interface InputTracking {
+  inputMethod: 'typed' | 'narrated' | 'mixed';
+  sttDurationSeconds: number;
+}
+
+// Silently send notification to admin about jump generation (guest + authenticated)
+const sendJumpGenerationNotification = async (
+  formData: { goals: string },
+  user: { id?: string; email?: string; user_metadata?: { name?: string; full_name?: string } } | null,
+  inputTracking: InputTracking
+) => {
+  try {
+    let ipAddress: string | undefined;
+    let location: string | undefined;
+
+    try {
+      const ipResponse = await supabase.functions.invoke('get-client-ip');
+      ipAddress = ipResponse.data?.ip;
+      location = ipResponse.data?.location;
+    } catch {
+      // ignore
+    }
+
+    await supabase.functions.invoke('send-jump-generation-notification', {
+      body: {
+        userType: user?.id ? 'authenticated' : 'guest',
+        userId: user?.id,
+        userEmail: user?.email,
+        userName: user?.user_metadata?.name || user?.user_metadata?.full_name,
+        ipAddress,
+        location,
+        goals: formData.goals,
+        challenges: '',
+        timestamp: new Date().toISOString(),
+        userAgent: navigator.userAgent,
+        goalsInputMethod: inputTracking.inputMethod,
+        challengesInputMethod: 'typed',
+        goalsSttDurationSeconds: inputTracking.sttDurationSeconds,
+        challengesSttDurationSeconds: 0,
+        totalSttDurationSeconds: inputTracking.sttDurationSeconds,
+      },
+    });
+  } catch {
+    // Silently fail - never disrupt generation
+  }
+};
 
 const JumpinAIStudio = () => {
-  const { user, isAuthenticated, login } = useAuth();
-  const { hasCredits, deductCredit, creditsBalance, updateTransactionReference } = useCredits();
+  const location = useLocation();
+  const incomingState = location.state as IncomingStudioState | null;
+  
+  const { user, isAuthenticated, isLoading, login } = useAuth();
+  const { hasCredits, deductCredit, updateTransactionReference } = useCredits();
   const { isGenerating, result, processingStatus, generateWithProgression } = useProgressiveGeneration();
-  const [guestCanUse, setGuestCanUse] = useState(true);
-  const [guestUsageCount, setGuestUsageCount] = useState(0);
+  
+  // State
   const [generationTimer, setGenerationTimer] = useState(0);
-  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(incomingState?.turnstileToken || null);
+  const [studioIsDark, setStudioIsDark] = useState(false);
+  const [guestUsageInfo, setGuestUsageInfo] = useState<{ usageCount: number; remaining: number } | null>(null);
+  const [isLoadingGuestInfo, setIsLoadingGuestInfo] = useState(true);
+  const [sttUsed, setSttUsed] = useState(incomingState?.goalsUsedStt || incomingState?.challengesUsedStt || false);
+  const [studioMousePos, setStudioMousePos] = useState({ x: -1000, y: -1000 });
+  const studioContainerRef = useRef<HTMLDivElement>(null);
+
+  const handleStudioMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = studioContainerRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    setStudioMousePos({ x: e.clientX - rect.left, y: e.clientY - rect.top + (studioContainerRef.current?.scrollTop || 0) });
+  }, []);
+
+  const handleStudioMouseLeave = useCallback(() => {
+    setStudioMousePos({ x: -1000, y: -1000 });
+  }, []);
+  
+  // Input method tracking state - simplified for single input
+  const [visionUsedStt, setVisionUsedStt] = useState(incomingState?.goalsUsedStt || false);
+  const [visionSttDuration, setVisionSttDuration] = useState(incomingState?.goalsSttDuration || 0);
+  const [visionTyped, setVisionTyped] = useState(incomingState?.goalsTyped || false);
+  
+  // Track if we've already triggered auto-start
+  const autoStartTriggered = useRef(false);
+  
+  const [formData, setFormData] = useState<StudioFormData>({
+    currentRole: '',
+    industry: '',
+    experienceLevel: '',
+    aiKnowledge: '',
+    goals: incomingState?.goals || '',
+    challenges: '',
+    timeCommitment: '',
+    budget: ''
+  });
+
+  // Refs - stable across renders
+  const turnstileRef = useRef<TurnstileInstance | null>(null);
+  const turnstileErrorShownRef = useRef(false);
+  const guestUsageFetched = useRef(false);
   const progressDisplayRef = useRef<HTMLDivElement>(null);
   const generateButtonRef = useRef<HTMLDivElement>(null);
-  const goalsTextareaRef = useRef<HTMLTextAreaElement>(null);
-  const challengesTextareaRef = useRef<HTMLTextAreaElement>(null);
+  const visionTextareaRef = useRef<HTMLTextAreaElement>(null);
 
+  // Turnstile can fail on preview/staging domains due to Cloudflare domain restrictions.
+  // Use Turnstile's official test key in Lovable preview/local environments so guests aren't blocked.
+  const turnstileSiteKey = useMemo(() => {
+    const host = typeof window !== 'undefined' ? window.location.hostname : '';
+    const isPreviewHost =
+      host.includes('lovable.app') ||
+      host.includes('lovableproject.com') ||
+      host.includes('lovable.dev') ||
+      host === 'localhost' ||
+      host === '127.0.0.1';
+
+    const configured = import.meta.env.VITE_TURNSTILE_SITE_KEY;
+    if (isPreviewHost) return TURNSTILE_TEST_SITE_KEY;
+    return configured || TURNSTILE_TEST_SITE_KEY;
+  }, []);
+
+  // Helper function to format time
+  const formatTime = useCallback((seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  }, []);
+
+  // Refresh function to fetch latest tool prompts
+  const refreshToolPrompts = useCallback(async () => {
+    if (!result?.jumpId) return;
+    
+    try {
+      console.log('🔄 Refreshing tool prompts for jump:', result.jumpId);
+      const { data: toolPromptsData, error } = await supabase
+        .from('user_tool_prompts')
+        .select('*')
+        .eq('jump_id', result.jumpId);
+      
+      if (error) throw error;
+      console.log('✅ Fetched updated tool prompts:', toolPromptsData?.length);
+      return toolPromptsData;
+    } catch (error) {
+      console.error('❌ Error refreshing tool prompts:', error);
+      throw error;
+    }
+  }, [result?.jumpId]);
+
+  // Theme detection
+  useEffect(() => {
+    const check = () => setStudioIsDark(document.documentElement.classList.contains('dark'));
+    check();
+    const obs = new MutationObserver(check);
+    obs.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    return () => obs.disconnect();
+  }, []);
+
+  // Add noindex meta tag
   useEffect(() => {
     const meta = document.createElement('meta');
     meta.name = 'robots';
@@ -36,33 +198,56 @@ const JumpinAIStudio = () => {
       document.head.removeChild(meta);
     };
   }, []);
-  
-  // Helper function to format time
-  const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
-  };
 
-  const [formData, setFormData] = useState<StudioFormData>({
-    currentRole: '',
-    industry: '',
-    experienceLevel: '',
-    aiKnowledge: '',
-    goals: '',
-    challenges: '',
-    timeCommitment: '',
-    budget: ''
-  });
-
-  // Check guest limits on component mount and load saved form data
+  // Fetch guest usage - only once when auth settles and user is not authenticated
   useEffect(() => {
-    if (!isAuthenticated) {
-      checkGuestLimits();
-    } else {
-      loadSavedFormData();
+    if (isLoading || guestUsageFetched.current) return;
+    
+    if (isAuthenticated) {
+      setIsLoadingGuestInfo(false);
+      return;
     }
-  }, [isAuthenticated]);
+
+    guestUsageFetched.current = true;
+    
+    const fetchGuestUsage = async () => {
+      setIsLoadingGuestInfo(true);
+      try {
+        const { data: ipData, error: ipError } = await supabase.functions.invoke('get-client-ip');
+        
+        if (ipError || !ipData?.ip) {
+          console.error('Error getting IP:', ipError);
+          setGuestUsageInfo({ usageCount: 0, remaining: 3 });
+          setIsLoadingGuestInfo(false);
+          return;
+        }
+        
+        const clientIp = ipData.ip;
+        console.log('📍 Client IP for usage check:', clientIp);
+        
+        const { data, error } = await supabase.rpc('get_guest_usage', {
+          p_ip_address: clientIp
+        });
+        
+        if (error) throw error;
+        
+        const usageData = data as { usage_count: number; remaining: number; reset_at?: string };
+        console.log('📊 Guest usage on mount:', usageData);
+        
+        setGuestUsageInfo({
+          usageCount: usageData.usage_count || 0,
+          remaining: usageData.remaining ?? 3
+        });
+      } catch (error) {
+        console.error('Error fetching guest usage:', error);
+        setGuestUsageInfo({ usageCount: 0, remaining: 3 });
+      } finally {
+        setIsLoadingGuestInfo(false);
+      }
+    };
+    
+    fetchGuestUsage();
+  }, [isLoading, isAuthenticated]);
 
   // Timer effect for generation
   useEffect(() => {
@@ -79,10 +264,9 @@ const JumpinAIStudio = () => {
     };
   }, [isGenerating]);
 
-  // Auto-scroll ONLY when generation starts (button click)
+  // Auto-scroll when generation starts
   useEffect(() => {
     if (isGenerating && progressDisplayRef.current) {
-      console.log('Generation started - scrolling to jump module');
       setTimeout(() => {
         if (progressDisplayRef.current) {
           progressDisplayRef.current.scrollIntoView({ 
@@ -94,192 +278,213 @@ const JumpinAIStudio = () => {
     }
   }, [isGenerating]);
 
-  // Auto-adjust textarea heights when content changes - keep both equal
+  // Auto-adjust textarea height
   useEffect(() => {
-    if (goalsTextareaRef.current && challengesTextareaRef.current) {
-      // Reset heights to calculate scroll height properly
-      goalsTextareaRef.current.style.height = 'auto';
-      challengesTextareaRef.current.style.height = 'auto';
+    if (visionTextareaRef.current) {
+      visionTextareaRef.current.style.height = 'auto';
+      visionTextareaRef.current.style.height = visionTextareaRef.current.scrollHeight + 'px';
+    }
+  }, [formData.goals]);
+
+  // Auto-start generation when coming from landing page with data
+  useEffect(() => {
+    // Only trigger once, when we have valid incoming state with autoStart flag
+    if (
+      incomingState?.autoStart && 
+      !autoStartTriggered.current && 
+      !isLoading && 
+      !isLoadingGuestInfo &&
+      formData.goals.trim() &&
+      !isGenerating
+    ) {
+      autoStartTriggered.current = true;
       
-      // Get the maximum height needed
-      const goalsHeight = goalsTextareaRef.current.scrollHeight;
-      const challengesHeight = challengesTextareaRef.current.scrollHeight;
-      const maxHeight = Math.max(goalsHeight, challengesHeight);
+      // Small delay to ensure Turnstile has time to initialize if needed
+      const startDelay = turnstileToken ? 100 : 1500;
       
-      // Set both to the same height
-      goalsTextareaRef.current.style.height = maxHeight + 'px';
-      challengesTextareaRef.current.style.height = maxHeight + 'px';
-    }
-  }, [formData.goals, formData.challenges]);
-
-  const loadSavedFormData = async () => {
-    // SECURITY: Only load data for authenticated users with verified user ID
-    if (!isAuthenticated || !user?.id) {
-      console.log('No authenticated user - keeping empty form fields');
-      return;
-    }
-    
-    try {
-      console.log('Loading saved form data for authenticated user:', user.id);
-      
-      // SECURITY: Query with explicit user_id filter to ensure data isolation
-      const { data: profiles, error } = await supabase
-        .from('user_profiles')
-        .select('*')
-        .eq('user_id', user.id) // CRITICAL: Only get data for THIS specific user
-        .order('updated_at', { ascending: false })
-        .limit(1);
-      
-      if (error) {
-        console.error('Database error loading user profile:', error);
-        return;
-      }
-      
-      // Only populate fields if user has previously saved data
-      if (profiles && profiles.length > 0) {
-        const profile = profiles[0];
-        console.log('Populating form with user saved data');
-        
-        // SECURITY: Only update with saved data, never expose other users' data
-        setFormData({
-          currentRole: profile.current_role_value || '',
-          industry: profile.industry || '',
-          experienceLevel: profile.experience_level || '',
-          aiKnowledge: profile.ai_knowledge || '',
-          goals: profile.goals || '',
-          challenges: profile.challenges || '',
-          timeCommitment: profile.time_commitment || '',
-          budget: profile.budget || '',
-        });
-      } else {
-        console.log('No saved data found - keeping empty fields');
-      }
-    } catch (error) {
-      console.error('Error loading saved form data:', error);
-    }
-  };
-
-  const saveFormData = async (data: StudioFormData) => {
-    if (!isAuthenticated || !user?.id) return;
-
-    try {
-      await jumpinAIStudioService.saveFormData(data, user.id);
-    } catch (error) {
-      console.error('Error saving form data:', error);
-    }
-  };
-
-  const checkGuestLimits = async () => {
-    try {
-      const { canUse, usageCount } = await guestLimitService.checkGuestLimit();
-      setGuestCanUse(canUse);
-      setGuestUsageCount(usageCount);
-    } catch (error) {
-      console.error('Error checking guest limits:', error);
-    }
-  };
-
-  const handleCancel = () => {
-    // Show confirmation toast
-    toast.info('Generation cancelled. You can start a new request anytime.');
-    
-    // Reset the generation state
-    // Note: The actual implementation would depend on your useProgressiveGeneration hook
-    // You might need to add a cancel method to that hook
-    window.location.reload(); // Simple approach - reload to reset state
-  };
-
-  const handleGenerate = async () => {
-    console.log('=== GENERATE BUTTON CLICKED ===');
-    console.log('Form data:', formData);
-    console.log('isAuthenticated:', isAuthenticated);
-    console.log('guestUsageCount:', guestUsageCount);
-    
-    // Validate required fields
-    if (!formData.goals.trim() || !formData.challenges.trim()) {
-      console.log('Validation failed: missing goals or challenges');
-      toast.error('Please fill in your goals and challenges');
-      return;
-    }
-
-    // Check limits based on user authentication status
-    if (isAuthenticated) {
-      // Authenticated users: Check credits
-      if (!hasCredits()) {
-        toast.error('You don\'t have enough credits. Please purchase more credits to continue.');
-        return;
-      }
-    } else {
-      // Guest users: Check usage limit
-      if (guestUsageCount >= 3) {
-        toast.error('You\'ve used all 3 free tries. Please sign up and get 5 welcome credits to continue!');
-        return;
-      }
-      
-      // Verify Turnstile token for guests
-      if (!turnstileToken) {
-        toast.error('Please complete the security verification');
-        return;
-      }
-    }
-
-    try {
-      // Deduct credit for authenticated users BEFORE generation
-      let tempReferenceId: string | undefined;
-      if (isAuthenticated && user?.id) {
-        tempReferenceId = `generation_${Date.now()}`;
-        const creditDeducted = await deductCredit(
-          'JumpinAI Studio generation', 
-          tempReferenceId
-        );
-        
-        if (!creditDeducted) {
-          toast.error('Failed to deduct credit. Please try again.');
-          return;
+      setTimeout(() => {
+        console.log('🚀 Auto-starting generation from landing page...');
+        toast.info('Starting your Jump generation...');
+        // Trigger generation - handleGenerate will be called via ref or direct invocation
+        if (generateButtonRef.current) {
+          const button = generateButtonRef.current.querySelector('button');
+          if (button && !button.disabled) {
+            button.click();
+          }
         }
-        
-        // Save form data
-        await saveFormData(formData);
+      }, startDelay);
+    }
+  }, [incomingState, isLoading, isLoadingGuestInfo, formData.goals, formData.challenges, isGenerating, turnstileToken]);
+
+  const handleCancel = useCallback(() => {
+    toast.info('Generation cancelled. You can start a new request anytime.');
+    window.location.reload();
+  }, []);
+
+  const handleGenerate = useCallback(async (alternativeContext?: { title: string; description: string }) => {
+    console.log('=== GENERATE BUTTON CLICKED ===');
+    
+    // Calculate input method
+    const getInputMethod = (usedStt: boolean, typed: boolean): 'typed' | 'narrated' | 'mixed' => {
+      if (usedStt && typed) return 'mixed';
+      if (usedStt) return 'narrated';
+      return 'typed';
+    };
+    
+    const overallInputMethod = getInputMethod(visionUsedStt, visionTyped);
+    
+    const effectiveFormData = alternativeContext 
+      ? {
+          ...formData,
+          goals: `${formData.goals}\n\n[ALTERNATIVE APPROACH SELECTED: "${alternativeContext.title}"]\nUser has explicitly chosen this alternative approach: ${alternativeContext.description}\nGenerate a jump that follows THIS specific approach, NOT the original default approach.`,
+          sttUsed: visionUsedStt,
+          inputMethod: overallInputMethod,
+          goalsSttSeconds: visionSttDuration,
+          challengesSttSeconds: 0,
+        }
+      : {
+          ...formData,
+          sttUsed: visionUsedStt,
+          inputMethod: overallInputMethod,
+          goalsSttSeconds: visionSttDuration,
+          challengesSttSeconds: 0,
+        };
+    
+    if (!effectiveFormData.goals.trim()) {
+      toast.error('Please share your vision, goals, and challenges');
+      return;
+    }
+
+    // Guest users: Verify Turnstile token
+    if (!turnstileToken) {
+      if (turnstileRef.current) {
+        toast.info('Security verification in progress. Please wait a moment and try again.');
+        turnstileRef.current.reset();
+      } else {
+        toast.error('Security verification required. Please refresh the page and try again.');
+      }
+      return;
+    }
+    
+    const inputTracking: InputTracking = {
+      inputMethod: overallInputMethod,
+      sttDurationSeconds: visionSttDuration,
+    };
+
+    // Send silent notification to admin (fire and forget)
+    void sendJumpGenerationNotification(
+      { goals: formData.goals },
+      user,
+      inputTracking
+    );
+
+    try {
+      if (alternativeContext) {
+        toast.info(`Generating new jump: "${alternativeContext.title}"...`);
       }
 
-      // Record guest usage if not authenticated (BEFORE generation)
-      if (!isAuthenticated) {
-        await guestLimitService.recordGuestUsage();
-      }
-
-      // Generate with progressive display
       const result = await generateWithProgression(
-        formData, 
-        user?.id, 
-        isAuthenticated ? undefined : turnstileToken || undefined
+        effectiveFormData, 
+        undefined, 
+        turnstileToken
       );
       
-      // Update credit transaction with actual jump ID
-      if (result.jumpId && tempReferenceId && isAuthenticated && user?.id) {
-        await updateTransactionReference(tempReferenceId, result.jumpId);
-      }
-      
       if (result.jumpId) {
-        toast.success('Jump has been generated. 1 credit used. It was saved to your Dashboard.');
-      } else if (!isAuthenticated) {
         toast.success('Your Jump in AI is ready! Sign up to get 5 welcome credits and save your jumps.');
       }
 
-      // Update guest limits - increment count and check if limit reached
-      if (!isAuthenticated) {
-        const newCount = guestUsageCount + 1;
-        setGuestUsageCount(newCount);
-        if (newCount >= 3) {
-          setGuestCanUse(false);
-        }
+      // Update guest usage info after successful generation
+      if (guestUsageInfo) {
+        setGuestUsageInfo({
+          usageCount: guestUsageInfo.usageCount + 1,
+          remaining: Math.max(0, guestUsageInfo.remaining - 1)
+        });
       }
+      
+      // Reset Turnstile to get a fresh token for next generation (e.g., alternative jumps)
+      setTimeout(() => {
+        turnstileRef.current?.reset();
+        setTurnstileToken(null);
+      }, 500);
 
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error generating Jump:', error);
-      toast.error('Failed to generate your Jump. Please try again.');
+      
+      if (error.message?.includes('Rate limit exceeded') || error.message?.includes('429')) {
+        toast.error('You\'ve used all 3 free tries. Please sign up to get 5 welcome credits and continue!');
+      } else {
+        toast.error('Failed to generate your Jump. Please try again.');
+      }
+      
+      // Reset Turnstile on error to allow retry
+      turnstileRef.current?.reset();
+      setTurnstileToken(null);
     }
-  };
+  }, [formData, turnstileToken, generateWithProgression, guestUsageInfo]);
 
+  const handleGenerateAlternativeJump = useCallback((alternative: AlternativeRoute, explorationHistory?: RouteExplorationHistory) => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (explorationHistory) {
+      console.log('🌳 Exploration History:', {
+        level: explorationHistory.currentLevel,
+        path: explorationHistory.explorationPath.map(n => n.jumpTitle)
+      });
+    }
+    handleGenerate(alternative);
+  }, [handleGenerate]);
+
+  // Memoize Turnstile to prevent re-initialization - key component for stability
+  const turnstileElement = useMemo(() => {
+    // Don't render if loading or authenticated
+    if (isLoading || isAuthenticated) return null;
+    
+    return (
+      <div className="hidden">
+        <Turnstile
+          ref={turnstileRef}
+          siteKey={turnstileSiteKey}
+          onSuccess={(token) => {
+            setTurnstileToken(token);
+            turnstileErrorShownRef.current = false;
+            console.log('✅ Turnstile verified');
+          }}
+          onError={() => {
+            if (!turnstileErrorShownRef.current) {
+              turnstileErrorShownRef.current = true;
+              console.error('❌ Turnstile verification failed');
+            }
+          }}
+          onExpire={() => {
+            // Token expired, reset to get a fresh one
+            console.log('⏰ Turnstile token expired, resetting...');
+            setTurnstileToken(null);
+            // Let Turnstile handle refreshExpired='auto' to avoid reset loops.
+          }}
+          options={{
+            theme: 'light',
+            size: 'invisible',
+            refreshExpired: 'auto', // Automatically refresh when expired
+          }}
+        />
+      </div>
+    );
+  }, [isLoading, isAuthenticated, turnstileSiteKey]);
+
+  // Redirect authenticated users to dashboard studio - AFTER all hooks
+  if (!isLoading && isAuthenticated) {
+    return <Navigate to="/dashboard/studio" replace />;
+  }
+
+  // Show loading state while auth is being checked
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  // Guest view
   return (
     <>
       <Helmet>
@@ -287,319 +492,312 @@ const JumpinAIStudio = () => {
         <meta name="description" content="Your AI-powered workspace for creating and managing strategic transformations with intelligent guidance." />
       </Helmet>
       
-      <div className="min-h-screen scroll-snap-container bg-gradient-to-br from-background/95 via-background to-primary/5 dark:bg-gradient-to-br dark:from-black dark:via-gray-950/90 dark:to-gray-900/60 relative">
-        {/* Premium floating background elements with liquid glass effects */}
-        <div className="fixed inset-0 overflow-hidden pointer-events-none">
-          {/* Main gradient orbs with enhanced blur and liquid animation */}
-          <div className="absolute -top-40 -right-40 w-[28rem] h-[28rem] bg-gradient-to-br from-primary/25 via-primary/15 to-primary/5 rounded-full blur-3xl animate-pulse opacity-60"></div>
-          <div className="absolute -bottom-40 -left-40 w-[32rem] h-[32rem] bg-gradient-to-tr from-secondary/20 via-accent/10 to-secondary/5 rounded-full blur-3xl animate-pulse opacity-50" style={{animationDelay: '2s'}}></div>
-          
-          {/* Liquid glass floating elements */}
-          <div className="absolute top-1/4 left-1/3 w-72 h-72 bg-gradient-conic from-primary/15 via-accent/10 to-secondary/15 rounded-full blur-2xl animate-pulse opacity-40" style={{animationDelay: '1s'}}></div>
-          <div className="absolute bottom-1/4 right-1/4 w-48 h-48 bg-gradient-radial from-accent/20 via-primary/10 to-transparent rounded-full blur-xl animate-pulse opacity-30" style={{animationDelay: '3s'}}></div>
-          
-          {/* Subtle mesh gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/5 to-transparent opacity-50"></div>
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-accent/3 to-transparent opacity-40"></div>
-        </div>
-        
-        <Navigation />
-        
-        <main className="relative pt-24 px-4 sm:px-6 lg:px-8">
-          <div className="max-w-6xl mx-auto">
-            {/* Auth Status and Credits Display - Mobile Optimized */}
-            <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center mb-4 sm:mb-6 animate-fade-in-right gap-3 sm:gap-4">
-              {/* Credits display for authenticated users */}
-              {isAuthenticated && (
-                <div className="flex-1 order-2 sm:order-1">
-                  <CreditsDisplay showBuyButton={true} />
-                </div>
-              )}
-              
-              {/* Auth status notification */}
-              <div className="relative group order-1 sm:order-2 w-full sm:w-auto">
-                <div className="relative glass rounded-xl p-2.5 sm:p-3 text-xs sm:text-sm border border-border backdrop-blur-xl bg-card/80 shadow-lg transition-all duration-300 w-full sm:max-w-sm">
-                  {/* Subtle glass overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/3 rounded-xl"></div>
-                  
-                  <div className="relative z-10">
-                    {isAuthenticated ? (
-                      <div className="flex items-center justify-center sm:justify-start gap-2 text-emerald-600">
-                        <div className="relative">
-                          <User className="w-3 h-3 sm:w-4 sm:h-4" />
-                          <div className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 bg-emerald-500 rounded-full"></div>
-                        </div>
-                        <span className="font-medium truncate text-xs sm:text-sm">
-                          {user?.display_name || user?.email}
-                        </span>
-                      </div>
-                    ) : (
-                      <div className="flex items-center justify-center sm:justify-start gap-2 text-amber-600">
-                        <div className="relative">
-                          <AlertCircle className="w-3 h-3 sm:w-4 sm:h-4" />
-                          <div className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 bg-amber-500 rounded-full"></div>
-                        </div>
-                        <span className="font-medium text-xs sm:text-sm">
-                          Guest: {guestUsageCount >= 3 ? 'limit reached' : `${3 - guestUsageCount} free tries remaining`}
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
+      <div 
+        className="min-h-screen scroll-snap-container relative"
+      >
+        {/* Premium Background System - SCOPED to top input section only */}
+        <div 
+          ref={studioContainerRef}
+          onMouseMove={handleStudioMouseMove}
+          onMouseLeave={handleStudioMouseLeave}
+          className="relative overflow-hidden"
+        >
+          {/* Background layers - contained within this wrapper */}
+          <div className="absolute inset-0">
+            {/* Base gradient */}
+            <div className="absolute inset-0 bg-gradient-to-br from-amber-50/70 via-slate-50/90 to-cyan-50/50 dark:from-[#110d08] dark:via-[#0c1420] dark:to-[#0a1018]"></div>
+            
+            {/* Primary Gradient Flow - Golden Warmth */}
+            <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg, rgba(234, 170, 50, 0.18) 0%, rgba(214, 145, 30, 0.10) 25%, transparent 50%, rgba(6, 182, 212, 0.08) 75%, rgba(34, 211, 238, 0.12) 100%)' }}></div>
+            
+            {/* Secondary Gradient Flow - Teal Accent */}
+            <div className="absolute inset-0" style={{ background: 'linear-gradient(-45deg, rgba(20, 184, 166, 0.12) 0%, transparent 40%, transparent 60%, rgba(214, 160, 40, 0.08) 100%)' }}></div>
+            
+            {/* Radial Glow - Top Left Golden */}
+            <div className="absolute -top-[15%] -left-[10%] w-[55%] h-[55%]" style={{ background: 'radial-gradient(ellipse at center, rgba(218, 160, 45, 0.22) 0%, rgba(200, 140, 30, 0.10) 30%, transparent 60%)', filter: 'blur(80px)' }}></div>
+            
+            {/* Radial Glow - Top Right Cyan */}
+            <div className="absolute -top-[10%] -right-[10%] w-[45%] h-[45%]" style={{ background: 'radial-gradient(ellipse at center, rgba(6, 182, 212, 0.2) 0%, rgba(20, 184, 166, 0.1) 40%, transparent 65%)', filter: 'blur(70px)' }}></div>
+            
+            {/* Radial Glow - Bottom Center Warm */}
+            <div className="absolute bottom-[-10%] left-[20%] w-[60%] h-[50%]" style={{ background: 'radial-gradient(ellipse at center, rgba(210, 140, 50, 0.13) 0%, rgba(200, 155, 45, 0.07) 50%, transparent 70%)', filter: 'blur(60px)' }}></div>
+            
+            {/* Interactive Dot Matrix */}
+            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+              <HeroDotMatrix isDark={studioIsDark} mousePos={studioMousePos} />
             </div>
-            {/* Premium Hero Section - Mobile Optimized */}
-            <div className="text-center mb-8 sm:mb-12 lg:mb-20 animate-fade-in-up px-2">
-              {/* Liquid glass backdrop for title */}
-              <div className="relative mb-4 sm:mb-6 lg:mb-8">
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent dark:via-primary/8 blur-3xl transform -translate-y-4"></div>
-                <h1 className="relative text-2xl sm:text-3xl md:text-4xl lg:text-6xl xl:text-7xl font-bold mb-2 bg-gradient-to-r from-foreground via-primary/90 to-foreground bg-clip-text text-transparent leading-tight tracking-tight px-2">
-                  JumpinAI Studio
-                </h1>
-                <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-24 sm:w-32 h-1 bg-gradient-to-r from-transparent via-primary/60 to-transparent rounded-full"></div>
-              </div>
+            
+            {/* Black overlay to darken - 30% opacity */}
+            <div className="absolute inset-0 bg-black/[0.30] dark:bg-black/[0.30]"></div>
+            
+            {/* Bottom fade-out into standard background */}
+            <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-b from-transparent via-background/60 to-background pointer-events-none"></div>
+          </div>
+          
+          <Navigation />
+          
+          {/* Memoized Turnstile - won't re-render on typing */}
+          {turnstileElement}
+          
+          <div className="relative z-10 pt-20 sm:pt-24 px-4 sm:px-6 lg:px-8 pb-16">
+            <div className="max-w-4xl mx-auto">
               
-              <div className="relative px-4">
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-accent/5 to-transparent blur-2xl"></div>
-                <p className="relative text-sm sm:text-base md:text-lg lg:text-xl text-muted-foreground/90 mb-6 sm:mb-8 lg:mb-12 max-w-4xl mx-auto leading-relaxed font-light">
-                  Tell us your goals and challenges, and we'll generate your personalized <span className="font-semibold text-primary bg-gradient-to-r from-primary via-primary/80 to-primary bg-clip-text text-transparent whitespace-nowrap">Jump in AI</span>: 
-                  a clear step-by-step plan with AI tools, custom prompts, and actionable strategies.
-                </p>
-              </div>
-              
-              {/* Simple feature indicators - Mobile optimized */}
-              <div className="flex flex-wrap justify-center gap-2 text-xs sm:text-sm text-muted-foreground/70 px-2">
-                <span className="bg-background/60 backdrop-blur-sm px-2 sm:px-3 py-1 rounded-md border border-border/30">Strategic Action Plan</span>
-                <span className="hidden sm:inline text-muted-foreground/50">•</span>
-                <span className="bg-background/60 backdrop-blur-sm px-2 sm:px-3 py-1 rounded-md border border-border/30">AI Tools & Resources</span>
-                <span className="hidden sm:inline text-muted-foreground/50">•</span>
-                <span className="bg-background/60 backdrop-blur-sm px-2 sm:px-3 py-1 rounded-md border border-border/30">Custom Prompts</span> 
-                <span className="hidden sm:inline text-muted-foreground/50">•</span>
-                <span className="bg-background/60 backdrop-blur-sm px-2 sm:px-3 py-1 rounded-md border border-border/30">Implementation Guide</span>
-              </div>
-            </div>
-
-            {/* Compact Glass Form - Mobile Optimized */}
-            <div className="mb-6 sm:mb-8 lg:mb-12 animate-fade-in-up px-2 sm:px-4 lg:px-0" style={{ animationDelay: '0.5s' }}>
-              <div className="relative group">
-                {/* Subtle backdrop */}
-                <div className="absolute -inset-1 bg-gradient-to-r from-primary/10 via-accent/8 to-secondary/10 rounded-2xl blur-xl opacity-40"></div>
+              {/* Refined Header Row */}
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8 sm:mb-12 animate-fade-in">
+                {/* Title - Clean typography */}
+                <div>
+                  <h1 className="text-xl sm:text-2xl font-bold text-foreground tracking-tight">
+                    JumpinAI Studio
+                  </h1>
+                  <p className="text-xs sm:text-sm text-muted-foreground/70 mt-1 font-medium">
+                    Your AI adaptation roadmap in minutes
+                  </p>
+                </div>
                 
-                {/* Compact glass container */}
-                <div className="relative glass rounded-2xl p-3 sm:p-4 md:p-6 border border-border backdrop-blur-2xl bg-card/80 dark:bg-background/20 overflow-hidden">
-                  {/* Minimal glass overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-primary/4 via-transparent to-secondary/4 rounded-2xl"></div>
-                  <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent"></div>
+                {/* Guest Status - Compact pill */}
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-medium border border-amber-500/25 bg-amber-50/60 dark:bg-amber-950/30 text-amber-700 dark:text-amber-400">
+                  {isLoadingGuestInfo ? (
+                    <>
+                      <Loader2 className="w-3 h-3 animate-spin" />
+                      <span>Loading...</span>
+                    </>
+                  ) : (
+                    <>
+                      <div className="w-1.5 h-1.5 rounded-full bg-amber-500 dark:bg-amber-400 animate-pulse"></div>
+                      <span>
+                        {guestUsageInfo 
+                          ? `${guestUsageInfo.remaining} free jump${guestUsageInfo.remaining !== 1 ? 's' : ''} left` 
+                          : '3 free jumps'}
+                      </span>
+                    </>
+                  )}
+                </div>
+              </div>
+
+              {/* HERO FORM CARD - Premium Glassmorphism (synced with InlineStudioSection) */}
+              <div className="mb-10 sm:mb-14">
+                <div className="relative">
+                  {/* Multi-layer ambient glow behind card */}
+                  <div className="absolute -inset-8 bg-gradient-to-br from-amber-500/[0.08] via-primary/[0.06] to-violet-500/[0.08] rounded-[4rem] blur-3xl opacity-70"></div>
+                  <div className="absolute -inset-4 bg-primary/[0.04] rounded-[3rem] blur-xl opacity-50"></div>
                   
-                  <div className="relative z-10">
-                    <div className="text-center mb-4 sm:mb-6">
-                      <h2 className="text-base sm:text-lg md:text-xl font-bold mb-2 bg-gradient-to-r from-foreground via-primary/90 to-foreground bg-clip-text text-transparent px-2">Let's understand your goals</h2>
-                      <div className="w-12 h-0.5 bg-gradient-to-r from-transparent via-primary/50 to-transparent mx-auto rounded-full"></div>
-                    </div>
-
-                    <div className="grid gap-3 sm:gap-4 md:gap-5">
-                      <div className="grid md:grid-cols-2 gap-3 sm:gap-4 md:gap-5">
-                        <div className="group">
-                          <label className="block text-xs sm:text-sm font-medium text-foreground/90 mb-2 sm:mb-3 transition-colors duration-300 group-focus-within:text-primary">
-                            What are you working toward? *
-                          </label>
-                          <div className="relative">
-                            <textarea
-                              ref={goalsTextareaRef}
-                              value={formData.goals}
-                              onChange={(e) => setFormData(prev => ({ ...prev, goals: e.target.value }))}
-                              className="w-full min-h-[120px] sm:min-h-[140px] md:min-h-[160px] p-3 sm:p-4 glass backdrop-blur-xl border border-border/40 hover:border-primary/30 focus:border-primary/50 transition-all duration-300 rounded-2xl sm:rounded-3xl shadow-xl hover:shadow-2xl focus:shadow-2xl focus:shadow-primary/10 resize-none placeholder:text-muted-foreground/60 text-sm sm:text-base text-foreground bg-card/60 overflow-hidden"
-                              placeholder="Your main goals & projects with AI..."
-                            />
-                          </div>
-                        </div>
-                        
-                        <div className="group">
-                          <label className="block text-xs sm:text-sm font-medium text-foreground/90 mb-2 sm:mb-3 transition-colors duration-300 group-focus-within:text-primary">
-                            What's keeping you from getting there? *
-                          </label>
-                          <div className="relative">
-                            <textarea
-                              ref={challengesTextareaRef}
-                              value={formData.challenges}
-                              onChange={(e) => setFormData(prev => ({ ...prev, challenges: e.target.value }))}
-                              className="w-full min-h-[120px] sm:min-h-[140px] md:min-h-[160px] p-3 sm:p-4 glass backdrop-blur-xl border border-border/40 hover:border-primary/30 focus:border-primary/50 transition-all duration-300 rounded-2xl sm:rounded-3xl shadow-xl hover:shadow-2xl focus:shadow-2xl focus:shadow-primary/10 resize-none placeholder:text-muted-foreground/60 text-sm sm:text-base text-foreground bg-card/60 overflow-hidden"
-                              placeholder="Your obstacles & challenges..."
-                            />
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Glass Morphism Generate Button - Mobile Optimized */}
-                      <div ref={generateButtonRef} className="text-center mt-4 sm:mt-6 md:mt-8">
-                        <div className="relative inline-block group w-full sm:w-auto">
-                          {/* Subtle glow backdrop */}
-                          <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 via-accent/15 to-secondary/20 dark:from-primary/15 dark:via-accent/12 dark:to-secondary/15 rounded-full blur-xl opacity-60 group-hover:opacity-80 transition-all duration-500"></div>
-                          
-                          <button
-                            onClick={handleGenerate}
-                            disabled={isGenerating}
-                            className="relative w-full sm:max-w-4xl px-8 sm:px-16 md:px-24 py-3 sm:py-4 md:py-5 glass backdrop-blur-xl border border-border/40 hover:border-primary/50 focus:border-primary/60 transition-all duration-500 rounded-full shadow-xl hover:shadow-2xl hover:shadow-primary/20 bg-card/70 hover:scale-[1.02] active:scale-98 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100 group overflow-hidden"
-                          >
-                            {/* Glass morphism overlay effects */}
-                            <div className="absolute inset-0 bg-gradient-to-br from-primary/8 via-transparent to-secondary/8 rounded-full"></div>
-                            <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/40 dark:via-white/25 to-transparent"></div>
-                            <div className="absolute inset-0 bg-gradient-to-r from-white/10 via-transparent to-white/10 dark:from-white/8 dark:via-transparent dark:to-white/8 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                            
-                            <div className="relative z-10 flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3">
-                              {isGenerating ? (
-                                <div className="flex flex-col items-center gap-1 sm:gap-2 min-h-[32px] w-full">
-                                  <div className="flex items-center gap-3 sm:gap-4 w-full justify-center">
-                                    <div className="relative">
-                                      <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin text-primary" />
-                                      <div className="absolute inset-0 animate-ping">
-                                        <div className="w-4 h-4 sm:w-5 sm:h-5 border border-primary/30 rounded-full"></div>
-                                      </div>
-                                    </div>
-                                    <div className="text-center flex-1">
-                                      <div className="font-semibold text-foreground text-sm sm:text-base md:text-lg">{processingStatus.stage}</div>
-                                      <div className="text-xs sm:text-sm text-muted-foreground/80 mt-1 flex flex-col sm:flex-row items-center gap-1 sm:gap-2">
-                                        <span className="text-xs sm:text-sm">{processingStatus.currentTask}</span>
-                                        {generationTimer > 0 && (
-                                          <span className="px-2 py-0.5 glass backdrop-blur-sm bg-primary/10 text-primary rounded-full text-xs font-medium border border-primary/20">
-                                            {formatTime(generationTimer)}
-                                          </span>
-                                        )}
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              ) : (
-                                <div className="flex items-center justify-center">
-                                  <span className="font-semibold text-foreground text-sm sm:text-base md:text-lg tracking-wide">Generate My Jump in AI</span>
-                                </div>
-                              )}
-                            </div>
-                          </button>
-                          
-                          {/* Cancel Button - only visible during processing */}
-                          {isGenerating && (
-                            <div className="absolute left-full ml-6 top-1/2 transform -translate-y-1/2 animate-fade-in">
-                              <div className="relative group">
-                                {/* Subtle backdrop for cancel button */}
-                                <div className="absolute -inset-0.5 bg-gradient-to-r from-muted-foreground/10 via-muted-foreground/5 to-muted-foreground/10 rounded-full blur-lg opacity-40 group-hover:opacity-60 transition-all duration-300"></div>
-                                
-                                <button
-                                  onClick={handleCancel}
-                                  className="relative px-6 py-3 glass backdrop-blur-xl border border-border/30 hover:border-muted-foreground/40 transition-all duration-300 rounded-full shadow-lg hover:shadow-xl bg-card/70 hover:scale-105 active:scale-95 group overflow-hidden"
-                                >
-                                  {/* Subtle glass overlay */}
-                                  <div className="absolute inset-0 bg-gradient-to-br from-muted-foreground/5 via-transparent to-muted-foreground/3 rounded-full"></div>
-                                  <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/20 dark:via-white/15 to-transparent"></div>
-                                  <div className="absolute inset-0 bg-gradient-to-r from-white/8 via-transparent to-white/8 dark:from-white/6 dark:via-transparent dark:to-white/6 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                                  
-                                  <div className="relative z-10 flex items-center justify-center">
-                                    <span className="font-medium text-muted-foreground group-hover:text-foreground text-sm tracking-wide transition-colors duration-300">Cancel</span>
-                                  </div>
-                                </button>
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                      </div>
+                  {/* Card with glassmorphism + gradient border via wrapper */}
+                  <div className="relative rounded-[32px] sm:rounded-[40px] p-px bg-gradient-to-br from-amber-400/80 via-white/40 to-cyan-400/80 dark:from-amber-500/65 dark:via-white/30 dark:to-cyan-500/65">
+                  <div className="relative rounded-[31px] sm:rounded-[39px] overflow-hidden 
+                    bg-gradient-to-br from-zinc-900/85 via-zinc-950/80 to-zinc-900/85 
+                    dark:from-zinc-950/90 dark:via-black/85 dark:to-zinc-950/90
+                    backdrop-blur-3xl
+                    shadow-[0_10px_50px_-4px_rgba(0,0,0,0.35),0_40px_100px_-12px_rgba(0,0,0,0.4),0_0_0_1px_rgba(255,255,255,0.12)_inset,0_1px_0_rgba(255,255,255,0.15)_inset]
+                    dark:shadow-[0_10px_50px_-4px_rgba(0,0,0,0.6),0_40px_100px_-12px_rgba(0,0,0,0.7),0_0_0_1px_rgba(255,255,255,0.08)_inset,0_1px_0_rgba(255,255,255,0.06)_inset]">
+                    
+                    {/* Premium top highlight - refined shimmer */}
+                    <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/30 dark:via-white/15 to-transparent"></div>
+                    
+                    {/* Bottom subtle edge */}
+                    <div className="absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-zinc-400/20 dark:via-zinc-500/10 to-transparent"></div>
+                    
+                    {/* Subtle inner glow - warm tint */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-amber-500/[0.04] via-transparent to-cyan-500/[0.03] pointer-events-none"></div>
+                    
+                    {/* Content */}
+                    <div className="relative p-8 sm:p-10 md:p-12 lg:p-14">
                       
-                      {/* Compact Guest User Notification */}
-                      {!isAuthenticated && (
-                        <div className="mt-6 relative group animate-fade-in-up" style={{ animationDelay: '0.8s' }}>
-                          {/* Subtle backdrop */}
-                          <div className="absolute -inset-1 bg-gradient-to-r from-amber-500/20 via-orange-400/15 to-amber-500/20 dark:from-amber-400/15 dark:via-orange-300/10 dark:to-amber-400/15 rounded-xl blur-lg opacity-40"></div>
-                          
-                          {/* Compact notification container */}
-                          <div className="relative glass-dark rounded-xl p-4 border border-amber-400/25 dark:border-amber-300/20 backdrop-blur-xl bg-gradient-to-br from-amber-50/10 via-orange-50/5 to-amber-50/3 dark:from-amber-900/15 dark:via-orange-900/10 dark:to-amber-900/8 overflow-hidden">
-                            {/* Minimal overlay */}
-                            <div className="absolute inset-0 bg-gradient-to-br from-amber-400/5 via-transparent to-orange-400/5 dark:from-amber-300/4 dark:via-transparent dark:to-orange-300/4 rounded-xl"></div>
-                            <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-amber-400/30 dark:via-amber-300/20 to-transparent"></div>
+                      {/* Hero text - Premium typography */}
+                      <div className="text-center mb-10 sm:mb-12">
+                      <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[2.75rem] font-bold text-foreground mb-4 tracking-tight leading-[1.15]">
+                        Create Your{' '}
+                        <span className="bg-gradient-to-r from-primary via-primary/90 to-primary/80 bg-clip-text text-transparent">
+                          Jump in AI
+                        </span>
+
+
+                      </h2>
+                      <p className="text-muted-foreground text-sm sm:text-base md:text-lg max-w-xl mx-auto font-medium">
+                        Share your vision, goals, and challenges — we'll craft your personalized AI implementation roadmap.
+                      </p>
+                    </div>
+
+                      {/* Form inputs */}
+                      <div className="space-y-8 sm:space-y-10">
+                        <div>
+                          {/* Unified single input */}
+                          <StudioTextarea
+                            ref={visionTextareaRef}
+                            label={"What are you building?\nAnd what's in your way?"}
+                            value={formData.goals}
+                            onChange={(value) => setFormData(prev => ({ ...prev, goals: value }))}
+                            onTyped={() => setVisionTyped(true)}
+                            onSttUsed={() => {
+                              setSttUsed(true);
+                              setVisionUsedStt(true);
+                            }}
+                            onSttDuration={(seconds) => setVisionSttDuration(prev => prev + seconds)}
+                            placeholder="Describe what you're building and any obstacles you're facing — we'll map out your personalized AI integration strategy..."
+                          />
+                        </div>
+
+                        {/* Generate Button - Matches InlineStudioSection exactly */}
+                        <div ref={generateButtonRef} className="pt-4 sm:pt-6">
+                          <div className="flex flex-col items-center">
+                            <div className="relative group/btn w-full sm:w-auto">
+                              {/* Subtle hover glow */}
+                              <div className="absolute -inset-1 bg-primary/15 rounded-full blur-xl opacity-0 group-hover/btn:opacity-100 transition-opacity duration-500"></div>
+                              
+                              <button
+                                onClick={() => handleGenerate()}
+                                disabled={isGenerating}
+                                className="relative w-full sm:w-auto px-12 sm:px-16 md:px-20 py-4 sm:py-5 
+                                  text-white font-semibold text-base sm:text-lg
+                                  rounded-full
+                                  border border-white/10
+                                  transition-all duration-300 ease-out
+                                  hover:scale-[1.02] active:scale-[0.98] 
+                                  hover:shadow-xl hover:shadow-black/30
+                                  disabled:cursor-not-allowed disabled:hover:scale-100 
+                                  shadow-lg shadow-black/20
+                                  overflow-hidden"
+                                style={{
+                                  background: 'linear-gradient(to bottom right, #27272a, #18181b, #000000)',
+                                }}
+                              >
+                                {/* Shimmer effect */}
+                                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700 rounded-full"></div>
+                                
+                                {/* Top highlight */}
+                                <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent"></div>
+                                
+                                {/* Bottom subtle shadow */}
+                                <div className="absolute inset-x-4 bottom-0 h-px bg-gradient-to-r from-transparent via-black/10 to-transparent"></div>
+                                
+                                <div className="relative z-10 flex items-center justify-center gap-4 text-white">
+                                  {isGenerating ? (
+                                    <div className="flex flex-col items-center gap-3 min-h-[36px] w-full">
+                                      <div className="flex items-center gap-4">
+                                        <Loader2 className="w-6 h-6 animate-spin text-white" />
+                                        <span className="text-lg font-semibold text-white">
+                                          {typeof processingStatus === 'string' ? processingStatus : 'Generating...'}
+                                        </span>
+                                        <span className="text-base opacity-70 font-mono tabular-nums bg-white/10 px-3 py-1 rounded-full text-white">
+                                          {formatTime(generationTimer)}
+                                        </span>
+                                      </div>
+                                      <button
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          handleCancel();
+                                        }}
+                                        className="text-sm text-white/60 hover:text-white transition-opacity underline underline-offset-4 decoration-dotted"
+                                      >
+                                        Cancel
+                                      </button>
+                                    </div>
+                                  ) : (
+                                    <>
+                                      <Zap className="w-6 h-6 text-white transition-transform duration-500 group-hover/btn:scale-125 group-hover/btn:rotate-12" />
+                                      <span className="text-white">Generate My Jump</span>
+                                    </>
+                                  )}
+                                </div>
+                              </button>
+                            </div>
                             
-                            <div className="relative z-10">
-                              <div className="flex items-start gap-3">
-                                <div className="p-2 rounded-lg bg-gradient-to-br from-amber-400/15 via-orange-400/10 to-amber-400/15 dark:from-amber-300/10 dark:via-orange-300/8 dark:to-amber-300/10 border border-amber-400/20 dark:border-amber-300/15">
-                                  <LogIn className="w-4 h-4 text-amber-600 dark:text-amber-400" />
-                                </div>
-                                <div className="flex-1">
-                                  <h3 className="font-medium text-amber-800 dark:text-amber-200 mb-1">Want to save your Jump?</h3>
-                                  <p className="text-sm text-amber-700/80 dark:text-amber-300/80 mb-3">
-                                    Sign up to save your Jump and access unlimited generations.
-                                  </p>
-                                  <button
-                                    onClick={() => login()}
-                                    className="inline-flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-amber-500 to-orange-500 dark:from-amber-600 dark:to-orange-600 text-white text-sm rounded-lg font-medium hover:scale-105 transition-all duration-300"
-                                  >
-                                    <LogIn className="w-3 h-3" />
-                                    Sign Up Now
-                                  </button>
-                                </div>
-                              </div>
+                            {/* Refined trust signals - color coded */}
+                            <div className="flex items-center justify-center gap-3.5 sm:gap-5 mt-8 text-[11px] sm:text-xs font-medium tracking-wide">
+                              <span className="flex items-center gap-2">
+                                <span className="w-1 h-1 rounded-full bg-teal-400/70"></span>
+                                <span className="text-teal-700/55 dark:text-teal-300/50">AI-Powered Strategy</span>
+                              </span>
+                              <span className="w-px h-3 bg-muted-foreground/10"></span>
+                              <span className="flex items-center gap-2">
+                                <span className="w-1 h-1 rounded-full bg-amber-400/70"></span>
+                                <span className="text-amber-700/55 dark:text-amber-300/50">Tailored to You</span>
+                              </span>
+                              <span className="w-px h-3 bg-muted-foreground/10"></span>
+                              <span className="flex items-center gap-2">
+                                <span className="w-1 h-1 rounded-full bg-indigo-400/70"></span>
+                                <span className="text-indigo-700/55 dark:text-indigo-300/50">Implementation-Ready</span>
+                              </span>
                             </div>
                           </div>
                         </div>
-                      )}
+                      </div>
                     </div>
+                  </div>
                   </div>
                 </div>
               </div>
-            </div>
 
-            {/* Invisible Turnstile - Only for guests */}
-            {!isAuthenticated && (
-              <div className="hidden">
-                <Turnstile
-                  siteKey={import.meta.env.VITE_TURNSTILE_SITE_KEY || "1x00000000000000000000AA"}
-                  onSuccess={(token) => {
-                    setTurnstileToken(token);
-                    console.log('✅ Turnstile verified');
-                  }}
-                  onError={() => {
-                    console.error('❌ Turnstile verification failed');
-                    toast.error('Security verification failed. Please refresh the page.');
-                  }}
-                  options={{
-                    theme: 'light',
-                    size: 'invisible',
-                  }}
-                />
-              </div>
-            )}
-
-            {/* Progressive Results Display */}
-            {result && (
-              <div ref={progressDisplayRef} className="mt-16 animate-fade-in-up" style={{ animationDelay: '0.7s' }}>
-                <ProgressiveJumpDisplay 
-                  result={result}
-                  generationTimer={generationTimer}
-                  isAuthenticated={isAuthenticated}
-                />
-              </div>
-            )}
-
-            {/* Mini Footer */}
-            <div className="mt-16 py-2 text-center border-t border-border/20">
-              <div className="text-sm text-muted-foreground/60">
-                © 2025 JumpinAI, LLC. All rights reserved.{' '}
-                <a 
-                  href="/terms-of-use" 
-                  className="text-primary hover:text-primary/80 transition-colors duration-200 underline underline-offset-4"
-                >
-                  Terms of Use
-                </a>
-                {' '}and{' '}
-                <a 
-                  href="/privacy-policy" 
-                  className="text-primary hover:text-primary/80 transition-colors duration-200 underline underline-offset-4"
-                >
-                  Privacy Policy
-                </a>
-                .
+              {/* Sign Up CTA - Premium redesign */}
+              <div className="mb-12 sm:mb-16 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-5 p-6 sm:p-8 rounded-[32px] border-2 border-amber-500/25 dark:border-amber-400/20 bg-gradient-to-r from-amber-500/[0.06] via-orange-500/[0.04] to-amber-500/[0.06] dark:from-amber-500/[0.12] dark:via-orange-500/[0.08] dark:to-amber-500/[0.12] backdrop-blur-sm shadow-xl shadow-amber-500/5">
+                  <p className="text-base text-muted-foreground text-center sm:text-left font-medium">
+                    <span className="text-foreground font-semibold">Sign up free</span> to save your Jumps and unlock{' '}
+                    <span className="text-amber-600 dark:text-amber-400 font-bold">5 welcome credits</span>
+                  </p>
+                  <button
+                    onClick={() => login('/dashboard/studio')}
+                    className="flex items-center gap-2.5 px-8 py-3.5 rounded-full text-sm font-bold transition-all duration-500 
+                      bg-gradient-to-r from-amber-500 via-amber-500 to-orange-500 hover:from-amber-400 hover:via-amber-500 hover:to-orange-400 
+                      text-white shadow-lg shadow-amber-500/30 hover:shadow-xl hover:shadow-amber-500/40 
+                      hover:scale-[1.03] active:scale-[0.98] whitespace-nowrap tracking-wide"
+                  >
+                    <LogIn className="w-4 h-4" />
+                    <span>Get Started Free</span>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
-        </main>
+        </div>
+        {/* END: Premium Background Zone */}
 
+        {/* Results section - on standard background */}
+        {result && (
+          <div className="bg-background">
+            <div className="px-4 sm:px-6 lg:px-8">
+              <div className="max-w-4xl mx-auto">
+                <div ref={progressDisplayRef} className="animate-fade-in-up pt-8">
+                  <ProgressiveJumpDisplay
+                    result={result}
+                    generationTimer={generationTimer}
+                    isAuthenticated={false}
+                    onGenerateAlternativeJump={handleGenerateAlternativeJump}
+                    onToolPromptsRefresh={refreshToolPrompts}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
+        {/* Mini Footer - on standard background */}
+        <div className="bg-background">
+          <div className="px-4 sm:px-6 lg:px-8">
+            <div className="max-w-4xl mx-auto">
+              <div className="mt-16 py-2 text-center border-t border-border/20">
+                <div className="text-sm text-muted-foreground/60">
+                  <div>© 2026 JumpinAI, LLC. All rights reserved.</div>
+                  <div>
+                    <a 
+                      href="/terms-of-use" 
+                      className="text-primary hover:text-primary/80 transition-colors duration-200 underline underline-offset-4"
+                    >
+                      Terms of Use
+                    </a>
+                    {' '}and{' '}
+                    <a 
+                      href="/privacy-policy" 
+                      className="text-primary hover:text-primary/80 transition-colors duration-200 underline underline-offset-4"
+                    >
+                      Privacy Policy
+                    </a>
+                    .
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </>
   );

@@ -1,5 +1,4 @@
-import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.0';
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.57.4';
 
 const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
 const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -137,7 +136,7 @@ const handler = async (req: Request): Promise<Response> => {
             <div class="container">
               <h1 class="warning">Verification Link Expired</h1>
               <p>This verification link has expired. Please request a new verification email from your account settings.</p>
-              <a href="/dashboard/profile" class="btn">Go to Profile Settings</a>
+              <a href="/dashboard/settings" class="btn">Go to Settings</a>
             </div>
           </body>
         </html>
@@ -167,7 +166,7 @@ const handler = async (req: Request): Promise<Response> => {
     return new Response(null, {
       status: 302,
       headers: {
-        "Location": "https://www.jumpinai.com/dashboard/profile?emailVerified=success",
+        "Location": "https://www.jumpinai.com/dashboard/settings?emailVerified=success",
         ...corsHeaders
       }
     });
@@ -202,4 +201,4 @@ const handler = async (req: Request): Promise<Response> => {
   }
 };
 
-serve(handler);
+Deno.serve(handler);

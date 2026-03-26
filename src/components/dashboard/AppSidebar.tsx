@@ -8,14 +8,16 @@ import {
 import { useLocation, Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useCredits } from "@/hooks/useCredits";
 import { supabase } from "@/integrations/supabase/client";
-import { User, Settings, Home, FileText, Workflow, Lightbulb, Boxes, ChevronDown, CreditCard, Palette, Sparkles, Zap } from "lucide-react";
+import { Settings, Home, FileText, CreditCard, Zap, Rocket, ChevronLeft, ChevronRight, Bot, Workflow } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { useAuth0Token } from "@/hooks/useAuth0Token";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import logoTransparent from "@/assets/logo-transparent.png";
+import SidebarRecentJumps from "./SidebarRecentJumps";
 
 interface SubscriberInfo {
   subscribed: boolean;
@@ -24,7 +26,7 @@ interface SubscriberInfo {
 }
 
 export default function AppSidebar() {
-  const { isMobile, setOpenMobile } = useSidebar();
+  const { isMobile, setOpenMobile, state, toggleSidebar, openMobile } = useSidebar();
   const { pathname: currentPath } = useLocation();
   const [userName, setUserName] = useState<string>("");
   const [subInfo, setSubInfo] = useState<SubscriberInfo | null>(null);
@@ -38,12 +40,10 @@ export default function AppSidebar() {
 
   useEffect(() => {
     if (isAuthenticated && user) {
-      // Use display_name from profiles table, fallback to email username
       setUserName(user?.display_name || user?.email?.split('@')[0] || "");
       refreshSubscription();
     }
 
-    // Listen for profile updates
     const handleProfileUpdate = () => {
       if (user) {
         setUserName(user?.display_name || user?.email?.split('@')[0] || "");
@@ -72,100 +72,210 @@ export default function AppSidebar() {
       ? "bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 backdrop-blur-xl border border-primary/20 text-foreground font-medium" 
       : "hover:bg-gradient-to-br hover:from-primary/10 hover:via-accent/5 hover:to-primary/10 hover:backdrop-blur-xl hover:border hover:border-primary/20";
 
+  const isCollapsed = state === "collapsed";
+
+  // Desktop toggle button - appears at sidebar edge or floats when collapsed
+  const DesktopToggleButton = () => (
+    <button
+      onClick={toggleSidebar}
+      className={cn(
+        "fixed z-50 hidden md:flex",
+        "w-8 h-8 rounded-full",
+        "bg-background/95 backdrop-blur-xl border border-border/50",
+        "shadow-lg shadow-black/10 dark:shadow-black/30",
+        "items-center justify-center",
+        "text-muted-foreground hover:text-foreground",
+        "hover:bg-primary/10 hover:border-primary/30",
+        "transition-all duration-300 ease-out",
+        "hover:scale-110 active:scale-95",
+        // Position: when expanded, at sidebar edge; when collapsed, near left edge
+        isCollapsed 
+          ? "top-20 left-2" 
+          : "top-20 left-[13.25rem]"
+      )}
+      aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+    >
+      <ChevronLeft 
+        className={cn(
+          "w-4 h-4 transition-transform duration-300",
+          isCollapsed && "rotate-180"
+        )} 
+      />
+    </button>
+  );
+
+  // Mobile toggle button - always visible on mobile, above sheet overlay
+  const MobileToggleButton = () => (
+    <button
+      onClick={() => setOpenMobile(!openMobile)}
+      className={cn(
+        "fixed flex md:hidden",
+        // z-[60] to be above Sheet overlay (z-50)
+        "z-[60]",
+        "w-10 h-10 rounded-full",
+        "bg-background/95 backdrop-blur-xl border border-border/50",
+        "shadow-lg shadow-black/10 dark:shadow-black/30",
+        "items-center justify-center",
+        "text-muted-foreground hover:text-foreground",
+        "hover:bg-primary/10 hover:border-primary/30",
+        "transition-all duration-300 ease-out",
+        "active:scale-95",
+        // When sidebar is open, position button centered on the sidebar edge
+        openMobile 
+          ? "top-[5.5rem] left-[calc(18rem-1.25rem)]" 
+          : "top-[5.5rem] left-3"
+      )}
+      aria-label={openMobile ? "Close sidebar" : "Open sidebar"}
+    >
+      {openMobile ? (
+        <ChevronLeft className="w-5 h-5" />
+      ) : (
+        <ChevronRight className="w-5 h-5" />
+      )}
+    </button>
+  );
+
   return (
-    <Sidebar className="w-52 mt-20">
-      <SidebarHeader className="border-b border-sidebar-border px-3 py-2">
-        <div className="text-center text-sm text-muted-foreground mb-1">
-          Welcome{userName ? (
-            <>
-              , <span className="font-medium text-foreground">{userName}</span>!
-            </>
-          ) : "!"}
-        </div>
-        {subInfo && (
-          <div className="flex justify-center mb-2">
-            <Badge 
-              variant="outline" 
-              className={cn(
-                "text-xs w-fit px-2 py-0.5",
-                subInfo.subscribed ? "border-primary/20 text-primary" : "border-muted text-muted-foreground"
-              )}
-            >
-              {subInfo.subscribed ? subInfo.subscription_tier || 'Free Plan' : 'Free Plan'}
-            </Badge>
+    <>
+      <DesktopToggleButton />
+      <MobileToggleButton />
+      <Sidebar className="mt-20 md:mt-16 h-[calc(100vh-5rem)] md:h-[calc(100vh-4rem)] flex flex-col">
+      <SidebarHeader className="border-b border-sidebar-border px-3 py-2 pt-3 shrink-0">
+        <Link 
+          to="/dashboard/profile" 
+          className={cn(
+            "flex items-center justify-center gap-2 rounded-lg px-2 py-1.5 transition-all duration-300",
+            "hover:bg-gradient-to-br hover:from-primary/10 hover:via-accent/5 hover:to-primary/10 hover:backdrop-blur-xl hover:border hover:border-primary/20",
+            currentPath === "/dashboard/profile" 
+              ? "bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 backdrop-blur-xl border border-primary/20" 
+              : "border border-transparent"
+          )}
+        >
+          <Avatar className="h-7 w-7">
+            {user?.avatar_url ? (
+              <AvatarImage src={user.avatar_url} alt={userName} />
+            ) : (
+              <div className="relative h-full w-full flex items-center justify-center bg-background">
+                <img 
+                  src={logoTransparent} 
+                  alt="JumpinAI" 
+                  className="h-5 w-5 opacity-40 brightness-200"
+                />
+              </div>
+            )}
+            <AvatarFallback className="text-xs">
+              {userName?.charAt(0)?.toUpperCase() || 'U'}
+            </AvatarFallback>
+          </Avatar>
+          <span className="text-[13px] font-medium text-foreground">{userName || 'User'}</span>
+        </Link>
+        <div className="flex items-center justify-center gap-2 mt-1">
+          <Badge 
+            variant="outline" 
+            className={cn(
+              "text-[13px] px-2 py-0.5",
+              subInfo?.subscribed ? "border-primary/20 text-primary" : "border-muted text-muted-foreground"
+            )}
+          >
+            {subInfo?.subscribed ? subInfo.subscription_tier || 'Free' : 'Free'}
+          </Badge>
+          <div className="flex items-center gap-1 text-[13px]">
+            <Zap className="w-3.5 h-3.5 text-primary" />
+            <span className="font-semibold text-foreground">{creditsBalance}</span>
+            <span className="text-muted-foreground">credits</span>
           </div>
-        )}
-        <div className="flex items-center justify-center gap-1.5 bg-gradient-to-r from-primary/10 to-accent/10 dark:from-primary/8 dark:to-accent/8 rounded-lg px-2.5 py-1.5 border border-primary/20">
-          <Zap className="w-3.5 h-3.5 text-primary" />
-          <span className="text-sm font-semibold text-foreground">{creditsBalance}</span>
-          <span className="text-xs text-muted-foreground">{creditsBalance === 1 ? 'credit' : 'credits'}</span>
         </div>
+        
+        <Link 
+          to="/dashboard/subscription" 
+          className={cn(
+            "flex items-center justify-center gap-2 rounded-lg px-2.5 py-1.5 text-[13px] font-medium transition-all duration-300 mt-2",
+            getNavCls({ isActive: currentPath === "/dashboard/subscription" })
+          )}
+        >
+          <CreditCard className="h-4 w-4" />
+          Subscription & Credits
+        </Link>
       </SidebarHeader>
 
-      <SidebarContent>
-        {/* Navigation Links */}
-        <nav className="p-3 space-y-1.5">
-          <Link 
-            to="/dashboard" 
-            className={cn(
-              "flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-300",
-              getNavCls({ isActive: currentPath === "/dashboard" })
-            )}
-          >
-            <Home className="h-4 w-4" />
-            Dashboard
-          </Link>
+      {/* Navigation Links - Fixed section */}
+      <nav className="p-3 space-y-1 shrink-0">
+        <Link 
+          to="/dashboard" 
+          className={cn(
+            "flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-[13px] font-medium transition-all duration-300",
+            getNavCls({ isActive: currentPath === "/dashboard" })
+          )}
+        >
+          <Home className="h-4 w-4" />
+          Dashboard
+        </Link>
 
+        <Link 
+          to="/dashboard/studio" 
+          className={cn(
+            "flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-[13px] font-medium transition-all duration-300",
+            getNavCls({ isActive: currentPath === "/dashboard/studio" })
+          )}
+        >
+          <Rocket className="h-4 w-4" />
+          JumpinAI Studio
+        </Link>
 
-          <Link 
-            to="/dashboard/jumps" 
-            className={cn(
-              "flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-300",
-              getNavCls({ isActive: currentPath === "/dashboard/jumps" })
-            )}
-          >
-            <FileText className="h-4 w-4" />
-            My Jumps
-          </Link>
+        <Link 
+          to="/dashboard/jumps" 
+          className={cn(
+            "flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-[13px] font-medium transition-all duration-300",
+            getNavCls({ isActive: currentPath === "/dashboard/jumps" })
+          )}
+        >
+          <FileText className="h-4 w-4" />
+          My Jumps
+        </Link>
 
-          <Link 
-            to="/dashboard/tools-prompts" 
-            className={cn(
-              "flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-300",
-              getNavCls({ isActive: currentPath === "/dashboard/tools-prompts" })
-            )}
-          >
-            <Sparkles className="h-4 w-4" />
-            Tools & Prompts
-          </Link>
+        <Link 
+          to="/dashboard/implementation" 
+          className={cn(
+            "flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-[13px] font-medium transition-all duration-300",
+            getNavCls({ isActive: currentPath === "/dashboard/implementation" })
+          )}
+        >
+          <Bot className="h-4 w-4" />
+          Implementation
+        </Link>
 
-          <Separator className="my-1.5" />
+        <Link 
+          to="/dashboard/automation" 
+          className={cn(
+            "flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-[13px] font-medium transition-all duration-300",
+            getNavCls({ isActive: currentPath === "/dashboard/automation" })
+          )}
+        >
+          <Workflow className="h-4 w-4" />
+          Automation
+        </Link>
 
-          {/* Profile & Settings */}
-          <Link 
-            to="/dashboard/profile" 
-            className={cn(
-              "flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-300",
-              getNavCls({ isActive: currentPath === "/dashboard/profile" })
-            )}
-          >
-            <User className="h-4 w-4" />
-            Profile
-          </Link>
+        <Separator className="my-1" />
+      </nav>
 
-          {/* Subscription */}
-          <Link 
-            to="/dashboard/subscription" 
-            className={cn(
-              "flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-300",
-              getNavCls({ isActive: currentPath === "/dashboard/subscription" })
-            )}
-          >
-            <CreditCard className="h-4 w-4" />
-            Subscription
-          </Link>
-        </nav>
+      {/* Recent Jumps - Flexible scrollable area */}
+      <SidebarContent className="flex-1 min-h-0 overflow-hidden">
+        <SidebarRecentJumps />
       </SidebarContent>
+
+      <SidebarFooter className="border-t border-sidebar-border p-3 shrink-0">
+        <Link 
+          to="/dashboard/settings" 
+          className={cn(
+            "flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-[13px] font-medium transition-all duration-300",
+            getNavCls({ isActive: currentPath === "/dashboard/settings" })
+          )}
+        >
+          <Settings className="h-4 w-4" />
+          Settings
+        </Link>
+      </SidebarFooter>
     </Sidebar>
+    </>
   );
 }

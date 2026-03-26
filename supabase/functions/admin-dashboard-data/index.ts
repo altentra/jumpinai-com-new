@@ -1,12 +1,11 @@
-import { serve } from "https://deno.land/std@0.224.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.4";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-serve(async (req) => {
+Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
@@ -35,54 +34,99 @@ serve(async (req) => {
     const supabaseUser = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
       global: { headers: { Authorization: authHeader } },
     });
+    
+    console.log('Authenticating user...');
     const { data: userData, error: userErr } = await supabaseUser.auth.getUser();
-    if (userErr || !userData?.user) {
-      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+    
+    if (userErr) {
+      console.error('Auth error:', userErr);
+      return new Response(JSON.stringify({ 
+        error: "Authentication failed", 
+        details: userErr.message 
+      }), {
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    
+    if (!userData?.user) {
+      console.error('No user data returned');
+      return new Response(JSON.stringify({ error: "Unauthorized - no user data" }), {
         status: 401,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    // Check if user has admin role using RPC
-    const { data: isAdmin, error: roleError } = await supabaseUser.rpc('has_role', {
+    console.log('User authenticated:', userData.user.id);
+
+    // Use service role client to check admin role (bypasses RLS)
+    const supabaseAdmin = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+    const { data: isAdmin, error: roleError } = await supabaseAdmin.rpc('has_role', {
       _user_id: userData.user.id,
       _role: 'admin'
     });
 
-    if (roleError || !isAdmin) {
-      console.error('Admin role check failed:', roleError);
-      return new Response(JSON.stringify({ error: "Forbidden" }), {
+    console.log('Admin check result:', { isAdmin, roleError });
+
+    if (roleError) {
+      console.error('Admin role check error:', roleError);
+      return new Response(JSON.stringify({ 
+        error: "Role verification failed", 
+        details: roleError.message 
+      }), {
+        status: 500,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    if (!isAdmin) {
+      console.log('User is not admin:', userData.user.email);
+      return new Response(JSON.stringify({ error: "Forbidden - admin access required" }), {
         status: 403,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
+    console.log('Admin access granted to:', userData.user.email);
+
     // Service role client for unrestricted reads
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
     // Fetch data in parallel
-    const [profilesRes, ordersRes, subscribersRes, contactsRes, leadRes, productsRes] = await Promise.all([
+    const [profilesRes, ordersRes, subscribersRes, contactsRes, productsRes, jumpsRes, creditsRes, transactionsRes, auditLogsRes, guestTrackingRes] = await Promise.all([
       supabase.from("profiles").select("id, display_name, avatar_url, created_at, email_verified"),
       supabase.from("orders").select("id, product_id, amount, status, created_at, user_email, download_count"),
-      supabase.from("subscribers").select("id, user_id, email, subscribed, subscription_end, subscription_tier, created_at"),
+      supabase.from("subscribers").select("id, user_id, email, subscribed, subscription_end, subscription_tier, created_at, stripe_customer_id"),
       supabase.from("contacts").select("id, email, first_name, last_name, source, status, newsletter_subscribed, lead_magnet_downloaded, tags, created_at"),
-      supabase.from("lead_magnet_downloads").select("id, email, downloaded_at, pdf_name, ip_address, user_agent"),
       supabase.from("products").select("id, name, file_name"),
+      supabase.from("user_jumps").select("id, user_id, title, full_content, status, created_at, ip_address, location, form_goals, form_challenges, completion_percentage, stt_used, input_method, goals_stt_seconds, challenges_stt_seconds").order('created_at', { ascending: false }).limit(200),
+      supabase.from("user_credits").select("id, user_id, credits_balance, total_credits_purchased"),
+      supabase.from("credit_transactions").select("id, user_id, transaction_type, credits_amount, description, created_at").order('created_at', { ascending: false }),
+      supabase.from("subscription_audit_log").select("id, user_id, email, action, old_data, new_data, created_at, changed_by, change_source").order('created_at', { ascending: false }),
+      supabase.from("guest_usage_tracking").select("*").order('last_used_at', { ascending: false }),
     ]);
 
     if (profilesRes.error) throw profilesRes.error;
     if (ordersRes.error) throw ordersRes.error;
     if (subscribersRes.error) throw subscribersRes.error;
     if (contactsRes.error) throw contactsRes.error;
-    if (leadRes.error) throw leadRes.error;
     if (productsRes.error) throw productsRes.error;
+    if (jumpsRes.error) throw jumpsRes.error;
+    if (creditsRes.error) throw creditsRes.error;
+    if (transactionsRes.error) throw transactionsRes.error;
+    if (auditLogsRes.error) throw auditLogsRes.error;
+    if (guestTrackingRes.error) throw guestTrackingRes.error;
 
     const profiles = profilesRes.data ?? [];
     const orders = ordersRes.data ?? [];
     const subscribers = subscribersRes.data ?? [];
     const contacts = contactsRes.data ?? [];
-    const leadDownloads = leadRes.data ?? [];
     const products = productsRes.data ?? [];
+    const jumps = jumpsRes.data ?? [];
+    const userCredits = creditsRes.data ?? [];
+    const creditTransactions = transactionsRes.data ?? [];
+    const auditLogs = auditLogsRes.data ?? [];
+    const guestTracking = guestTrackingRes.data ?? [];
 
     // Create product map for lookups
     const productById = new Map(products.map((p: any) => [p.id, p]));
@@ -108,6 +152,15 @@ serve(async (req) => {
 
     // Filter paid subscribers early for stats calculation - only real active Stripe subscribers
     const paidSubscribers = subscribers.filter(s => s.subscribed);
+    const starterSubscribers = paidSubscribers.filter(s => s.subscription_tier === 'JumpinAI Starter');
+    const proSubscribers = paidSubscribers.filter(s => s.subscription_tier === 'JumpinAI Pro');
+    const growthSubscribers = paidSubscribers.filter(s => s.subscription_tier === 'JumpinAI Growth');
+
+    // Jump stats - properly categorize by status
+    const successfulJumps = jumps.filter(j => j.status === 'completed' || j.status === 'active');
+    const failedJumps = jumps.filter(j => j.status === 'failed' || j.status === 'error');
+    const generatingJumps = jumps.filter(j => j.status === 'generating');
+    const guestJumps = jumps.filter(j => !j.user_id);
 
     const now = new Date();
     const currentMonth = now.getMonth();
@@ -126,14 +179,36 @@ serve(async (req) => {
       return d.getTime() === today.getTime() ? sum + (o.amount || 0) : sum;
     }, 0);
 
+    // Calculate last 7 days revenue
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+    const last7DaysRevenueCents = paidOrders.reduce((sum, o) => {
+      const d = new Date(o.created_at);
+      return d >= sevenDaysAgo ? sum + (o.amount || 0) : sum;
+    }, 0);
+
+    // Calculate year-to-date revenue
+    const yearStart = new Date(currentYear, 0, 1);
+    const ytdRevenueCents = paidOrders.reduce((sum, o) => {
+      const d = new Date(o.created_at);
+      return d >= yearStart ? sum + (o.amount || 0) : sum;
+    }, 0);
+
     const stats = {
       totalUsers: profiles.length,
       totalSubscribers: paidSubscribers.length, // Only count actual paid subscribers
+      starterSubscribers: starterSubscribers.length,
+      proSubscribers: proSubscribers.length,
+      growthSubscribers: growthSubscribers.length,
       totalOrders: paidOrders.length, // Only count actually paid orders
       totalRevenue: totalRevenueCents / 100,
       totalContacts: contacts.length,
       totalNewsletterSubscribers: contacts.filter((c) => c.newsletter_subscribed).length,
-      totalLeadMagnetDownloads: leadDownloads.length,
+      totalJumps: jumps.length,
+      successfulJumps: successfulJumps.length,
+      failedJumps: failedJumps.length,
+      generatingJumps: generatingJumps.length,
+      guestJumps: guestJumps.length,
       abandonedCarts: orders.filter((o) => o.status === "pending").length,
       completedOrders: paidOrders.length,
       // Add breakdown of revenue and orders
@@ -143,6 +218,8 @@ serve(async (req) => {
       productOrders: paidOrders.filter(o => !(productById.get(o.product_id)?.name === "JumpinAI Pro Subscription")).length,
       monthlyRevenue: monthlyRevenueCents / 100,
       dailyRevenue: dailyRevenueCents / 100,
+      last7DaysRevenue: last7DaysRevenueCents / 100,
+      ytdRevenue: ytdRevenueCents / 100,
       averageOrderValue: paidOrders.length ? totalRevenueCents / paidOrders.length / 100 : 0,
     };
 
@@ -172,14 +249,40 @@ serve(async (req) => {
         const totalPaid = userOrders.reduce((sum, o) => sum + (o.amount || 0), 0) / 100;
         const totalDownloads = userOrders.reduce((sum, o) => sum + (o.download_count || 0), 0);
         
+        // Get subscription audit logs for this user
+        const userAuditLogs = auditLogs
+          .filter(log => log.email === s.email || log.user_id === s.user_id)
+          .map(log => ({
+            id: log.id,
+            action: log.action,
+            old_data: log.old_data,
+            new_data: log.new_data,
+            created_at: log.created_at,
+            changed_by: log.changed_by,
+            change_source: log.change_source,
+          }));
+        
+        // Calculate subscription-specific billing
+        const subscriptionPayments = subscriptionOrders.map(o => ({
+          id: o.id,
+          amount: o.amount / 100,
+          created_at: o.created_at,
+          product_name: productById.get(o.product_id)?.name || "Subscription",
+        }));
+        
+        const totalSubscriptionPaid = subscriptionOrders.reduce((sum, o) => sum + (o.amount || 0), 0) / 100;
+        
         return {
           ...s,
           last_login: auth?.last_sign_in_at || null,
           total_paid: totalPaid,
+          total_subscription_paid: totalSubscriptionPaid,
           total_downloads: totalDownloads,
           completed_orders: userOrders.length,
           subscription_payments: subscriptionOrders.length,
           product_purchases: productPurchases.length,
+          subscription_payment_history: subscriptionPayments,
+          audit_logs: userAuditLogs,
         };
       });
 
@@ -232,6 +335,10 @@ serve(async (req) => {
       }
 
       const contact = email ? contacts.find((c) => c.email === email) : undefined;
+      
+      // Get latest jump for this user to get IP and location
+      const userJumps = jumps.filter((j: any) => j.user_id === p.id);
+      const latestJump = userJumps.sort((a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())[0];
 
       return {
         id: p.id,
@@ -253,6 +360,8 @@ serve(async (req) => {
         newsletter_subscribed: !!contact?.newsletter_subscribed,
         lead_magnet_downloaded: !!contact?.lead_magnet_downloaded,
         last_login: auth?.last_sign_in_at || null,
+        latestIpAddress: latestJump?.ip_address || null,
+        latestLocation: latestJump?.location || null,
       };
     });
 
@@ -292,6 +401,143 @@ serve(async (req) => {
       return events;
     }).sort((a, b) => b.timestamp - a.timestamp).slice(0, 100);
 
+    // Format jump generations with user info and enhanced status tracking
+    const jumpGenerations = jumps.map((j: any) => {
+      const userProfile = profiles.find((p: any) => p.id === j.user_id);
+      const userAuth = authById.get(j.user_id);
+      const userSub = subscribers.find((s: any) => s.user_id === j.user_id);
+      
+      // Determine status description based on status and completion percentage
+      let statusDescription = '';
+      if (j.status === 'completed' || j.status === 'active') {
+        statusDescription = 'Successfully completed';
+      } else if (j.status === 'generating') {
+        statusDescription = `In progress: ${j.completion_percentage || 0}% complete`;
+      } else if (j.status === 'failed' || j.status === 'error') {
+        statusDescription = 'Generation failed - check logs for details';
+      } else {
+        statusDescription = `Unknown status: ${j.status}`;
+      }
+      
+      return {
+        id: j.id,
+        user_id: j.user_id,
+        user_email: userAuth?.email || userSub?.email || null,
+        title: j.title,
+        full_content: j.full_content,
+        status: j.status,
+        completion_percentage: j.completion_percentage || 0,
+        status_description: statusDescription,
+        created_at: j.created_at,
+        is_guest: !j.user_id,
+        ip_address: j.ip_address || null,
+        location: j.location || null,
+        form_goals: j.form_goals || null,
+        form_challenges: j.form_challenges || null,
+        stt_used: j.stt_used || false,
+        input_method: j.input_method || 'typed',
+        goals_stt_seconds: j.goals_stt_seconds || 0,
+        challenges_stt_seconds: j.challenges_stt_seconds || 0,
+      };
+    });
+
+    // Build credit overviews
+    const creditOverviews = userCredits.map((uc: any) => {
+      const userAuth = authById.get(uc.user_id);
+      const userSub = subscribers.find((s: any) => s.user_id === uc.user_id);
+      const userTransactions = creditTransactions
+        .filter((t: any) => t.user_id === uc.user_id)
+        .slice(0, 10); // Get recent 10 transactions per user
+      
+      return {
+        user_id: uc.user_id,
+        user_email: userAuth?.email || userSub?.email || 'Unknown',
+        credits_balance: uc.credits_balance,
+        total_credits_purchased: uc.total_credits_purchased,
+        recent_transactions: userTransactions,
+      };
+    });
+
+    // Helper function to get location from IP address
+    async function getLocationFromIP(ipAddress: string): Promise<string> {
+      if (ipAddress === 'unknown' || ipAddress === '127.0.0.1' || ipAddress.startsWith('192.168.') || ipAddress.startsWith('10.')) {
+        return 'Unknown';
+      }
+
+      try {
+        const geoResponse = await fetch(`http://ip-api.com/json/${ipAddress}?fields=status,country,regionName,city`);
+        if (geoResponse.ok) {
+          const geoData = await geoResponse.json();
+          if (geoData.status === 'success') {
+            const parts = [];
+            if (geoData.city) parts.push(geoData.city);
+            if (geoData.regionName) parts.push(geoData.regionName);
+            if (geoData.country) parts.push(geoData.country);
+            return parts.join(', ') || 'Unknown';
+          }
+        }
+      } catch (error) {
+        console.error('Geolocation error:', error);
+      }
+      
+      return 'Unknown';
+    }
+
+    // Build guest user activity data
+    const guestUsers = await Promise.all(guestTracking.map(async (gt: any) => {
+      // Get all guest jumps from this IP address
+      const guestJumpsForIP = jumps
+        .filter((j: any) => !j.user_id && j.ip_address === gt.ip_address)
+        .sort((a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+        .map((j: any) => ({
+          id: j.id,
+          title: j.title,
+          full_content: j.full_content,
+          status: j.status,
+          created_at: j.created_at,
+          location: j.location,
+          form_goals: j.form_goals,
+          form_challenges: j.form_challenges,
+          views_count: j.views_count || 0,
+          clarifications_count: j.clarifications_count || 0,
+          max_clarification_level: j.max_clarification_level || 0,
+          reroutes_count: j.reroutes_count || 0,
+          tools_clicked_count: j.tools_clicked_count || 0,
+          prompts_copied_count: j.prompts_copied_count || 0,
+          combos_used_count: j.combos_used_count || 0,
+          // STT tracking fields
+          stt_used: j.stt_used || false,
+          input_method: j.input_method || 'typed',
+          goals_stt_seconds: j.goals_stt_seconds || 0,
+          challenges_stt_seconds: j.challenges_stt_seconds || 0,
+          completion_percentage: j.completion_percentage || 0,
+          status_description: j.status === 'active' || j.status === 'completed' 
+            ? '✓ Successfully generated' 
+            : j.status === 'generating' 
+              ? `In progress (${j.completion_percentage || 0}%)` 
+              : j.status === 'failed' ? 'Failed to generate' : j.status,
+        }));
+
+      // Get location from the most recent jump, or geolocate the IP if no jumps found
+      let locationValue = guestJumpsForIP.length > 0 ? guestJumpsForIP[0].location : null;
+      
+      // If no location from jumps, try to geolocate the IP address
+      if (!locationValue || locationValue === 'Unknown') {
+        locationValue = await getLocationFromIP(gt.ip_address);
+      }
+
+      return {
+        ip_address: gt.ip_address,
+        user_agent: gt.user_agent,
+        usage_count: gt.usage_count,
+        remaining_uses: Math.max(0, 3 - gt.usage_count),
+        last_used_at: gt.last_used_at,
+        created_at: gt.created_at,
+        location: locationValue,
+        jump_attempts: guestJumpsForIP,
+      };
+    }));
+
     const payload = {
       stats,
       recentOrders,
@@ -299,6 +545,9 @@ serve(async (req) => {
       contacts: contactsSorted,
       users,
       authLogs,
+      jumpGenerations,
+      creditOverviews,
+      guestUsers,
     };
 
     return new Response(JSON.stringify(payload), {

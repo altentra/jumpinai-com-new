@@ -3,24 +3,87 @@ import { Menu, X, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { Collapsible, CollapsibleTrigger, CollapsibleContent } from "@/components/ui/collapsible";
-import ThemeToggle from "@/components/ThemeToggle";
+
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
-import logo from "@/assets/logo.png";
+import { useTheme } from "next-themes";
+import logo from "@/assets/logo-header-transparent.png";
 
 const Navigation = React.memo(() => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isHeaderVisible, setIsHeaderVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
   const { isAuthenticated, logout, login } = useAuth();
+  // We still keep next-themes around for ThemeToggle etc, but we don't rely on
+  // resolvedTheme here because the header itself is forced into `.dark`.
+  useTheme();
   const navigate = useNavigate();
+  
+  // Detect the *global* theme from the <html> class.
+  // This avoids confusion caused by this nav being forced into `.dark`.
+  const [isGlobalDarkMode, setIsGlobalDarkMode] = useState(() => {
+    if (typeof document === 'undefined') return true;
+    return document.documentElement.classList.contains('dark');
+  });
+
+  useEffect(() => {
+    if (typeof document === 'undefined') return;
+    const el = document.documentElement;
+    const update = () => setIsGlobalDarkMode(el.classList.contains('dark'));
+    update();
+
+    const observer = new MutationObserver(update);
+    observer.observe(el, { attributes: true, attributeFilter: ['class'] });
+    return () => observer.disconnect();
+  }, []);
+
+  // In light mode, we want the header to look identical (solid) to dark mode.
+  // In dark mode, keep the existing glass/transparency behavior.
+  const isLightMode = !isGlobalDarkMode;
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
+      const currentScrollY = window.scrollY;
+      
+      // Update scrolled state for styling
+      setIsScrolled(currentScrollY > 50);
+      
+      // On mobile, hide header when scrolling down, show when scrolling up
+      if (window.innerWidth < 768) {
+        let newVisibility = isHeaderVisible;
+        
+        if (currentScrollY > lastScrollY && currentScrollY > 80) {
+          // Scrolling down & past header height - hide it
+          newVisibility = false;
+        } else if (currentScrollY < lastScrollY) {
+          // Scrolling up - show it
+          newVisibility = true;
+        }
+        
+        if (newVisibility !== isHeaderVisible) {
+          setIsHeaderVisible(newVisibility);
+          // Dispatch custom event to sync with other components
+          window.dispatchEvent(new CustomEvent('headerVisibilityChange', { 
+            detail: { visible: newVisibility } 
+          }));
+        }
+      } else {
+        // On desktop, always show header
+        if (!isHeaderVisible) {
+          setIsHeaderVisible(true);
+          window.dispatchEvent(new CustomEvent('headerVisibilityChange', { 
+            detail: { visible: true } 
+          }));
+        }
+      }
+      
+      setLastScrollY(currentScrollY);
     };
+    
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [lastScrollY, isHeaderVisible]);
 
   // Preload page when user hovers over navigation link
   const handleMouseEnter = useCallback((href: string) => {
@@ -67,8 +130,6 @@ const Navigation = React.memo(() => {
   const navItems = [
     { name: "JumpinAI Studio", href: "/jumpinai-studio" },
     { name: "Pricing", href: "/pricing" },
-    { name: "Guides", href: "/jumps" },
-    { name: "Resources", href: "/resources" },
   ];
 
   const companyItems = [
@@ -77,42 +138,65 @@ const Navigation = React.memo(() => {
   ];
 
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-      isScrolled 
-        ? 'bg-background/80 backdrop-blur-2xl border-b border-border/50 shadow-2xl' 
-        : 'bg-background/40 backdrop-blur-lg'
-    }`}>
+    <nav 
+      className={`dark fixed left-0 right-0 z-50 transition-all duration-300 ease-out ${
+        isLightMode 
+          ? 'bg-background' // fully opaque (uses dark tokens because of `.dark`)
+          : isScrolled 
+            ? 'bg-background/80 backdrop-blur-2xl' 
+            : 'bg-background/40 backdrop-blur-lg'
+      } ${
+        isScrolled 
+          ? 'border-b border-border/50 shadow-2xl' 
+          : ''
+      }`}
+      style={{
+        top: 0,
+        transform: isHeaderVisible ? 'translateY(0)' : 'translateY(-100%)',
+        pointerEvents: isHeaderVisible ? 'auto' : 'none',
+        transitionProperty: 'transform, background-color, border-color, box-shadow',
+        transitionDuration: '300ms',
+        transitionTimingFunction: 'ease-out',
+        // Ensure no accidental "glass" bleed-through in light mode.
+        ...(isLightMode ? { backdropFilter: 'none' } : {}),
+      }}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-20">
-          {/* Logo */}
-          <Link to="/" className="flex items-center group cursor-pointer">
-            <div className="relative">
-              <div className="pointer-events-none absolute -inset-1 rounded-3xl bg-primary/20 blur-md opacity-0 group-hover:opacity-60 transition-opacity duration-300"></div>
-              <div className="relative w-10 h-10 rounded-2xl overflow-hidden group-hover:scale-105 transition-transform duration-300 ring-1 ring-border shadow-lg">
-                <img 
-                  src={logo}
-                  alt="JumpinAI Logo" 
-                  width="40"
-                  height="40"
-                  loading="eager"
-                  className="w-full h-full object-cover"
-                />
-              </div>
+        <div className="flex items-center h-20 md:h-16">
+          {/* Left: Logo - Fixed */}
+          <div className="flex-shrink-0">
+            <button 
+              onClick={() => {
+                if (window.location.pathname === '/') {
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                } else {
+                  navigate('/');
+                }
+              }}
+              className="flex items-center group cursor-pointer"
+            >
+            <div className="relative group-hover:scale-105 transition-transform duration-300">
+              <div className="pointer-events-none absolute -inset-1 rounded-lg bg-primary/20 blur-md opacity-0 group-hover:opacity-60 transition-opacity duration-300"></div>
+              <img 
+                src={logo}
+                alt="JumpinAI Logo" 
+                height="36"
+                loading="eager"
+                className="relative h-9 w-auto object-contain"
+              />
             </div>
-            <span className="ml-3 text-2xl font-black font-display gradient-text-primary">
-              JumpinAI
-            </span>
-          </Link>
+            </button>
+          </div>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:block">
-            <div className="flex items-center space-x-8">
+          {/* Center: Desktop Navigation - Centered */}
+          <div className="hidden md:flex flex-1 justify-center px-4">
+            <div className="flex items-center space-x-2 lg:space-x-6">
               {navItems.map((item) => (
                 <button
                   key={item.name}
                   onClick={() => handleNavClick(item.href)}
                   onMouseEnter={() => handleMouseEnter(item.href)}
-                  className="relative text-muted-foreground hover:text-foreground px-4 py-2 text-sm font-medium transition-all duration-300 group"
+                  className="relative text-muted-foreground hover:text-foreground px-2 lg:px-3 py-2 text-sm font-medium transition-all duration-300 group whitespace-nowrap"
                 >
                   {item.name}
                   <span className="absolute bottom-0 left-0 w-full h-0.5 bg-primary transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
@@ -122,7 +206,7 @@ const Navigation = React.memo(() => {
               {/* Company dropdown */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <button className="relative text-muted-foreground hover:text-foreground px-4 py-2 text-sm font-medium transition-all duration-300 group flex items-center">
+                  <button className="relative text-muted-foreground hover:text-foreground px-2 lg:px-3 py-2 text-sm font-medium transition-all duration-300 group flex items-center whitespace-nowrap">
                     Company <ChevronDown className="ml-1 h-3 w-3" />
                     <span className="absolute bottom-0 left-0 w-full h-0.5 bg-primary transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
                   </button>
@@ -138,9 +222,8 @@ const Navigation = React.memo(() => {
             </div>
           </div>
 
-          {/* Theme Toggle & CTA */}
-          <div className="hidden md:flex items-center space-x-4">
-            <ThemeToggle />
+          {/* Right: Theme Toggle & CTA - Fixed */}
+          <div className="hidden md:flex items-center space-x-4 flex-shrink-0">
             {isAuthenticated ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -163,7 +246,15 @@ const Navigation = React.memo(() => {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="min-w-[200px]">
                   <DropdownMenuItem onSelect={() => navigate('/dashboard')}>Dashboard</DropdownMenuItem>
-                  <DropdownMenuItem onSelect={() => logout()}>Log Out</DropdownMenuItem>
+                  <DropdownMenuItem
+                    onSelect={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      void logout();
+                    }}
+                  >
+                    Log Out
+                  </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
@@ -189,8 +280,7 @@ const Navigation = React.memo(() => {
           </div>
 
           {/* Mobile menu button */}
-          <div className="md:hidden flex items-center space-x-2">
-            <ThemeToggle />
+          <div className="md:hidden flex items-center space-x-2 ml-auto">
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="text-muted-foreground hover:text-foreground p-2 rounded-lg transition-colors"
@@ -245,7 +335,7 @@ const Navigation = React.memo(() => {
                     </button>
                     <button
                       onClick={() => {
-                        logout();
+                        void logout();
                         setIsOpen(false);
                       }}
                       className="text-muted-foreground hover:text-foreground block w-full text-left px-4 py-3 rounded-2xl text-base font-medium hover:bg-accent transition-all duration-300"

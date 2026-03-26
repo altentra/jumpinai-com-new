@@ -9,10 +9,15 @@ export interface StudioFormData {
   aiKnowledge: string;
   aiExperience?: string;
   goals: string;
-  challenges: string;
+  challenges?: string;
   timeCommitment: string;
   budget: string;
   urgency?: string;
+  // STT tracking data
+  sttUsed?: boolean;
+  inputMethod?: 'typed' | 'narrated' | 'mixed';
+  goalsSttSeconds?: number;
+  challengesSttSeconds?: number;
 }
 
 export interface GenerationResult {
@@ -20,6 +25,7 @@ export interface GenerationResult {
   jumpName?: string;
   jumpNumber?: number;
   fullTitle?: string;
+  title?: string;
   fullContent: string;
   structuredPlan?: any;
   comprehensivePlan?: any;
@@ -56,6 +62,8 @@ export const jumpinAIStudioService = {
       };
 
       let jumpId: string | undefined = userId ? undefined : tempJumpId;
+      let ipAddress = 'unknown';
+      let location = 'Unknown';
 
       // Get the session for auth token (optional for guests)
       const { data: { session } } = await supabase.auth.getSession();
@@ -70,9 +78,16 @@ export const jumpinAIStudioService = {
       }
 
       // Build request body - turnstileToken only for guests
+      // Include STT tracking data for database storage
       const requestBody = { 
         formData,
-        turnstileToken
+        turnstileToken,
+        sttTracking: {
+          sttUsed: formData.sttUsed || false,
+          inputMethod: formData.inputMethod || 'typed',
+          goalsSttSeconds: formData.goalsSttSeconds || 0,
+          challengesSttSeconds: formData.challengesSttSeconds || 0
+        }
       };
 
       fetch('https://cieczaajcgkgdgenfdzi.supabase.co/functions/v1/jumps-ai-streaming', {
@@ -81,139 +96,177 @@ export const jumpinAIStudioService = {
         body: JSON.stringify(requestBody)
       }).then(async response => {
         if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+          // Parse error response to get detailed message
+          let errorMessage = `HTTP error! status: ${response.status}`;
+          try {
+            const errorData = await response.json();
+            if (errorData.error) {
+              errorMessage = errorData.error;
+              // For rate limit errors, include reset time if available
+              if (response.status === 429 && errorData.resetAt) {
+                const resetDate = new Date(errorData.resetAt);
+                const hoursUntilReset = Math.ceil((resetDate.getTime() - Date.now()) / (1000 * 60 * 60));
+                errorMessage += ` Resets in ~${hoursUntilReset} hours.`;
+              }
+            }
+          } catch {
+            // Couldn't parse JSON, use default message
+          }
+          throw new Error(errorMessage);
         }
 
         const reader = response.body?.getReader();
         if (!reader) throw new Error('No reader available');
 
         const decoder = new TextDecoder();
-        let buffer = '';
+        let textBuffer = '';
+        let streamDone = false;
 
-        while (true) {
+        while (!streamDone) {
           const { done, value } = await reader.read();
           if (done) break;
 
-          buffer += decoder.decode(value, { stream: true });
-          const lines = buffer.split('\n\n');
-          buffer = lines.pop() || '';
+          textBuffer += decoder.decode(value, { stream: true });
 
-          for (const line of lines) {
-            if (!line.trim() || !line.startsWith('data: ')) continue;
+          let newlineIndex: number;
+          while ((newlineIndex = textBuffer.indexOf('\n')) !== -1) {
+            let line = textBuffer.slice(0, newlineIndex);
+            textBuffer = textBuffer.slice(newlineIndex + 1);
+
+            if (line.endsWith('\r')) line = line.slice(0, -1);
+            const trimmed = line.trim();
+            if (!trimmed || trimmed.startsWith(':')) continue;
+            if (!trimmed.startsWith('data: ')) continue;
+
+            const jsonStr = trimmed.slice(6).trim();
+            if (!jsonStr) continue;
+            if (jsonStr === '[DONE]') {
+              streamDone = true;
+              break;
+            }
 
             try {
-              const jsonStr = line.substring(6);
               const parsed = JSON.parse(jsonStr);
               const { step, type, data } = parsed;
 
               console.log(`📨 Received SSE event: step=${step}, type=${type}`);
 
+              // High-frequency streaming events
+              if (type === 'progress' || type === 'delta') {
+                if (onProgress) onProgress(step, type, data);
+                continue;
+              }
+
               if (type === 'naming') {
-                result.jumpName = data.jumpName;
+                console.log('📨 Received naming event, raw data:', data);
+                console.log('📨 data.jumpName:', data.jumpName);
+                
+                result.jumpName = data.jumpName || 'AI Transformation Journey';
+                // CRITICAL FOR GUESTS: Also set title immediately so it displays during generation
+                result.title = result.jumpName;
+                console.log('✅ Set result.jumpName and result.title to:', result.jumpName);
+                
+                // Extract IP, location, and JUMP ID from backend metadata
+                // The backend now creates the jump record for both guests and logged-in users
+                if (data._metadata) {
+                  ipAddress = data._metadata.ipAddress || 'unknown';
+                  location = data._metadata.location || 'Unknown';
+                  
+                  // Backend provides the jumpId after creating the record
+                  if (data._metadata.jumpId) {
+                    jumpId = data._metadata.jumpId;
+                    result.jumpId = jumpId;
+                    console.log('✅ Jump ID received from backend:', jumpId);
+                  }
+                  
+                  // Backend also provides the formatted title (with Jump # for logged-in users)
+                  if (data._metadata.jumpTitle) {
+                    result.title = data._metadata.jumpTitle;
+                    result.fullTitle = data._metadata.jumpTitle;
+                    console.log('✅ Jump title received from backend:', result.title);
+                  }
+                  
+                  console.log('📍 Extracted from backend:', { ipAddress, location, jumpId });
+                }
+                
                 console.log('✅ Jump name received:', data.jumpName);
                 
+                // Call onProgress for naming event
                 if (onProgress) {
-                  onProgress(step, type, data);
+                  const callbackData = { ...data, jumpName: result.jumpName, jumpId };
+                  onProgress(step, type, callbackData);
                 }
                 
-                if (userId) {
-                  (async () => {
-                    try {
-                      const jumpNumber = await jumpNamingService.getNextJumpNumber(userId);
-                      const fullTitle = `Jump #${jumpNumber}: ${result.jumpName}`;
-                      result.jumpNumber = jumpNumber;
-                      result.fullTitle = fullTitle;
-                      
-                      const { data: savedJump, error } = await supabase
-                        .from('user_jumps')
-                        .insert({
-                          user_id: userId,
-                          title: fullTitle,
-                          summary: `AI Transformation: ${result.jumpName}`,
-                          full_content: JSON.stringify({ jumpName: result.jumpName }),
-                          completion_percentage: 5,
-                          status: 'generating'
-                        })
-                        .select()
-                        .single();
-
-                      if (!error && savedJump) {
-                        jumpId = savedJump.id;
-                        result.jumpId = jumpId;
-                        console.log('✅ Jump created with ID:', jumpId);
-                        
-                        if (onProgress) {
-                          onProgress(step, 'jump_created', { jumpId, jumpNumber, fullTitle });
-                        }
-                      }
-                    } catch (error) {
-                      console.error('❌ Error creating jump:', error);
-                    }
-                  })();
-                } else {
-                  // For guest users, send jump_created event with temp ID
-                  console.log('✅ Guest jump using temp ID:', jumpId);
-                  if (onProgress) {
-                    onProgress(step, 'jump_created', { 
-                      jumpId, 
-                      jumpNumber: null, 
-                      fullTitle: result.jumpName 
-                    });
-                  }
+                // Call onProgress with jump_created event
+                if (onProgress && jumpId) {
+                  onProgress(step, 'jump_created', {
+                    jumpId: jumpId,
+                    jumpNumber: result.jumpNumber,
+                    fullTitle: result.fullTitle || result.title,
+                    title: result.title
+                  });
+                }
+                
+                // CRITICAL: Dispatch window event to notify sidebar of new jump
+                if (jumpId) {
+                  console.log('🔔 Dispatching jumpCreated event to window for sidebar update');
+                  window.dispatchEvent(new CustomEvent('jumpCreated', { 
+                    detail: { 
+                      jumpId: jumpId, 
+                      title: result.fullTitle || result.title 
+                    } 
+                  }));
                 }
               } else if (type === 'overview') {
-                console.log('📋 Processing overview data:', data);
+                console.log('📋 Processing overview data (NEW 4-FRAME FORMAT):', data);
+                
+                // NEW 4-FRAME STRUCTURE: jumpForward, strategicEdge, flightPath, newBaseline
                 result.comprehensivePlan = {
-                  executiveSummary: data.executiveSummary || '',
-                  situationAnalysis: data.situationAnalysis || {},
-                  strategicVision: data.strategicVision || '',
-                  roadmap: data.roadmap || {},
-                  successFactors: data.successFactors || [],
-                  riskMitigation: data.riskMitigation || [],
-                  action_plan: { phases: [] } // Will be filled by plan step
+                  // NEW 4-FRAME STRUCTURE
+                  jumpForward: data.jumpForward || '',
+                  strategicEdge: data.strategicEdge || { analysis: '', keyPoints: [] },
+                  flightPath: data.flightPath || { vision: '', roadmap: [] },
+                  newBaseline: data.newBaseline || '',
+                  // Action plan will be filled by plan step
+                  action_plan: { phases: [] }
                 };
                 
+                // Build overview text for full_content using NEW structure
                 let overviewText = '';
-                if (data.executiveSummary) {
-                  overviewText += `## Executive Summary\n\n${data.executiveSummary}\n\n`;
+                if (data.jumpForward) {
+                  overviewText += `## The Jump Forward\n\n${data.jumpForward}\n\n`;
                 }
-                if (data.situationAnalysis) {
-                  if (data.situationAnalysis.currentState) {
-                    overviewText += `## Current State\n\n${data.situationAnalysis.currentState}\n\n`;
-                  }
-                  if (data.situationAnalysis.challenges?.length) {
-                    overviewText += `## Challenges\n`;
-                    data.situationAnalysis.challenges.forEach((c: string) => {
-                      overviewText += `- ${c}\n`;
-                    });
-                    overviewText += '\n';
-                  }
-                  if (data.situationAnalysis.opportunities?.length) {
-                    overviewText += `## Opportunities\n`;
-                    data.situationAnalysis.opportunities.forEach((o: string) => {
-                      overviewText += `- ${o}\n`;
+                if (data.strategicEdge?.analysis) {
+                  overviewText += `## Strategic Edge\n\n${data.strategicEdge.analysis}\n\n`;
+                  if (data.strategicEdge.keyPoints?.length) {
+                    data.strategicEdge.keyPoints.forEach((p: string) => {
+                      overviewText += `- ${p}\n`;
                     });
                     overviewText += '\n';
                   }
                 }
-                if (data.strategicVision) {
-                  overviewText += `## Strategic Vision\n\n${data.strategicVision}\n\n`;
+                if (data.flightPath?.vision) {
+                  overviewText += `## Flight Path\n\n${data.flightPath.vision}\n\n`;
+                  if (data.flightPath.roadmap?.length) {
+                    data.flightPath.roadmap.forEach((phase: any) => {
+                      overviewText += `### ${phase.phase} (${phase.timeframe})\n${phase.focus}\n\n`;
+                    });
+                  }
                 }
-                if (data.roadmap) {
-                  overviewText += `## Roadmap\n\n`;
-                  if (data.roadmap.immediate) overviewText += `**Immediate (0-30 days):** ${data.roadmap.immediate}\n\n`;
-                  if (data.roadmap.shortTerm) overviewText += `**Short-term (30-90 days):** ${data.roadmap.shortTerm}\n\n`;
-                  if (data.roadmap.longTerm) overviewText += `**Long-term (90+ days):** ${data.roadmap.longTerm}\n\n`;
+                if (data.newBaseline) {
+                  overviewText += `## New Baseline\n\n${data.newBaseline}\n\n`;
                 }
                 
                 result.fullContent = overviewText.trim();
-                console.log('✅ Overview built with', result.fullContent.length, 'chars');
+                console.log('✅ Overview built with NEW 4-frame format,', result.fullContent.length, 'chars');
                 
+                // CRITICAL: Pass jumpName explicitly in callback data for guest display
                 if (onProgress) {
-                  onProgress(step, type, data);
+                  const callbackData = { ...data, jumpName: result.jumpName };
+                  onProgress(step, type, callbackData);
                 }
                 
-                if (userId && jumpId) {
+                if (jumpId) {
                   (async () => {
                     try {
                       await supabase
@@ -269,7 +322,7 @@ export const jumpinAIStudioService = {
                   onProgress(step, type, data);
                 }
                 
-                if (userId && jumpId) {
+                if (jumpId) {
                   (async () => {
                     try {
                       await supabase
@@ -324,27 +377,46 @@ export const jumpinAIStudioService = {
                   onProgress(step, type, data);
                 }
                 
-                if (userId && jumpId && toolPromptsArray.length > 0) {
-                  console.log(`💾 Attempting to save ${toolPromptsArray.length} tool prompts...`);
-                  console.log('💾 Save context:', { userId, jumpId, arrayLength: toolPromptsArray.length });
+                if (jumpId && toolPromptsArray.length > 0) {
+                  console.log(`💾 Attempting to save ${toolPromptsArray.length} tool prompts to database...`);
+                  console.log('💾 Save context:', { userId: userId || 'guest', jumpId, arrayLength: toolPromptsArray.length });
+                  
+                  // IMPORTANT: Generate temporary IDs immediately so UI can render
+                  // These will be replaced with real database IDs when save completes
+                  const tempIds = toolPromptsArray.map(() => crypto.randomUUID());
+                  result.components!.toolPrompts = toolPromptsArray.map((tp, idx) => ({
+                    ...tp,
+                    id: tempIds[idx]
+                  }));
+                  
+                  // Notify UI immediately with temp IDs so View buttons work
+                  if (onProgress) {
+                    console.log('⚡ Notifying UI with temporary IDs for immediate display');
+                    onProgress(step, 'tool_prompts_ids_updated', { 
+                      tool_prompts: result.components!.toolPrompts,
+                      ids: tempIds
+                    });
+                  }
+                  
+                  // Then save to database in background and update with real IDs when done
                   (async () => {
                     try {
                       const { toolPromptsService } = await import('@/services/toolPromptsService');
                       console.log('💾 toolPromptsService loaded, calling saveToolPrompts...');
-                      const savedIds = await toolPromptsService.saveToolPrompts(toolPromptsArray, userId, jumpId);
-                      console.log('✅ Tool prompts saved successfully with IDs:', savedIds);
+                      const savedIds = await toolPromptsService.saveToolPrompts(toolPromptsArray, userId || null, jumpId);
+                      console.log('✅ Tool prompts saved successfully with real database IDs:', savedIds);
                       
-                      // Update the result with saved IDs
+                      // Update the result with real database IDs
                       if (savedIds && savedIds.length === toolPromptsArray.length) {
                         result.components!.toolPrompts = toolPromptsArray.map((tp, idx) => ({
                           ...tp,
                           id: savedIds[idx]
                         }));
-                        console.log('✅ Updated tool prompts with database IDs:', savedIds);
+                        console.log('✅ Replaced temp IDs with real database IDs');
                         
-                        // Trigger progress update to notify components about the ID update
+                        // Notify UI again with real database IDs
                         if (onProgress) {
-                          console.log('🔄 Notifying components of tool prompt ID updates');
+                          console.log('🔄 Notifying UI with real database IDs');
                           onProgress(step, 'tool_prompts_ids_updated', { 
                             tool_prompts: result.components!.toolPrompts,
                             ids: savedIds
@@ -352,30 +424,14 @@ export const jumpinAIStudioService = {
                         }
                       }
                     } catch (error) {
-                      console.error('❌ Error saving tool prompts:', error);
+                      console.error('❌ Error saving tool prompts to database:', error);
                       console.error('❌ Error details:', error instanceof Error ? error.message : String(error));
+                      console.warn('⚠️ Continuing with temporary IDs since database save failed');
+                      // UI still works with temp IDs, just won't persist
                     }
                   })();
-                } else if (jumpId && toolPromptsArray.length > 0) {
-                  // For guest users, generate temporary IDs so UI can display properly
-                  console.log('🎯 Guest mode: Generating temp IDs for tool prompts');
-                  const tempIds = toolPromptsArray.map(() => crypto.randomUUID());
-                  result.components!.toolPrompts = toolPromptsArray.map((tp, idx) => ({
-                    ...tp,
-                    id: tempIds[idx]
-                  }));
-                  
-                  // Notify components about the temp IDs
-                  if (onProgress) {
-                    console.log('🔄 Notifying components of temp tool prompt IDs');
-                    onProgress(step, 'tool_prompts_ids_updated', { 
-                      tool_prompts: result.components!.toolPrompts,
-                      ids: tempIds
-                    });
-                  }
                 } else {
                   console.warn('⚠️ NOT saving tool prompts. Conditions:', {
-                    hasUserId: !!userId,
                     hasJumpId: !!jumpId,
                     arrayLength: toolPromptsArray.length,
                     arrayIsEmpty: toolPromptsArray.length === 0
@@ -406,8 +462,8 @@ export const jumpinAIStudioService = {
                   onProgress(step, type, data);
                 }
               }
-
-              if (userId && jumpId) {
+                
+              if (jumpId) {
                 (async () => {
                   const progress = Math.min(100, step * 15);
                   await this.updateJumpProgress(jumpId, progress);
@@ -514,6 +570,9 @@ export const jumpinAIStudioService = {
           result.jumpId = savedJump.id;
           result.jumpName = fullTitle;
           console.log('savedJump', savedJump);
+          
+          // Dispatch custom event to notify sidebar of new jump
+          window.dispatchEvent(new CustomEvent('jumpCreated', { detail: { jumpId: savedJump.id, title: fullTitle } }));
 
           // Save components
           await this.saveComponents(result.components, userId, savedJump.id);

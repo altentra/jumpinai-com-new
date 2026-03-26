@@ -10,6 +10,13 @@ import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { creditsService, type CreditPackage, type SubscriptionPlan } from '@/services/creditsService';
+import { SubscriptionUpgradeModal } from '@/components/SubscriptionUpgradeModal';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 const PricingNew = () => {
   const { user, isAuthenticated, subscription } = useAuth();
@@ -17,6 +24,9 @@ const PricingNew = () => {
   const [subscriptionPlans, setSubscriptionPlans] = useState<SubscriptionPlan[]>([]);
   const [loadingSubscription, setLoadingSubscription] = useState<Record<string, boolean>>({});
   const [packageLoading, setPackageLoading] = useState<Record<string, boolean>>({});
+  const [planLoading, setPlanLoading] = useState<Record<string, boolean>>({});
+  const [selectedUpgradePlan, setSelectedUpgradePlan] = useState<SubscriptionPlan | null>(null);
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
 
   useEffect(() => {
     const meta = document.createElement('meta');
@@ -56,7 +66,8 @@ const PricingNew = () => {
 
   const handleBuyCredits = async (packageId: string) => {
     if (!isAuthenticated) {
-      toast.error('Please sign in to purchase credits');
+      toast.info('Please sign up or log in to purchase credits');
+      window.location.href = '/auth';
       return;
     }
 
@@ -84,7 +95,8 @@ const PricingNew = () => {
 
   const handleSubscribe = async (planId: string) => {
     if (!isAuthenticated) {
-      toast.error('Please sign in to subscribe');
+      toast.info('Please sign up or log in to subscribe to a plan');
+      window.location.href = '/auth';
       return;
     }
 
@@ -110,20 +122,126 @@ const PricingNew = () => {
     }
   };
 
+  const getPlanTier = (planName: string): number => {
+    const name = planName.toLowerCase();
+    if (name.includes('free')) return 0;
+    if (name.includes('pro')) return 1;
+    if (name.includes('growth')) return 2;
+    return 0;
+  };
+
+  const getButtonAction = (plan: SubscriptionPlan) => {
+    const isCurrent = isCurrentPlan(plan.name);
+    const isFree = plan.price_cents === 0;
+    const currentTier = getPlanTier(subscription?.subscription_tier || 'Free Plan');
+    const planTier = getPlanTier(plan.name);
+    const hasSubscription = subscription?.subscribed;
+
+    if (isCurrent) {
+      return { type: 'current' as const, label: isFree ? 'Free Forever' : 'Current Plan' };
+    }
+
+    if (!hasSubscription && !isFree) {
+      return { type: 'subscribe' as const, label: 'Get Started' };
+    }
+
+    if (isFree) {
+      return { type: 'free' as const, label: 'Free Forever' };
+    }
+
+    if (planTier > currentTier) {
+      return { type: 'upgrade' as const, label: 'Upgrade Now' };
+    }
+
+    if (planTier < currentTier) {
+      return { type: 'downgrade' as const, label: 'Downgrade' };
+    }
+
+    return { type: 'current' as const, label: 'Current Plan' };
+  };
+
+  const getCurrentPlanData = (): SubscriptionPlan | null => {
+    return subscriptionPlans.find(p => p.name === subscription?.subscription_tier) || null;
+  };
+
+  const calculateUpgradeDetails = (newPlan: SubscriptionPlan) => {
+    const currentPlan = getCurrentPlanData();
+    if (!currentPlan) return { priceDifference: newPlan.price_cents / 100, creditDifference: newPlan.credits_per_month };
+    
+    return {
+      priceDifference: (newPlan.price_cents - currentPlan.price_cents) / 100,
+      creditDifference: newPlan.credits_per_month - currentPlan.credits_per_month,
+    };
+  };
+
+  const handleUpgradeClick = (plan: SubscriptionPlan) => {
+    setSelectedUpgradePlan(plan);
+    setShowUpgradeModal(true);
+  };
+
+  const handleUpgradeConfirm = async () => {
+    if (!selectedUpgradePlan) return;
+    
+    setPlanLoading(prev => ({ ...prev, [selectedUpgradePlan.id]: true }));
+    try {
+      const upgradeDetails = calculateUpgradeDetails(selectedUpgradePlan);
+      if (!upgradeDetails) {
+        throw new Error('Failed to calculate upgrade details');
+      }
+
+      const { data, error } = await supabase.functions.invoke('create-upgrade-checkout', {
+        body: {
+          newPlanId: selectedUpgradePlan.id,
+          priceDifference: upgradeDetails.priceDifference,
+          creditDifference: upgradeDetails.creditDifference,
+        }
+      });
+      
+      if (error) throw error;
+      
+      if (data?.url) {
+        window.location.href = data.url;
+      } else {
+        throw new Error('No checkout URL received');
+      }
+    } catch (e: any) {
+      console.error('Upgrade error:', e);
+      toast.error(e.message || "Failed to create upgrade checkout");
+      setPlanLoading(prev => ({ ...prev, [selectedUpgradePlan.id]: false }));
+    }
+  };
+
+  const handleDowngradeClick = async (planId: string, planName: string) => {
+    setPlanLoading(prev => ({ ...prev, [planId]: true }));
+    try {
+      const { data, error } = await supabase.functions.invoke('schedule-downgrade', {
+        body: { newPlanId: planId }
+      });
+      
+      if (error) throw error;
+      
+      toast.success(`Downgrade to ${planName} scheduled!`, {
+        description: `Your subscription will change to ${planName} on ${new Date(data.effectiveDate).toLocaleDateString()}.`,
+        duration: 7000,
+      });
+    } catch (e: any) {
+      toast.error(e.message || "Failed to schedule downgrade");
+    } finally {
+      setPlanLoading(prev => ({ ...prev, [planId]: false }));
+    }
+  };
+
   const formatPrice = (cents: number): string => {
     return `$${(cents / 100).toFixed(0)}`;
   };
 
   const getValueBadge = (credits: number) => {
-    if (credits === 250) return "Best Value";
-    if (credits === 100) return "Popular";
     return null;
   };
 
   const getPlanIcon = (planName: string) => {
     switch (planName.toLowerCase()) {
       case 'free plan': return <Zap className="w-6 h-6" />;
-      case 'starter plan': return <Star className="w-6 h-6" />;
       case 'pro plan': return <Crown className="w-6 h-6" />;
       case 'growth plan': return <Rocket className="w-6 h-6" />;
       default: return <Zap className="w-6 h-6" />;
@@ -197,7 +315,7 @@ const PricingNew = () => {
                   </div>
                 </div>
                 <p className="text-sm sm:text-base md:text-lg text-muted-foreground/90 max-w-3xl mx-auto mb-4 leading-relaxed px-4">
-                  <span className="font-semibold text-foreground">1 credit = 1 jump generation</span> - each jump delivers a comprehensive transformation plan including situation analysis, strategic vision with success metrics, detailed action plan with phases and milestones, plus 9 AI tool-prompt combinations to execute your strategy.
+                  <span className="font-semibold text-foreground">Credit costs:</span> 1 credit per Jump generation, 1 credit per Workflow build, 2 credits per AI Agent build. Each Jump includes a complete AI adaptation plan with tools and prompts, plus intelligent features to <span className="text-foreground">Clarify</span> steps into actionable details, <span className="text-foreground">Reroute</span> to explore alternative approaches, and <span className="text-foreground">Equip</span> any step with custom tool-prompt combinations. Build Workflows and AI Agents to automate your execution with downloadable n8n and Make.com integrations.
                 </p>
             </div>
           </section>
@@ -211,11 +329,12 @@ const PricingNew = () => {
               </p>
             </div>
 
-            <div className="w-full overflow-x-auto pb-4">
+              <div className="w-full overflow-x-auto pb-4">
               <div className="flex gap-4 sm:gap-6 min-w-max px-2 sm:px-4 md:px-0 md:justify-center md:flex-wrap md:max-w-7xl md:mx-auto pt-4">
                 {subscriptionPlans.map((plan) => {
                 const badge = getPlanBadge(plan.name);
-                const isLoading = loadingSubscription[plan.id];
+                const action = getButtonAction(plan);
+                const isLoading = planLoading[plan.id] || loadingSubscription[plan.id];
                 const isFree = plan.price_cents === 0;
                 const isUsersPlan = isCurrentPlan(plan.name);
                 
@@ -243,10 +362,22 @@ const PricingNew = () => {
                       <CardTitle className="text-xl font-bold">{plan.name}</CardTitle>
                       <CardDescription className="text-sm">{plan.description}</CardDescription>
                       <div className="mt-4">
-                        <div className="text-3xl font-bold">
-                          {isFree ? 'Free' : formatPrice(plan.price_cents)}
-                          {!isFree && <span className="text-base font-normal text-muted-foreground">/month</span>}
-                        </div>
+                        {isFree ? (
+                          <div className="text-3xl font-bold">Free</div>
+                        ) : (
+                          <div className="flex items-center justify-center gap-2">
+                            <span className="text-lg line-through text-muted-foreground/60">
+                              {plan.name.toLowerCase().includes('pro') ? '$20' : '$35'}
+                            </span>
+                            <span className="text-3xl font-bold">{formatPrice(plan.price_cents)}</span>
+                            <span className="text-base font-normal text-muted-foreground">/month</span>
+                          </div>
+                        )}
+                        {!isFree && (
+                          <Badge className="mt-1 bg-emerald-500/10 text-emerald-600 border-emerald-500/20 text-xs">
+                            Launch Promo
+                          </Badge>
+                        )}
                         <div className="text-sm text-muted-foreground mt-1">
                           {plan.credits_per_month} credits {!isFree && 'monthly'}
                         </div>
@@ -265,17 +396,21 @@ const PricingNew = () => {
                       
                       <div className="mt-auto">
                         <button 
-                          onClick={() => isUsersPlan ? null : handleSubscribe(plan.id)}
-                          disabled={isLoading || isUsersPlan}
+                          onClick={() => {
+                            if (action.type === 'subscribe') handleSubscribe(plan.id);
+                            else if (action.type === 'upgrade') handleUpgradeClick(plan);
+                            else if (action.type === 'downgrade') handleDowngradeClick(plan.id, plan.name);
+                          }}
+                          disabled={isLoading || action.type === 'current' || action.type === 'free'}
                           className="relative group w-full overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                           {/* Liquid glass glow effect */}
                           <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/30 via-accent/20 to-primary/30 rounded-[2rem] blur-md opacity-30 group-hover:opacity-60 transition duration-500"></div>
                           
                           {/* Button */}
-                          <div className={`relative flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 backdrop-blur-xl rounded-[2rem] border transition-all duration-300 overflow-hidden ${isUsersPlan ? 'border-border/30' : 'border-primary/30 group-hover:border-primary/50'}`}>
+                          <div className={`relative flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 backdrop-blur-xl rounded-[2rem] border transition-all duration-300 overflow-hidden ${(action.type === 'current' || action.type === 'free') ? 'border-border/30' : 'border-primary/30 group-hover:border-primary/50'}`}>
                             {/* Shimmer effect */}
-                            {!isUsersPlan && (
+                            {action.type !== 'current' && action.type !== 'free' && (
                               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
                             )}
                             
@@ -285,12 +420,14 @@ const PricingNew = () => {
                                 <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
                                 <span className="relative font-bold">Processing...</span>
                               </>
-                            ) : isUsersPlan ? (
-                              <span className="relative font-bold text-muted-foreground">Current Plan</span>
                             ) : (
                               <>
-                                <span className="relative font-bold text-foreground group-hover:text-primary transition-colors duration-300">Get Started</span>
-                                <ArrowRight className="w-4 h-4 relative text-foreground group-hover:text-primary transition-colors duration-300" />
+                                <span className={`relative font-bold transition-colors duration-300 ${(action.type === 'current' || action.type === 'free') ? 'text-muted-foreground' : 'text-foreground group-hover:text-primary'}`}>
+                                  {action.label}
+                                </span>
+                                {action.type !== 'current' && action.type !== 'free' && (
+                                  <ArrowRight className="w-4 h-4 relative text-foreground group-hover:text-primary transition-colors duration-300" />
+                                )}
                               </>
                             )}
                           </div>
@@ -323,8 +460,7 @@ const PricingNew = () => {
                   <Card key={pkg.id} className="relative h-full flex flex-col glass hover:glass-dark transition-all duration-300 shadow-modern hover:shadow-modern-lg rounded-2xl border-0">
                     {valueBadge && (
                       <div className="absolute -top-2 -right-2 z-10">
-                        <Badge variant="secondary" className="text-xs shadow-modern rounded-full px-2 py-1">
-                          <Sparkles className="w-3 h-3 mr-1" />
+                        <Badge className={`text-xs shadow-modern rounded-full px-2 py-1 ${valueBadge === 'Most Popular' ? 'bg-primary text-primary-foreground' : 'bg-gradient-to-r from-purple-500 to-pink-500 text-white'}`}>
                           {valueBadge}
                         </Badge>
                       </div>
@@ -386,8 +522,7 @@ const PricingNew = () => {
                   <Card key={pkg.id} className="relative h-full flex flex-col glass hover:glass-dark transition-all duration-300 shadow-modern hover:shadow-modern-lg rounded-2xl border-0">
                     {valueBadge && (
                       <div className="absolute -top-2 -right-2 z-10">
-                        <Badge variant="secondary" className="text-xs shadow-modern rounded-full px-2 py-1">
-                          <Sparkles className="w-3 h-3 mr-1" />
+                        <Badge className={`text-xs shadow-modern rounded-full px-2 py-1 ${valueBadge === 'Most Popular' ? 'bg-primary text-primary-foreground' : 'bg-gradient-to-r from-purple-500 to-pink-500 text-white'}`}>
                           {valueBadge}
                         </Badge>
                       </div>
@@ -450,8 +585,7 @@ const PricingNew = () => {
                     <Card key={pkg.id} className="relative h-full flex flex-col glass hover:glass-dark transition-all duration-300 shadow-modern hover:shadow-modern-lg rounded-2xl border-0">
                       {valueBadge && (
                         <div className="absolute -top-2 -right-2 z-10">
-                          <Badge variant="secondary" className="text-xs shadow-modern rounded-full px-2 py-1">
-                            <Sparkles className="w-3 h-3 mr-1" />
+                          <Badge className={`text-xs shadow-modern rounded-full px-2 py-1 ${valueBadge === 'Most Popular' ? 'bg-primary text-primary-foreground' : 'bg-gradient-to-r from-purple-500 to-pink-500 text-white'}`}>
                             {valueBadge}
                           </Badge>
                         </div>
@@ -514,27 +648,27 @@ const PricingNew = () => {
                   <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
                     <Zap className="w-6 h-6 text-primary" />
                   </div>
-                  <h3 className="font-semibold mb-2">One Credit Per Generation</h3>
+                  <h3 className="font-semibold mb-2">Simple & Transparent</h3>
                   <p className="text-sm text-muted-foreground">
-                    Each AI transformation plan, strategy, or workflow costs 1 credit to generate
+                    One credit equals one complete Jump generation. No hidden fees, usage caps, or confusing tier restrictions
                   </p>
                 </div>
                 <div className="text-center">
                   <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
                     <Star className="w-6 h-6 text-primary" />
                   </div>
-                  <h3 className="font-semibold mb-2">Credits Roll Over</h3>
+                  <h3 className="font-semibold mb-2">Pay Your Way</h3>
                   <p className="text-sm text-muted-foreground">
-                    Unused monthly credits carry forward to the next month. No credits go to waste
+                    Choose subscriptions for ongoing needs or buy credit packages for flexibility. Mix and match as your needs evolve
                   </p>
                 </div>
                 <div className="text-center">
                   <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
                     <Crown className="w-6 h-6 text-primary" />
                   </div>
-                  <h3 className="font-semibold mb-2">Access Everything</h3>
+                  <h3 className="font-semibold mb-2">Never Lose Credits</h3>
                   <p className="text-sm text-muted-foreground">
-                    All plans include access to our complete library of guides, resources, and tools
+                    Monthly credits roll over. Purchased packages never expire. Your investment stays yours, ready when you need it
                   </p>
                 </div>
               </div>
@@ -545,38 +679,108 @@ const PricingNew = () => {
           <section className="container mx-auto px-4 py-12 sm:py-16">
             <div className="max-w-3xl mx-auto">
               <h2 className="text-2xl sm:text-3xl font-bold text-center mb-8 sm:mb-12">Frequently Asked Questions</h2>
-              <div className="space-y-8">
-                <div>
-                  <h3 className="font-semibold mb-2">What can I do with credits?</h3>
-                  <p className="text-muted-foreground">
-                    Credits are used to generate AI transformation plans, strategies, workflows, and other AI-powered content through our JumpinAI Studio.
-                  </p>
-                </div>
-                <div>
-                  <h3 className="font-semibold mb-2">Do credits expire?</h3>
-                  <p className="text-muted-foreground">
-                    Monthly subscription credits roll over to the next month, so you never lose them. Purchased credit packages also never expire.
-                  </p>
-                </div>
-                <div>
-                  <h3 className="font-semibold mb-2">Can I change my plan anytime?</h3>
-                  <p className="text-muted-foreground">
-                    Yes! You can upgrade, downgrade, or cancel your subscription at any time. Changes take effect at your next billing cycle.
-                  </p>
-                </div>
-                <div>
-                  <h3 className="font-semibold mb-2">What's included with all plans?</h3>
-                  <p className="text-muted-foreground">
-                    All paid plans include access to our complete resource library, guides, templates, and priority support. Higher tier plans include additional features like phone support and custom workflows.
-                  </p>
-                </div>
-              </div>
+              <Accordion type="single" collapsible className="space-y-4">
+                <AccordionItem value="item-1" className="rounded-2xl glass border border-primary/10 hover:border-primary/20 transition-all duration-300 shadow-lg overflow-hidden">
+                  <AccordionTrigger className="px-5 sm:px-6 py-4 hover:no-underline group">
+                    <h3 className="text-base font-bold text-left group-hover:text-primary transition-colors">
+                      What exactly does 1 credit get me?
+                    </h3>
+                  </AccordionTrigger>
+                  <AccordionContent className="px-5 sm:px-6 pb-4 pt-0">
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      1 credit generates one complete Jump with three tabs: Overview (executive summary), Plan (structured action steps), and Tools & Prompts (AI tool recommendations with ready-to-use prompts). Plus unlimited use of Clarify, Reroute, and Equip features to adapt your plan.
+                    </p>
+                  </AccordionContent>
+                </AccordionItem>
+
+                <AccordionItem value="item-2" className="rounded-2xl glass border border-primary/10 hover:border-primary/20 transition-all duration-300 shadow-lg overflow-hidden">
+                  <AccordionTrigger className="px-5 sm:px-6 py-4 hover:no-underline group">
+                    <h3 className="text-base font-bold text-left group-hover:text-primary transition-colors">
+                      How do the adaptive features work?
+                    </h3>
+                  </AccordionTrigger>
+                  <AccordionContent className="px-5 sm:px-6 pb-4 pt-0">
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      Clarify breaks down steps into granular details. Reroute generates alternative approaches. Equip creates custom tool-prompt combinations for any step. These features require a subscription tier based on depth level—Free users and guests can use them on main steps only.
+                    </p>
+                  </AccordionContent>
+                </AccordionItem>
+
+                <AccordionItem value="item-3" className="rounded-2xl glass border border-primary/10 hover:border-primary/20 transition-all duration-300 shadow-lg overflow-hidden">
+                  <AccordionTrigger className="px-5 sm:px-6 py-4 hover:no-underline group">
+                    <h3 className="text-base font-bold text-left group-hover:text-primary transition-colors">
+                      Do credits expire?
+                    </h3>
+                  </AccordionTrigger>
+                  <AccordionContent className="px-5 sm:px-6 pb-4 pt-0">
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      No. Monthly subscription credits roll over if unused. Purchased credit packages never expire—use them whenever you need them.
+                    </p>
+                  </AccordionContent>
+                </AccordionItem>
+
+                <AccordionItem value="item-4" className="rounded-2xl glass border border-primary/10 hover:border-primary/20 transition-all duration-300 shadow-lg overflow-hidden">
+                  <AccordionTrigger className="px-5 sm:px-6 py-4 hover:no-underline group">
+                    <h3 className="text-base font-bold text-left group-hover:text-primary transition-colors">
+                      Can I upgrade or downgrade my plan?
+                    </h3>
+                  </AccordionTrigger>
+                  <AccordionContent className="px-5 sm:px-6 pb-4 pt-0">
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      Yes. Upgrades take effect immediately with prorated charges. Downgrades are scheduled for your next billing cycle to protect your current benefits.
+                    </p>
+                  </AccordionContent>
+                </AccordionItem>
+
+                <AccordionItem value="item-5" className="rounded-2xl glass border border-primary/10 hover:border-primary/20 transition-all duration-300 shadow-lg overflow-hidden">
+                  <AccordionTrigger className="px-5 sm:px-6 py-4 hover:no-underline group">
+                    <h3 className="text-base font-bold text-left group-hover:text-primary transition-colors">
+                      What can I do on the Free plan?
+                    </h3>
+                  </AccordionTrigger>
+                  <AccordionContent className="px-5 sm:px-6 pb-4 pt-0">
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      Free plan includes 5 welcome credits to generate Jumps. You can use Clarify, Reroute, and Equip on main steps (level 1 only). Deeper clarification levels require a paid subscription.
+                    </p>
+                  </AccordionContent>
+                </AccordionItem>
+
+                <AccordionItem value="item-6" className="rounded-2xl glass border border-primary/10 hover:border-primary/20 transition-all duration-300 shadow-lg overflow-hidden">
+                  <AccordionTrigger className="px-5 sm:px-6 py-4 hover:no-underline group">
+                    <h3 className="text-base font-bold text-left group-hover:text-primary transition-colors">
+                      Can I try JumpinAI without signing up?
+                    </h3>
+                  </AccordionTrigger>
+                  <AccordionContent className="px-5 sm:px-6 pb-4 pt-0">
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      Yes. Guest users can generate up to 3 Jumps without an account. However, guest Jumps cannot be saved for later access—sign up to save your Jumps and unlock all features.
+                    </p>
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
             </div>
           </section>
         </main>
-
+        
         <Footer />
       </div>
+
+      {selectedUpgradePlan && (
+        <SubscriptionUpgradeModal
+          isOpen={showUpgradeModal}
+          onClose={() => {
+            setShowUpgradeModal(false);
+            setSelectedUpgradePlan(null);
+          }}
+          onConfirm={handleUpgradeConfirm}
+          currentPlan={getCurrentPlanData()?.name || 'Free Plan'}
+          newPlan={selectedUpgradePlan.name}
+          priceDifference={calculateUpgradeDetails(selectedUpgradePlan).priceDifference}
+          creditDifference={calculateUpgradeDetails(selectedUpgradePlan).creditDifference}
+          newPlanFeatures={selectedUpgradePlan.features}
+          isLoading={planLoading[selectedUpgradePlan.id]}
+        />
+      )}
     </>
   );
 };

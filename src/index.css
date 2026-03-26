@@ -2,6 +2,20 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 @tailwind base;
+
+/* Custom shimmer animation for premium buttons */
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 2s infinite;
+}
 @tailwind components;
 @tailwind utilities;
 
@@ -116,17 +130,36 @@
   display: none;  /* Chrome, Safari and Opera */
 }
 
-/* Professional Glass Morphism */
+/* Professional Glass Morphism - Original liquid glass effect */
+/* Safari desktop fix: When .glass is combined with Tailwind bg-muted/XX classes, */
+/* Safari incorrectly renders them as white. We override bg-muted when combined with glass in dark mode */
 .glass {
   background: rgba(255, 255, 255, 0.4);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(55, 65, 81, 0.15);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  /* border removed - use Tailwind border classes instead */
 }
 
 .dark .glass {
   background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  /* border removed - use Tailwind border classes instead */
+}
+
+/* Safari fix: Override Tailwind bg-muted opacity classes when used with .glass in dark mode */
+/* These need explicit rgba backgrounds because Safari misinterprets HSL with opacity modifiers */
+.dark .glass[class*="bg-muted"] {
+  background: rgba(45, 45, 50, 0.55) !important;
+}
+
+.dark [class*="bg-muted"][class*="backdrop-blur"] {
+  background: rgba(45, 45, 50, 0.55) !important;
+}
+
+/* Override for elements using bg-background with opacity + backdrop-blur */
+.dark [class*="bg-background/"][class*="backdrop-blur"] {
+  background: rgba(15, 15, 18, 0.85) !important;
 }
 
 .glass-dark {
@@ -296,6 +329,42 @@
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
 }
 
+/* Mobile Animation Performance Optimizations */
+/* Force hardware acceleration for smooth animations on mobile */
+.scroll-animate {
+  will-change: opacity, transform;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  perspective: 1000px;
+  -webkit-perspective: 1000px;
+}
+
+/* Smooth scrolling behavior */
+html {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Optimize transitions for better mobile performance */
+@media (prefers-reduced-motion: no-preference) {
+  .transition-smooth {
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+/* Disable animations for users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
 .shadow-steel {
   box-shadow: 0 10px 25px -5px rgba(55, 65, 81, 0.3);
 }
@@ -307,6 +376,24 @@
 
 .dark .shadow-modern-lg {
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+}
+
+/* Scroll animation performance optimization */
+.scroll-animate {
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Reduced motion support for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .scroll-animate {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
 }
 
 /* Professional scroll styles */
@@ -538,4 +625,51 @@ iframe[src*="cloudflare"] {
 :not(.dark) div[style*="position: fixed"][style*="bottom"][style*="left"] {
   display: none !important;
 }
+
+@layer utilities {
+  /* Custom scrollbar for horizontal scrolling - Mobile Optimized */
+  .scrollbar-thin {
+    scrollbar-width: thin;
+  }
+  
+  .scrollbar-thumb-muted {
+    scrollbar-color: hsl(var(--muted-foreground) / 0.3) transparent;
+  }
+  
+  .scrollbar-track-transparent {
+    scrollbar-width: thin;
+  }
+  
+  /* Webkit scrollbar styling for better mobile UX */
+  .scrollbar-thin::-webkit-scrollbar {
+    height: 4px;
+  }
+  
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: hsl(var(--muted-foreground) / 0.3);
+    border-radius: 2px;
+  }
+  
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--muted-foreground) / 0.5);
+  }
+}
+
+/* Branching lines animation keyframes */
+@keyframes drawLine {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
 

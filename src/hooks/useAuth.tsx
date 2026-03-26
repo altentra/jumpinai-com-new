@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
+import React, { createContext, useContext, useEffect, useMemo, useState, useCallback, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { subscriptionCache } from "@/utils/subscriptionCache";
 
@@ -14,6 +14,7 @@ interface SubscriptionInfo {
   subscribed: boolean;
   subscription_tier?: string | null;
   subscription_end?: string | null;
+  manual_subscription?: boolean;
 }
 
 interface AuthContextValue {
@@ -35,6 +36,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isLoading, setIsLoading] = useState(true);
   const [subscription, setSubscription] = useState<SubscriptionInfo | null>(null);
   const [isSubscriptionLoading, setIsSubscriptionLoading] = useState(false);
+
+  // Guards against stale async profile fetches racing with logout / auth changes
+  const profileFetchTokenRef = useRef(0);
+  const profileFetchTimeoutRef = useRef<number | null>(null);
 
   // Function to fetch and merge user profile data
   const fetchUserWithProfile = async (authUser: any): Promise<AuthUser | null> => {
@@ -103,17 +108,31 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   useEffect(() => {
     // Listen for auth changes FIRST
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      // Invalidate any previously scheduled profile fetch
+      profileFetchTokenRef.current += 1;
+      const token = profileFetchTokenRef.current;
+
+      if (profileFetchTimeoutRef.current) {
+        window.clearTimeout(profileFetchTimeoutRef.current);
+        profileFetchTimeoutRef.current = null;
+      }
+
       const authUser = session?.user ?? null;
-      
+
       if (authUser) {
         // Defer the profile fetch to avoid auth callback issues
-        setTimeout(async () => {
-          const userWithProfile = await fetchUserWithProfile(authUser);
-          setUser(userWithProfile);
-          setIsLoading(false);
+        profileFetchTimeoutRef.current = window.setTimeout(() => {
+          fetchUserWithProfile(authUser).then((userWithProfile) => {
+            // Ignore stale fetch results (e.g. logout happened while this was in-flight)
+            if (profileFetchTokenRef.current !== token) return;
+            setUser(userWithProfile);
+            setIsLoading(false);
+          });
         }, 0);
       } else {
+        subscriptionCache.clear();
+        setSubscription(null);
         setUser(null);
         setIsLoading(false);
       }
@@ -121,35 +140,54 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     // Then check current session
     supabase.auth.getSession().then(async ({ data: { session } }) => {
+      profileFetchTokenRef.current += 1;
+      const token = profileFetchTokenRef.current;
+
       const authUser = session?.user ?? null;
       const userWithProfile = await fetchUserWithProfile(authUser);
+
+      if (profileFetchTokenRef.current !== token) return;
       setUser(userWithProfile);
       setIsLoading(false);
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      if (profileFetchTimeoutRef.current) {
+        window.clearTimeout(profileFetchTimeoutRef.current);
+        profileFetchTimeoutRef.current = null;
+      }
+      subscription.unsubscribe();
+    };
   }, []);
 
-  // Fetch subscription data with caching
+  // Fetch subscription data directly from Supabase - NO Stripe calls!
   const fetchSubscription = async (): Promise<SubscriptionInfo | null> => {
-    // Try cache first
-    const cached = subscriptionCache.get();
-    if (cached) {
-      return {
-        subscribed: cached.subscribed,
-        subscription_tier: cached.subscription_tier,
-        subscription_end: cached.subscription_end
-      };
+    if (!user?.email) {
+      console.log('No user email available');
+      return null;
     }
 
     try {
-      const { data, error } = await supabase.functions.invoke('check-subscription');
-      if (error) throw error;
+      console.log('Querying subscribers table for email:', user.email);
+      // Query subscribers table directly - fast and efficient
+      const { data, error } = await supabase
+        .from('subscribers')
+        .select('subscribed, subscription_tier, subscription_end, manual_subscription')
+        .eq('email', user.email)
+        .maybeSingle();
+      
+      if (error) {
+        console.error('Error querying subscribers:', error);
+        throw error;
+      }
+      
+      console.log('Subscribers query result:', data);
       
       const subInfo: SubscriptionInfo = {
         subscribed: data?.subscribed || false,
         subscription_tier: data?.subscription_tier || null,
-        subscription_end: data?.subscription_end || null
+        subscription_end: data?.subscription_end || null,
+        manual_subscription: data?.manual_subscription || false
       };
       
       // Cache the result
@@ -175,12 +213,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  // Load subscription data when user is available
+  // Load subscription data when user is available - always fetch fresh on mount
   useEffect(() => {
-    if (user && !subscription) {
-      fetchSubscription().then(setSubscription);
+    if (user) {
+      // Clear cache and fetch fresh subscription data on every mount
+      subscriptionCache.clear();
+      console.log('Fetching subscription for user:', user.email);
+      fetchSubscription().then(sub => {
+        console.log('Subscription fetched:', sub);
+        setSubscription(sub);
+      });
     }
-  }, [user, subscription]);
+  }, [user]);
 
   const login = (redirectTo?: string) => {
     const next = redirectTo ?? window.location.pathname + window.location.search;
@@ -188,11 +232,30 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     window.location.href = url;
   };
 
-  const logout = async () => {
-    subscriptionCache.clear(); // Clear cache on logout
-    await supabase.auth.signOut();
-    window.location.href = "/";
-  };
+  const logout = useCallback(async () => {
+    // Invalidate any in-flight profile fetch that could re-set the user after logout
+    profileFetchTokenRef.current += 1;
+    if (profileFetchTimeoutRef.current) {
+      window.clearTimeout(profileFetchTimeoutRef.current);
+      profileFetchTimeoutRef.current = null;
+    }
+
+    // Prevent route-guards from firing "login()" during the logout transition
+    setIsLoading(true);
+    subscriptionCache.clear();
+    setSubscription(null);
+
+    try {
+      // Full sign out (clears refresh token + session)
+      await supabase.auth.signOut();
+    } catch (err) {
+      // Still continue with redirect; onAuthStateChange should eventually reconcile.
+      console.warn("supabase.auth.signOut failed:", err);
+    } finally {
+      // Hard redirect ensures all route guards/state are reset
+      window.location.assign("/");
+    }
+  }, []);
 
   const value = useMemo<AuthContextValue>(() => ({
     user,

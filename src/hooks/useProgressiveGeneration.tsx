@@ -1,6 +1,14 @@
 import { useState, useCallback } from 'react';
 import { jumpinAIStudioService, type StudioFormData, type GenerationResult } from '@/services/jumpinAIStudioService';
 import { toast } from 'sonner';
+import {
+  parseStreamingOverview,
+  parseStreamingPlan,
+  parseStreamingToolPrompts,
+  type ParsedOverview,
+  type ParsedPlan,
+  type ParsedToolPrompts,
+} from '@/utils/progressiveJsonParser';
 
 export type ProcessingStatus = {
   stage: string;
@@ -19,12 +27,22 @@ export type ProgressiveResult = {
   full_content: string;
   structured_plan?: any;
   comprehensive_plan?: any;
+  formGoals?: string;
+  formChallenges?: string;
   components: {
     toolPrompts: any[];
     plan?: any;
     workflows: any[];
     blueprints: any[];
     strategies: any[];
+  };
+  // Raw streaming content (JSON fragments)
+  streaming_content?: Partial<Record<'overview' | 'plan' | 'tool_prompts', string>>;
+  // Progressively parsed frames ready for UI rendering
+  streaming_parsed?: {
+    overview?: ParsedOverview;
+    plan?: ParsedPlan;
+    tool_prompts?: ParsedToolPrompts;
   };
   processing_status: ProcessingStatus;
   stepTimes?: { [key: string]: number };
@@ -182,6 +200,8 @@ export const useProgressiveGeneration = () => {
       let progressiveResult: ProgressiveResult = {
         title: 'Generating Jump...',
         full_content: '',
+        formGoals: formData.goals,
+        formChallenges: formData.challenges || '',
         components: {
           toolPrompts: [],
           plan: null,
@@ -189,6 +209,8 @@ export const useProgressiveGeneration = () => {
           blueprints: [], // Keep for type compatibility but won't be used
           strategies: []  // Keep for type compatibility but won't be used
         },
+        streaming_content: {},
+        streaming_parsed: {},
         processing_status: {
           stage: 'Generating',
           progress: 0,
@@ -208,6 +230,46 @@ export const useProgressiveGeneration = () => {
         // Real-time progress callback
         (step: number, type: string, stepData: any) => {
           console.log(`Step ${step} (${type}) completed:`, stepData);
+
+          // Live token-by-token stream updates (visible in tabs while step is running)
+          if (type === 'delta') {
+            const stepName = stepData?.stepName as 'overview' | 'plan' | 'tool_prompts' | undefined;
+            const delta = stepData?.delta as string | undefined;
+            if (stepName && delta) {
+              // Accumulate raw JSON
+              const newRaw = (progressiveResult.streaming_content?.[stepName] || '') + delta;
+              progressiveResult.streaming_content = {
+                ...(progressiveResult.streaming_content || {}),
+                [stepName]: newRaw
+              };
+
+              // Parse frames progressively so UI can render them immediately
+              if (stepName === 'overview') {
+                progressiveResult.streaming_parsed = {
+                  ...progressiveResult.streaming_parsed,
+                  overview: parseStreamingOverview(newRaw),
+                };
+              } else if (stepName === 'plan') {
+                progressiveResult.streaming_parsed = {
+                  ...progressiveResult.streaming_parsed,
+                  plan: parseStreamingPlan(newRaw),
+                };
+              } else if (stepName === 'tool_prompts') {
+                progressiveResult.streaming_parsed = {
+                  ...progressiveResult.streaming_parsed,
+                  tool_prompts: parseStreamingToolPrompts(newRaw),
+                };
+              }
+
+              // Keep the current step aligned to the streaming tab
+              progressiveResult.processing_status = {
+                ...progressiveResult.processing_status,
+                currentStep: stepName,
+              };
+              setResult({ ...progressiveResult });
+            }
+            return;
+          }
           
           // Calculate step completion time
           const stepEndTime = Date.now();
@@ -218,15 +280,36 @@ export const useProgressiveGeneration = () => {
           const taskName = stepNames[type] || `Processing ${type}...`;
           const progress = stepProgress[type] || Math.min(100, (step / 8) * 100);
           
+          // Handle progress updates (micro-streaming feel)
+          if (type === 'progress') {
+            const { stepName, percent, message } = stepData;
+            console.log(`⏳ Micro-progress: ${stepName} - ${percent}%`);
+            
+            progressiveResult.processing_status = {
+              stage: 'Generating',
+              progress: percent,
+              currentTask: message || `Processing ${stepName}...`,
+              isComplete: false,
+              currentStep: stepName
+            };
+            setProcessingStatus(progressiveResult.processing_status);
+            setResult({ ...progressiveResult });
+            return; // Don't process further for progress events
+          }
+          
           // Update progressive result with new data
           if (type === 'naming') {
             // STEP 1: Name complete - show it and start overview
-            console.log('Processing naming step data:', stepData);
+            console.log('🏷️ Processing naming step data:', stepData);
+            console.log('🏷️ stepData.jumpName:', stepData.jumpName);
+            console.log('🏷️ Full stepData:', JSON.stringify(stepData));
+            
             jumpName = stepData.jumpName || 'AI Transformation Journey';
             
-            // Display name immediately WITHOUT Jump# prefix
+            // CRITICAL: Set both title and fullTitle immediately for guest display
             progressiveResult.jumpName = jumpName;
-            progressiveResult.title = jumpName; // Show name only, wait for jump_created event for full title
+            progressiveResult.title = jumpName;
+            progressiveResult.fullTitle = jumpName; // Set fullTitle immediately for guests (will be overwritten for auth users)
             
             progressiveResult.processing_status = {
               stage: 'Generating',
@@ -236,26 +319,37 @@ export const useProgressiveGeneration = () => {
               currentStep: 'overview'
             };
             progressiveResult.stepTimes = { naming: stepDuration };
+            
+            console.log('🏷️ Updated progressiveResult.title:', progressiveResult.title);
+            console.log('🏷️ Updated progressiveResult.fullTitle:', progressiveResult.fullTitle);
+            
             setProcessingStatus(progressiveResult.processing_status);
             setResult({ ...progressiveResult });
             
           } else if (type === 'jump_created') {
-            // IMMEDIATE UPDATE: Jump created with Jump# formatting right after naming
+            // IMMEDIATE UPDATE: Jump created - update with proper title
             console.log('Jump created callback:', stepData);
             progressiveResult.jumpId = stepData.jumpId;
-            progressiveResult.jumpNumber = stepData.jumpNumber;
-            progressiveResult.fullTitle = stepData.fullTitle;
-            progressiveResult.title = stepData.fullTitle; // Update with full "Jump #X: Name"
+            progressiveResult.jumpNumber = stepData.jumpNumber; // Will be undefined for guests
+            progressiveResult.fullTitle = stepData.fullTitle || stepData.title; // Use fullTitle or fallback to title
+            progressiveResult.title = stepData.fullTitle || stepData.title; // Update display title
             
             // Update UI immediately
             setResult({ ...progressiveResult });
             
           } else if (type === 'overview') {
-            // STEP 2: Overview complete - ORIGINAL format
+            // STEP 2: Overview complete - NEW 4-FRAME FORMAT
             console.log('Processing overview step data:', stepData);
             
+            // NEW FORMAT: jumpForward, strategicEdge, flightPath, newBaseline
             progressiveResult.comprehensive_plan = {
               title: jumpName,
+              // NEW 4-FRAME STRUCTURE
+              jumpForward: stepData.jumpForward || '',
+              strategicEdge: stepData.strategicEdge || { analysis: '', keyPoints: [] },
+              flightPath: stepData.flightPath || { vision: '', roadmap: [] },
+              newBaseline: stepData.newBaseline || '',
+              // LEGACY FIELDS (for backwards compatibility with old jumps)
               executiveSummary: stepData.executiveSummary || '',
               situationAnalysis: stepData.situationAnalysis || {},
               strategicVision: stepData.strategicVision || '',
@@ -265,22 +359,23 @@ export const useProgressiveGeneration = () => {
               action_plan: { phases: [] } // Will be filled in step 3
             };
             
+            // Build overview text for full_content (used for search/context)
             let overviewText = '';
-            if (stepData.executiveSummary) {
-              overviewText += `## Executive Summary\n\n${stepData.executiveSummary}\n\n`;
+            if (stepData.jumpForward) {
+              overviewText += `## The Jump Forward\n\n${stepData.jumpForward}\n\n`;
             }
-            if (stepData.situationAnalysis) {
-              if (stepData.situationAnalysis.currentState) {
-                overviewText += `## Current State\n\n${stepData.situationAnalysis.currentState}\n\n`;
-              }
-              if (stepData.situationAnalysis.challenges?.length) {
-                overviewText += `## Challenges\n`;
-                stepData.situationAnalysis.challenges.forEach((c: string) => overviewText += `- ${c}\n`);
+            if (stepData.strategicEdge?.analysis) {
+              overviewText += `## Strategic Edge\n\n${stepData.strategicEdge.analysis}\n\n`;
+              if (stepData.strategicEdge.keyPoints?.length) {
+                stepData.strategicEdge.keyPoints.forEach((p: string) => overviewText += `- ${p}\n`);
                 overviewText += '\n';
               }
             }
-            if (stepData.strategicVision) {
-              overviewText += `## Strategic Vision\n\n${stepData.strategicVision}\n\n`;
+            if (stepData.flightPath?.vision) {
+              overviewText += `## Flight Path\n\n${stepData.flightPath.vision}\n\n`;
+            }
+            if (stepData.newBaseline) {
+              overviewText += `## New Baseline\n\n${stepData.newBaseline}\n\n`;
             }
             
             progressiveResult.full_content = overviewText.trim();
@@ -293,6 +388,7 @@ export const useProgressiveGeneration = () => {
               currentStep: 'plan'
             };
             progressiveResult.stepTimes = { ...progressiveResult.stepTimes, overview: stepDuration };
+            setStepStartTimes(prev => ({ ...prev, plan: Date.now() }));
             setProcessingStatus(progressiveResult.processing_status);
             setResult({ ...progressiveResult });
             
@@ -315,11 +411,16 @@ export const useProgressiveGeneration = () => {
             progressiveResult.processing_status = {
               stage: 'Generating',
               progress: 60,
-              currentTask: `Plan has been generated. (${stepDuration}s) Generating Tools & Prompts...`,
+              currentTask: `Plan generated (${stepDuration}s). Generating Tools & Prompts...`,
               isComplete: false,
               currentStep: 'tool_prompts'
             };
-            progressiveResult.stepTimes = { ...progressiveResult.stepTimes, comprehensive: stepDuration };
+            // Store as BOTH 'plan' and 'comprehensive' so UI can find it with either key
+            progressiveResult.stepTimes = { 
+              ...progressiveResult.stepTimes, 
+              plan: stepDuration,
+              comprehensive: stepDuration 
+            };
             setProcessingStatus(progressiveResult.processing_status);
             setResult({ ...progressiveResult });
             
@@ -387,17 +488,22 @@ export const useProgressiveGeneration = () => {
       // Calculate total generation time
       const totalTime = Object.values(stepTimes).reduce((sum, time) => sum + time, 0);
       
-      // Final update with complete data
+      // Final update - PRESERVE the progressiveResult data built during streaming
+      // Don't overwrite comprehensive_plan with rawResponse.comprehensivePlan as it may have old format
       const finalResult: ProgressiveResult = {
-        jumpId: rawResponse.jumpId,
-        jumpName: rawResponse.jumpName,
-        jumpNumber: rawResponse.jumpNumber,
-        fullTitle: rawResponse.fullTitle,
-        title: rawResponse.fullTitle || 'AI Transformation Jump',
-        full_content: rawResponse.fullContent,
-        structured_plan: rawResponse.structuredPlan,
-        comprehensive_plan: rawResponse.comprehensivePlan,
-        components: rawResponse.components || {
+        jumpId: rawResponse.jumpId || progressiveResult.jumpId,
+        jumpName: rawResponse.jumpName || progressiveResult.jumpName,
+        jumpNumber: rawResponse.jumpNumber || progressiveResult.jumpNumber,
+        fullTitle: rawResponse.fullTitle || progressiveResult.fullTitle,
+        title: rawResponse.fullTitle || progressiveResult.title || 'AI Transformation Jump',
+        full_content: progressiveResult.full_content || rawResponse.fullContent,
+        structured_plan: progressiveResult.structured_plan || rawResponse.structuredPlan,
+        // CRITICAL: Preserve the streamed comprehensive_plan with new 4-frame structure
+        comprehensive_plan: progressiveResult.comprehensive_plan || rawResponse.comprehensivePlan,
+        // CRITICAL: Preserve formGoals and formChallenges for Explore Alternative Routes feature
+        formGoals: progressiveResult.formGoals,
+        formChallenges: progressiveResult.formChallenges,
+        components: progressiveResult.components || rawResponse.components || {
           toolPrompts: [],
           workflows: [],
           blueprints: [],

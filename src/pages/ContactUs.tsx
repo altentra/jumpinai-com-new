@@ -9,7 +9,9 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { Mail, MapPin, Clock, Send, MessageCircle, Phone, Globe } from "lucide-react";
+import { Mail, MapPin, Clock, Send, MessageCircle, Phone, Globe, Lightbulb, X as TwitterIcon } from "lucide-react";
+import { FaInstagram, FaFacebookF, FaLinkedinIn } from "react-icons/fa";
+import { FaXTwitter } from "react-icons/fa6";
 import { useToast } from "@/hooks/use-toast";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -22,9 +24,16 @@ const formSchema = z.object({
   message: z.string().min(10, "Message must be at least 10 characters"),
 });
 
+const featureRequestSchema = z.object({
+  name: z.string().min(2, "Name must be at least 2 characters"),
+  email: z.string().email("Please enter a valid email address"),
+  description: z.string().min(10, "Please provide at least 10 characters").max(2000, "Description must be less than 2000 characters"),
+});
+
 const ContactUs = () => {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmittingFeature, setIsSubmittingFeature] = useState(false);
 
   useEffect(() => {
     const meta = document.createElement('meta');
@@ -44,6 +53,15 @@ const ContactUs = () => {
       email: "",
       subject: "",
       message: "",
+    },
+  });
+
+  const featureForm = useForm<z.infer<typeof featureRequestSchema>>({
+    resolver: zodResolver(featureRequestSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      description: "",
     },
   });
 
@@ -75,6 +93,39 @@ const ContactUs = () => {
       });
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const onFeatureSubmit = async (values: z.infer<typeof featureRequestSchema>) => {
+    setIsSubmittingFeature(true);
+    console.log("Feature request submitted:", values);
+    
+    try {
+      const { data, error } = await supabase.functions.invoke('submit-feature-request', {
+        body: values
+      });
+
+      if (error) throw error;
+
+      console.log("Feature request processed:", data);
+      
+      toast({
+        title: "Feature request received!",
+        description: data.creditsAwarded 
+          ? "Thank you! We've added 10 bonus credits to your account. Check your email for confirmation."
+          : "Thank you for your feedback! We've received your suggestion. (Note: Credit bonus is a one-time reward)",
+      });
+      
+      featureForm.reset();
+    } catch (error) {
+      console.error("Error submitting feature request:", error);
+      toast({
+        title: "Error submitting request",
+        description: "There was an error submitting your request. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmittingFeature(false);
     }
   };
 
@@ -155,19 +206,47 @@ const ContactUs = () => {
                     </div>
                   </div>
 
-                  {/* Response Time & Location - Enhanced Cards */}
-                  <div className="grid grid-cols-1 gap-3">
-                    <div className="glass backdrop-blur-sm bg-background/20 dark:bg-background/10 border border-primary/20 rounded-2xl p-3 shadow-lg shadow-primary/10 hover:shadow-xl hover:shadow-primary/15 hover:border-primary/30 transition-all duration-300 group">
-                      <div>
-                        <h4 className="font-bold text-xs text-foreground mb-1">Response Time</h4>
-                        <p className="text-xs text-muted-foreground">Within 24 hours</p>
-                      </div>
-                    </div>
-
-                    <div className="glass backdrop-blur-sm bg-background/20 dark:bg-background/10 border border-primary/20 rounded-2xl p-3 shadow-lg shadow-primary/10 hover:shadow-xl hover:shadow-primary/15 hover:border-primary/30 transition-all duration-300 group">
-                      <div>
-                        <h4 className="font-bold text-xs text-foreground mb-1">Our Reach</h4>
-                        <p className="text-xs text-muted-foreground">Global - Remote Team</p>
+                  {/* Social Media - Enhanced Card */}
+                  <div className="glass backdrop-blur-sm bg-background/20 dark:bg-background/10 border border-primary/20 rounded-2xl p-3 shadow-lg shadow-primary/10 hover:shadow-xl hover:shadow-primary/15 hover:border-primary/30 transition-all duration-300 group">
+                    <div>
+                      <h4 className="font-bold text-xs text-foreground mb-2">DM Us at:</h4>
+                      <div className="flex gap-4 pl-1">
+                        <a
+                          href="https://x.com/Jump_in_AI"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-muted-foreground hover:text-primary transition-colors"
+                        >
+                          <FaXTwitter className="h-6 w-6" />
+                          <span className="sr-only">X (Twitter)</span>
+                        </a>
+                        <a
+                          href="https://www.instagram.com/jumpinai/"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-muted-foreground hover:text-primary transition-colors"
+                        >
+                          <FaInstagram className="h-6 w-6" />
+                          <span className="sr-only">Instagram</span>
+                        </a>
+                        <a
+                          href="https://facebook.com/jumpinai/"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-muted-foreground hover:text-primary transition-colors"
+                        >
+                          <FaFacebookF className="h-6 w-6" />
+                          <span className="sr-only">Facebook</span>
+                        </a>
+                        <a
+                          href="https://www.linkedin.com/company/jumpinai"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-muted-foreground hover:text-primary transition-colors"
+                        >
+                          <FaLinkedinIn className="h-6 w-6" />
+                          <span className="sr-only">LinkedIn</span>
+                        </a>
                       </div>
                     </div>
                   </div>
@@ -294,6 +373,109 @@ const ContactUs = () => {
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Request Feature Section */}
+      <section className="pb-20 px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="max-w-4xl mx-auto">
+          <div className="glass backdrop-blur-md bg-background/30 dark:bg-background/15 border border-primary/20 rounded-3xl p-6 md:p-8 shadow-2xl shadow-primary/10 hover:shadow-3xl hover:shadow-primary/15 transition-all duration-500">
+            {/* Header */}
+            <div className="text-center mb-6">
+              <h2 className="text-2xl md:text-3xl font-bold mb-3 bg-gradient-to-br from-foreground via-foreground to-primary/70 bg-clip-text text-transparent">
+                Request a Feature
+              </h2>
+              <p className="text-base text-muted-foreground leading-relaxed max-w-2xl mx-auto">
+                Have an idea for a new feature or improvement? Share it with us! Your feedback shapes the future of JumpinAI.
+              </p>
+              <div className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-primary/10 to-accent/10 border border-primary/30">
+                <span className="text-sm font-semibold text-primary">+10 Bonus Credits</span>
+                <span className="text-xs text-muted-foreground">• One-time reward for your first request</span>
+              </div>
+            </div>
+
+            {/* Form */}
+            <div className="glass backdrop-blur-sm bg-background/20 dark:bg-background/10 border border-primary/25 rounded-2xl p-6 shadow-xl shadow-primary/15">
+              <Form {...featureForm}>
+                <form onSubmit={featureForm.handleSubmit(onFeatureSubmit)} className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <FormField
+                      control={featureForm.control}
+                      name="name"
+                      render={({ field }) => (
+                        <FormItem className="space-y-2">
+                          <FormLabel className="text-xs font-bold text-foreground">Your Name</FormLabel>
+                          <FormControl>
+                            <Input 
+                              placeholder="Your name" 
+                              className="h-10 text-sm glass backdrop-blur-sm bg-background/50 dark:bg-background/30 border-primary/30 focus:border-primary/50 focus:bg-background/70 dark:focus:bg-background/50 transition-all duration-300 rounded-xl shadow-lg shadow-primary/5 focus:shadow-xl focus:shadow-primary/10"
+                              {...field} 
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <FormField
+                      control={featureForm.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem className="space-y-2">
+                          <FormLabel className="text-xs font-bold text-foreground">Email Address</FormLabel>
+                          <FormControl>
+                            <Input 
+                              placeholder="your.email@example.com" 
+                              type="email" 
+                              className="h-10 text-sm glass backdrop-blur-sm bg-background/50 dark:bg-background/30 border-primary/30 focus:border-primary/50 focus:bg-background/70 dark:focus:bg-background/50 transition-all duration-300 rounded-xl shadow-lg shadow-primary/5 focus:shadow-xl focus:shadow-primary/10"
+                              {...field} 
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  <FormField
+                    control={featureForm.control}
+                    name="description"
+                    render={({ field }) => (
+                      <FormItem className="space-y-2">
+                        <FormLabel className="text-xs font-bold text-foreground">Describe Your Idea</FormLabel>
+                        <FormControl>
+                          <Textarea 
+                            placeholder="Tell us about your feature idea or improvement suggestion. What problem would it solve? How would it help you?"
+                            className="min-h-[140px] text-sm glass backdrop-blur-sm bg-background/50 dark:bg-background/30 border-primary/30 focus:border-primary/50 focus:bg-background/70 dark:focus:bg-background/50 transition-all duration-300 rounded-xl resize-none shadow-lg shadow-primary/5 focus:shadow-xl focus:shadow-primary/10"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <div className="pt-4">
+                    <button 
+                      type="submit" 
+                      disabled={isSubmittingFeature}
+                      className="relative group w-full overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/30 via-accent/20 to-primary/30 rounded-[2rem] blur-md opacity-30 group-hover:opacity-60 transition duration-500"></div>
+                      
+                      <div className="relative flex items-center justify-center gap-2 px-4 h-10 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 backdrop-blur-xl rounded-[2rem] border border-primary/30 group-hover:border-primary/50 transition-all duration-300 overflow-hidden">
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                        
+                        <span className="relative text-sm font-bold text-foreground group-hover:text-primary transition-colors duration-300">
+                          {isSubmittingFeature ? "Submitting..." : "Submit Feature Request"}
+                        </span>
+                      </div>
+                    </button>
+                  </div>
+                </form>
+              </Form>
             </div>
           </div>
         </div>

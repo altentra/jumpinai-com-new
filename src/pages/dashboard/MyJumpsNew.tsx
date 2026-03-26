@@ -3,24 +3,14 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Rocket, Plus, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { getUserJumpsLight, deleteJump } from "@/services/jumpService";
+import { getUserJumpsLight, deleteJump, LightJumpWithAgentStats } from "@/services/jumpService";
 import { useOptimizedAuth } from "@/hooks/useOptimizedAuth";
 import JumpListCard from "@/components/dashboard/JumpListCard";
 import { toast } from 'sonner';
 import { Link } from 'react-router-dom';
 
-type LightJump = {
-  id: string;
-  title: string;
-  summary: string | null;
-  created_at: string;
-  jump_type?: string;
-  status?: string;
-  completion_percentage?: number;
-};
-
 export default function MyJumpsNew() {
-  const [jumps, setJumps] = useState<LightJump[]>([]);
+  const [jumps, setJumps] = useState<LightJumpWithAgentStats[]>([]);
   const [loading, setLoading] = useState(true);
   const [displayLimit, setDisplayLimit] = useState(20);
   const { isAuthenticated, isLoading: authLoading } = useOptimizedAuth();
@@ -45,7 +35,7 @@ export default function MyJumpsNew() {
     loadJumps();
   }, [isAuthenticated, authLoading]);
 
-  const handleViewJump = (jump: LightJump) => {
+  const handleViewJump = (jump: LightJumpWithAgentStats) => {
     // Navigation is now handled in JumpCard component
   };
 
@@ -103,16 +93,6 @@ export default function MyJumpsNew() {
       </div>
       
       <div className="relative space-y-4 sm:space-y-6 px-2 sm:px-0">
-      <div className="space-y-3 sm:space-y-1">
-        <div className="block sm:hidden">
-          <h1 className="text-2xl font-bold tracking-tight">My Jumps</h1>
-          <p className="text-sm text-muted-foreground">Your AI transformation plans</p>
-        </div>
-        <div className="hidden sm:block">
-          <h1 className="text-3xl font-bold tracking-tight">My Jumps</h1>
-          <p className="text-muted-foreground">Your personal AI transformation plans ready to implement</p>
-        </div>
-      </div>
 
       <div className="glass rounded-xl p-3 sm:p-4 shadow-modern">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">

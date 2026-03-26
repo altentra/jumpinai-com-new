@@ -22,15 +22,17 @@ const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
 const Download = lazy(() => import("./pages/Download"));
 const DownloadPro = lazy(() => import("./pages/DownloadPro"));
 const ForInvestors = lazy(() => import("./pages/ForInvestors"));
+const PitchDeck = lazy(() => import("./pages/PitchDeck"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const Resources = lazy(() => import("./pages/Resources"));
-const Profile = lazy(() => import("./pages/Profile"));
+const PublicProfile = lazy(() => import("./pages/PublicProfile"));
+const PublicJumpView = lazy(() => import("./pages/PublicJumpView"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const Auth = lazy(() => import("./pages/Auth"));
 const PricingNew = lazy(() => import("./pages/PricingNew"));
 const JumpinAIStudio = lazy(() => import("./pages/JumpinAIStudio"));
 const SyncStripe = lazy(() => import("./pages/SyncStripe"));
-const ViewJump = lazy(() => import("./pages/dashboard/ViewJump"));
+
 
 // Loading component for Suspense
 const PageLoader = () => (
@@ -85,14 +87,16 @@ const App = () => {
               <Route path="/test-sync" element={<TestSync />} />
               <Route path="/jumps" element={<Jumps />} />
               <Route path="/for-investors" element={<ForInvestors />} />
+              <Route path="/pitch-deck" element={<PitchDeck />} />
               <Route path="/payment-success" element={<PaymentSuccess />} />
               <Route path="/credit-purchase-success" element={<CreditPurchaseSuccess />} />
               <Route path="/subscription-success" element={<SubscriptionSuccess />} />
               <Route path="/admin" element={<AdminDashboard />} />
               <Route path="/download/:token" element={<Download />} />
               <Route path="/download-pro/:productId" element={<DownloadPro />} />
-              <Route path="/profile" element={<Profile />} />
-              <Route path="/dashboard/jump/:jumpId" element={<ViewJump />} />
+              <Route path="/u/:username" element={<PublicProfile />} />
+              <Route path="/jump/:jumpId/public/:username" element={<PublicJumpView />} />
+              
               <Route path="/dashboard/*" element={<Dashboard />} />
               <Route path="/auth" element={<Auth />} />
               <Route path="*" element={<NotFound />} />

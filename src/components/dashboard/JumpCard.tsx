@@ -5,6 +5,7 @@ import { Calendar, Trash2, ArrowRight } from "lucide-react";
 import { UserJump } from "@/services/jumpService";
 import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
+import JumpStatsRow from "./JumpStatsRow";
 
 interface JumpCardProps {
   jump: UserJump;
@@ -82,7 +83,18 @@ export default function JumpCard({ jump, jumpNumber, onView, onDelete }: JumpCar
         </div>
       </CardHeader>
       
-      <CardContent className="pt-0 relative z-10">
+      <CardContent className="pt-0 relative z-10 space-y-4">
+        {/* Jump Stats Row */}
+        <JumpStatsRow stats={{
+          views_count: jump.views_count,
+          clarifications_count: jump.clarifications_count,
+          max_clarification_level: jump.max_clarification_level,
+          reroutes_count: jump.reroutes_count,
+          tools_clicked_count: jump.tools_clicked_count,
+          prompts_copied_count: jump.prompts_copied_count,
+          combos_used_count: jump.combos_used_count
+        }} />
+
         {/* Premium View Button */}
         <div className="relative group/btn">
           {/* Subtle glow backdrop */}

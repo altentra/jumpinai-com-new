@@ -1,6 +1,5 @@
-import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import Stripe from "https://esm.sh/stripe@14.21.0";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.4";
 import { Resend } from "https://esm.sh/resend@2.0.0";
 
 const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "", {
@@ -19,7 +18,7 @@ const webhookSecret = Deno.env.get("STRIPE_WEBHOOK_SECRET");
 
 const logoUrl = "https://jumpinai.com/images/jumpinai-logo-email.png";
 
-serve(async (req) => {
+Deno.serve(async (req) => {
   const signature = req.headers.get("stripe-signature");
   
   if (!signature) {
@@ -54,9 +53,11 @@ serve(async (req) => {
           break;
         }
 
-        // Check if this is a subscription or one-time payment
-        if (session.mode === "subscription") {
-          // Handle subscription
+        // Check if this is a subscription upgrade
+        if (session.metadata?.type === 'subscription_upgrade') {
+          await handleSubscriptionUpgrade(session, customerEmail);
+        } else if (session.mode === "subscription") {
+          // Handle new subscription
           await handleSubscriptionSuccess(session, customerEmail);
         } else if (session.mode === "payment") {
           // Handle one-time payment (credits)
@@ -69,7 +70,46 @@ serve(async (req) => {
       case "customer.subscription.updated": {
         const subscription = event.data.object as Stripe.Subscription;
         console.log("Subscription event:", subscription.id);
-        // Additional subscription handling if needed
+        
+        // Handle subscription updates after upgrade payment
+        if (subscription.metadata?.upgrade_processed === 'true') {
+          console.log("Subscription updated after upgrade");
+          const userId = subscription.metadata?.user_id;
+          const newPlanName = subscription.metadata?.plan_name;
+          
+          if (userId && newPlanName) {
+            // Check if this is a manual subscription (protected)
+            const { data: existing } = await supabase
+              .from('subscribers')
+              .select('manual_subscription')
+              .eq('user_id', userId)
+              .single();
+            
+            if (existing?.manual_subscription) {
+              console.log('⚠️ Skipping update - manual subscription is protected');
+              break;
+            }
+            
+            // Set change source for audit log
+            await supabase.rpc('set_config', {
+              setting_name: 'app.change_source',
+              setting_value: 'stripe_webhook'
+            });
+            
+            // Update subscriber record
+            await supabase
+              .from('subscribers')
+              .update({
+                subscribed: true,
+                subscription_tier: newPlanName,
+                subscription_end: new Date(subscription.current_period_end * 1000).toISOString(),
+                updated_at: new Date().toISOString(),
+              })
+              .eq('user_id', userId);
+            
+            console.log(`✅ Updated subscription tier to ${newPlanName}`);
+          }
+        }
         break;
       }
 
@@ -186,8 +226,12 @@ async function handleSubscriptionSuccess(
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
         </head>
         <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
-          <div style="text-align: center; margin-bottom: 30px;">
-            <img src="${logoUrl}" alt="JumpinAI" style="max-width: 150px; height: auto;" />
+          <div style="text-align: center; padding: 32px 24px 24px 24px;">
+            <img 
+              src="https://jumpinai.com/logo.jpg" 
+              alt="JumpinAI Logo" 
+              style="width: 84px; height: 84px; display: block; border-radius: 12px; margin: 0 auto;"
+            />
           </div>
 
           <div style="background: linear-gradient(135deg, #374151 0%, #1f2937 100%); padding: 30px; text-align: center; border-radius: 10px 10px 0 0;">
@@ -209,17 +253,6 @@ async function handleSubscriptionSuccess(
                 <div style="font-size: 14px; color: #9ca3af; margin-top: 5px;">Renews monthly</div>
               </div>
               
-              <div style="background: #f3f4f6; padding: 20px; border-radius: 6px; margin: 20px 0;">
-                <h3 style="color: #374151; margin-top: 0;">What's included:</h3>
-                <ul style="margin: 10px 0; padding-left: 20px;">
-                  <li>${creditsPerMonth} monthly credits (roll over if unused)</li>
-                  <li>Access to all guides & resources library</li>
-                  <li>JumpinAI Studio for comprehensive transformation plans</li>
-                  <li>Priority customer support</li>
-                  <li>Early access to new features</li>
-                </ul>
-              </div>
-              
               <div style="text-align: center; margin: 25px 0;">
                 <a href="https://www.jumpinai.com/dashboard" 
                    style="background: linear-gradient(135deg, #374151 0%, #1f2937 100%); color: white; padding: 12px 25px; text-decoration: none; border-radius: 6px; display: inline-block; font-weight: 600;">
@@ -229,10 +262,22 @@ async function handleSubscriptionSuccess(
             </div>
           </div>
           
-          <div style="background: #374151; padding: 20px; text-align: center; border-radius: 0 0 10px 10px;">
-            <p style="color: white; margin: 0; font-size: 14px;">
-              <strong>JumpinAI - Your Personalized AI Adaptation Studio</strong><br>
-              Questions? Reply to this email or contact us at <a href="mailto:support@jumpinai.com" style="color: #d1d5db;">support@jumpinai.com</a>
+          <div style="border-top: 1px solid #e5e7eb; padding-top: 18px; margin-top: 20px; text-align: center;">
+            <p style="margin: 0 0 6px 0; color: #6b7280; font-size: 13px;">Questions? We're always here to help!</p>
+            <p style="margin: 0; color: #1f2937; font-size: 13px;">
+              Email us at <a href="mailto:info@jumpinai.com" style="color: #3b82f6; text-decoration: none; font-weight: 600;">info@jumpinai.com</a>
+            </p>
+          </div>
+
+          <div style="padding: 20px 24px; text-align: center; background: #f9fafb; margin-top: 14px; border-radius: 6px;">
+            <p style="color: #111827; margin: 0 0 4px 0; font-size: 14px; font-weight: 600;">
+              JumpinAI.
+            </p>
+            <p style="color: #6b7280; margin: 0 0 14px 0; font-size: 13px;">
+              Your Personalized AI Adaptation Studio.
+            </p>
+            <p style="color: #9ca3af; margin: 0; font-size: 12px;">
+              <a href="https://www.jumpinai.com/dashboard/subscription" style="color: #6b7280; text-decoration: underline;">Manage Subscription</a>
             </p>
           </div>
         </body>
@@ -291,6 +336,143 @@ async function handleSubscriptionSuccess(
     console.log("✅ Subscription emails sent successfully");
   } catch (error) {
     console.error("Error handling subscription:", error);
+  }
+}
+
+async function handleSubscriptionUpgrade(
+  session: Stripe.Checkout.Session,
+  customerEmail: string
+) {
+  try {
+    console.log('🔄 Processing subscription upgrade...');
+    console.log('Session ID:', session.id);
+    
+    const userId = session.metadata?.user_id;
+    const newPlanId = session.metadata?.new_plan_id;
+    const newPlanName = session.metadata?.new_plan_name;
+    const currentPlanName = session.metadata?.current_plan_name;
+    const creditsToAdd = parseInt(session.metadata?.credits_to_add || "0");
+    const newCreditsPerMonth = parseInt(session.metadata?.new_credits_per_month || "0");
+
+    console.log(`Upgrading user ${userId} from ${currentPlanName} to ${newPlanName}`);
+
+    if (!userId || !newPlanId) {
+      console.error('Missing required upgrade metadata');
+      return;
+    }
+
+    // Get user's current subscription
+    const { data: subscriber } = await supabase
+      .from('subscribers')
+      .select('*')
+      .eq('user_id', userId)
+      .single();
+
+    if (!subscriber || !subscriber.stripe_customer_id) {
+      console.error('No active subscription found for user');
+      return;
+    }
+
+    // Get the active Stripe subscription
+    const subscriptions = await stripe.subscriptions.list({
+      customer: subscriber.stripe_customer_id,
+      status: 'active',
+      limit: 1,
+    });
+
+    if (subscriptions.data.length === 0) {
+      console.error('No active Stripe subscription found');
+      return;
+    }
+
+    const currentSubscription = subscriptions.data[0];
+
+    // Get the new plan's Stripe price
+    const { data: newPlan } = await supabase
+      .from('subscription_plans')
+      .select('*')
+      .eq('id', newPlanId)
+      .single();
+
+    if (!newPlan || !newPlan.stripe_price_id) {
+      console.error('New plan or price not found');
+      return;
+    }
+
+    // Update the Stripe subscription to the new plan
+    console.log('Updating Stripe subscription...');
+    const updatedSubscription = await stripe.subscriptions.update(
+      currentSubscription.id,
+      {
+        items: [{
+          id: currentSubscription.items.data[0].id,
+          price: newPlan.stripe_price_id,
+        }],
+        proration_behavior: 'none', // We already charged the prorated amount
+        metadata: {
+          user_id: userId,
+          user_email: customerEmail,
+          plan_id: newPlanId,
+          plan_name: newPlanName,
+          credits_per_month: newCreditsPerMonth.toString(),
+          upgrade_processed: 'true',
+        },
+      }
+    );
+
+    console.log('Stripe subscription updated:', updatedSubscription.id);
+
+    // Add the upgrade credits immediately
+    if (creditsToAdd > 0) {
+      console.log(`Adding ${creditsToAdd} upgrade credits...`);
+      const { error: creditsError } = await supabase.rpc('add_user_credits', {
+        p_user_id: userId,
+        p_credits: creditsToAdd,
+        p_description: `Upgrade to ${newPlanName} - Additional credits`,
+        p_reference_id: session.id,
+      });
+
+      if (creditsError) {
+        console.error('Error adding upgrade credits:', creditsError);
+      } else {
+        console.log(`✅ Successfully added ${creditsToAdd} credits`);
+      }
+    }
+
+    // Check if this is a manual subscription (protected)
+    const { data: existingSub } = await supabase
+      .from('subscribers')
+      .select('manual_subscription')
+      .eq('user_id', userId)
+      .single();
+    
+    if (existingSub?.manual_subscription) {
+      console.log('⚠️ Cannot upgrade - manual subscription is protected');
+      throw new Error('Manual subscriptions cannot be upgraded through Stripe');
+    }
+    
+    // Set change source for audit log
+    await supabase.rpc('set_config', {
+      setting_name: 'app.change_source',
+      setting_value: 'stripe_webhook_upgrade'
+    });
+    
+    // Update subscriber record
+    const subscriptionEnd = new Date(updatedSubscription.current_period_end * 1000);
+    await supabase
+      .from('subscribers')
+      .update({
+        subscribed: true,
+        subscription_tier: newPlanName,
+        subscription_end: subscriptionEnd.toISOString(),
+        updated_at: new Date().toISOString(),
+      })
+      .eq('user_id', userId);
+
+    console.log(`✅ Subscription upgraded to ${newPlanName}`);
+
+  } catch (error) {
+    console.error("Error handling subscription upgrade:", error);
   }
 }
 
@@ -372,13 +554,17 @@ async function handlePaymentSuccess(
         <!DOCTYPE html>
         <html>
         <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
-          <div style="text-align: center; margin-bottom: 30px;">
-            <img src="${logoUrl}" alt="JumpinAI" style="max-width: 150px; height: auto;" />
+          <div style="text-align: center; padding: 32px 24px 24px 24px;">
+            <img 
+              src="https://jumpinai.com/logo.jpg" 
+              alt="JumpinAI Logo" 
+              style="width: 84px; height: 84px; display: block; border-radius: 12px; margin: 0 auto;"
+            />
           </div>
 
-          <div style="background: linear-gradient(135deg, #374151 0%, #1f2937 100%); padding: 30px; text-align: center; border-radius: 10px 10px 0 0;">
+          <div style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); padding: 30px; text-align: center; border-radius: 10px 10px 0 0;">
             <h1 style="color: white; margin: 0; font-size: 28px;">Payment Confirmed! ✅</h1>
-            <p style="color: #d1d5db; margin: 10px 0 0 0; font-size: 16px;">Your credits have been added</p>
+            <p style="color: rgba(255,255,255,0.9); margin: 10px 0 0 0; font-size: 16px;">Your credits have been added</p>
           </div>
           
           <div style="padding: 30px; background: #f9f9f9;">
@@ -386,7 +572,7 @@ async function handlePaymentSuccess(
               <h2 style="color: #374151; margin-bottom: 20px;">Hi ${customerName}!</h2>
               
               <p style="font-size: 16px; margin-bottom: 20px;">
-                Your payment has been successfully processed and ${credits} credits have been added to your account!
+                Your payment has been successfully processed and <strong>${credits} credits</strong> have been added to your account!
               </p>
               
               <div style="background: #f3f4f6; padding: 20px; border-radius: 6px; margin: 20px 0; text-align: center;">
@@ -396,17 +582,26 @@ async function handlePaymentSuccess(
               
               <div style="text-align: center; margin: 25px 0;">
                 <a href="https://www.jumpinai.com/dashboard" 
-                   style="background: linear-gradient(135deg, #374151 0%, #1f2937 100%); color: white; padding: 12px 25px; text-decoration: none; border-radius: 6px; display: inline-block; font-weight: 600;">
+                   style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; padding: 12px 25px; text-decoration: none; border-radius: 6px; display: inline-block; font-weight: 600;">
                   Use Your Credits Now
                 </a>
               </div>
             </div>
           </div>
           
-          <div style="background: #374151; padding: 20px; text-align: center; border-radius: 0 0 10px 10px;">
-            <p style="color: white; margin: 0; font-size: 14px;">
-              <strong>JumpinAI - Your Personalized AI Adaptation Studio</strong><br>
-              Questions? Reply to this email or contact us at <a href="mailto:support@jumpinai.com" style="color: #d1d5db;">support@jumpinai.com</a>
+          <div style="border-top: 1px solid #e5e7eb; padding-top: 18px; margin-top: 20px; text-align: center;">
+            <p style="margin: 0 0 6px 0; color: #6b7280; font-size: 13px;">Questions? We're always here to help!</p>
+            <p style="margin: 0; color: #1f2937; font-size: 13px;">
+              Email us at <a href="mailto:info@jumpinai.com" style="color: #3b82f6; text-decoration: none; font-weight: 600;">info@jumpinai.com</a>
+            </p>
+          </div>
+
+          <div style="padding: 20px 24px; text-align: center; background: #f9fafb; margin-top: 14px; border-radius: 6px;">
+            <p style="color: #111827; margin: 0 0 4px 0; font-size: 14px; font-weight: 600;">
+              JumpinAI.
+            </p>
+            <p style="color: #6b7280; margin: 0; font-size: 13px;">
+              Your Personalized AI Adaptation Studio.
             </p>
           </div>
         </body>

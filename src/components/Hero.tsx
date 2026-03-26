@@ -1,12 +1,31 @@
-
 import { Button } from "@/components/ui/button";
+import HeroDotMatrix from "@/components/HeroDotMatrix";
 import { ArrowRight, Sparkles } from "lucide-react";
-import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import logoTransparent from "@/assets/logo-transparent.png";
+import heroDesktopNew from "@/assets/hero-desktop-studio-new.jpg";
+import heroMobileGeneration from "@/assets/hero-mobile-generation.jpg";
+import heroMobileDashboardGraph from "@/assets/hero-mobile-dashboard-graph.jpg";
+import heroMobileComboDetail from "@/assets/hero-mobile-combo-detail.png";
+import heroMobileClarify from "@/assets/hero-mobile-clarify.jpg";
 
 const Hero = () => {
   const [isDark, setIsDark] = useState(false);
+  const [mousePos, setMousePos] = useState({ x: -1000, y: -1000 });
+  const sectionRef = useRef<HTMLElement>(null);
+  const { elementRef: mockupsRef, scrollProgress: mockupsProgress } = useScrollAnimation({ threshold: 0.2 });
+  const { elementRef: mobilesMockupsRef, scrollProgress: mobilesProgress } = useScrollAnimation({ threshold: 0.2 });
+
+  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLElement>) => {
+    const rect = sectionRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    setMousePos({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+  }, []);
+
+  const handleMouseLeave = useCallback(() => {
+    setMousePos({ x: -1000, y: -1000 });
+  }, []);
 
   useEffect(() => {
     const checkTheme = () => {
@@ -33,260 +52,425 @@ const Hero = () => {
   };
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-8">
-      {/* Sophisticated Background - Matching Premium Gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-gray-50 via-slate-100 to-stone-200 dark:from-black dark:via-gray-950/90 dark:to-gray-900/60"></div>
+    <section ref={sectionRef} onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave} className="relative min-h-screen flex items-center justify-center overflow-hidden pt-12 sm:pt-14 lg:pt-12">
+      {/* === WORLD-CLASS OPTIMISTIC AI HERO === */}
       
-      {/* Premium Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-blue-50/30 via-indigo-100/20 to-slate-300/40 dark:from-black/50 dark:via-gray-950/40 dark:to-gray-900/50"></div>
+      {/* Luminous Foundation - Warm & Optimistic */}
+      <div className="absolute inset-0 bg-gradient-to-br from-amber-50/80 via-slate-50 to-cyan-50/60 dark:from-[#0c0a09] dark:via-[#0f172a] dark:to-[#0c1220]"></div>
       
-      {/* Radial Depth Effect */}
-      <div className="absolute inset-0 bg-gradient-radial from-transparent via-transparent to-blue-950/40 dark:from-transparent dark:via-gray-950/30 dark:to-gray-900/40"></div>
+      {/* Primary Gradient Flow - Golden Warmth */}
+      <div 
+        className="absolute inset-0"
+        style={{
+          background: 'linear-gradient(135deg, rgba(251, 191, 36, 0.15) 0%, rgba(245, 158, 11, 0.08) 25%, transparent 50%, rgba(6, 182, 212, 0.06) 75%, rgba(34, 211, 238, 0.08) 100%)',
+          animation: 'gradient-flow 20s ease-in-out infinite'
+        }}
+      ></div>
       
-      {/* Vertical Curtain Drapes Effect - Removed in light mode */}
-      <div className="absolute inset-0 hidden dark:block">
-        <div className="absolute inset-0 bg-gradient-to-r from-gray-950/80 via-transparent to-gray-950/80"></div>
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-gray-900/50 to-transparent"></div>
+      {/* Secondary Gradient Flow - Teal Accent */}
+      <div 
+        className="absolute inset-0"
+        style={{
+          background: 'linear-gradient(-45deg, rgba(20, 184, 166, 0.1) 0%, transparent 40%, transparent 60%, rgba(251, 191, 36, 0.08) 100%)',
+          animation: 'gradient-flow-reverse 25s ease-in-out infinite'
+        }}
+      ></div>
+      
+      {/* Radial Glow - Top Left Golden */}
+      <div 
+        className="absolute -top-[20%] -left-[10%] w-[60%] h-[60%]"
+        style={{
+          background: 'radial-gradient(ellipse at center, rgba(251, 191, 36, 0.2) 0%, rgba(245, 158, 11, 0.1) 30%, transparent 60%)',
+          filter: 'blur(80px)',
+          animation: 'glow-pulse-1 12s ease-in-out infinite'
+        }}
+      ></div>
+      
+      {/* Radial Glow - Top Right Cyan */}
+      <div 
+        className="absolute -top-[10%] -right-[15%] w-[50%] h-[50%]"
+        style={{
+          background: 'radial-gradient(ellipse at center, rgba(6, 182, 212, 0.18) 0%, rgba(20, 184, 166, 0.08) 40%, transparent 65%)',
+          filter: 'blur(70px)',
+          animation: 'glow-pulse-2 15s ease-in-out infinite'
+        }}
+      ></div>
+      
+      {/* Radial Glow - Bottom Center Warm */}
+      <div 
+        className="absolute bottom-[-10%] left-[25%] w-[50%] h-[40%]"
+        style={{
+          background: 'radial-gradient(ellipse at center, rgba(251, 146, 60, 0.12) 0%, rgba(251, 191, 36, 0.06) 50%, transparent 70%)',
+          filter: 'blur(60px)',
+          animation: 'glow-pulse-3 18s ease-in-out infinite'
+        }}
+      ></div>
+      
+      {/* === INTERACTIVE DOT MATRIX === */}
+      <div className="absolute inset-0 overflow-hidden">
+        <HeroDotMatrix isDark={isDark} mousePos={mousePos} />
+        
+        {/* Animated connection lines */}
+        <svg className="absolute inset-0 w-full h-full pointer-events-none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="dot-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="rgb(251, 191, 36)" stopOpacity="0.5" />
+              <stop offset="50%" stopColor="rgb(20, 184, 166)" stopOpacity="0.4" />
+              <stop offset="100%" stopColor="rgb(6, 182, 212)" stopOpacity="0.5" />
+            </linearGradient>
+          </defs>
+          <g className="opacity-[0.06] dark:opacity-[0.1]" stroke="url(#dot-gradient)" strokeWidth="0.5" fill="none">
+            <path d="M0,200 Q400,150 800,200 T1600,200">
+              <animate attributeName="d" 
+                values="M0,200 Q400,150 800,200 T1600,200;M0,200 Q400,250 800,200 T1600,200;M0,200 Q400,150 800,200 T1600,200" 
+                dur="8s" repeatCount="indefinite" />
+            </path>
+            <path d="M0,400 Q400,350 800,400 T1600,400">
+              <animate attributeName="d" 
+                values="M0,400 Q400,350 800,400 T1600,400;M0,400 Q400,450 800,400 T1600,400;M0,400 Q400,350 800,400 T1600,400" 
+                dur="10s" repeatCount="indefinite" />
+            </path>
+            <path d="M0,600 Q400,550 800,600 T1600,600">
+              <animate attributeName="d" 
+                values="M0,600 Q400,550 800,600 T1600,600;M0,600 Q400,650 800,600 T1600,600;M0,600 Q400,550 800,600 T1600,600" 
+                dur="12s" repeatCount="indefinite" />
+            </path>
+          </g>
+        </svg>
       </div>
       
-      {/* Bottom Sophisticated Light Effect */}
-      <div className="absolute bottom-0 left-0 right-0 h-96 bg-gradient-to-t from-white/60 via-slate-50/30 to-transparent dark:from-gray-950/70 dark:via-gray-900/40 dark:to-transparent"></div>
-
-      {/* Advanced Animated Grid Pattern */}
-      <div className="absolute inset-0 opacity-[0.02] dark:opacity-[0.08]">
-        <div className="absolute inset-0 bg-grid-pattern animate-pulse" style={{ 
-          backgroundImage: `linear-gradient(rgba(59, 130, 246, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(59, 130, 246, 0.1) 1px, transparent 1px)`,
-          backgroundSize: '50px 50px',
-          animationDuration: '8s'
-        }}></div>
+      {/* Elegant Breathing Aurora */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        {/* Top aurora band */}
+        <div 
+          className="absolute top-0 left-[10%] right-[10%] h-[50%]"
+          style={{
+            background: 'radial-gradient(ellipse 80% 50% at 50% 0%, rgba(251, 191, 36, 0.08) 0%, transparent 70%)',
+            animation: 'aurora-breathe 8s ease-in-out infinite'
+          }}
+        ></div>
+        
+        {/* Right side subtle glow */}
+        <div 
+          className="absolute top-[20%] right-0 w-[30%] h-[60%]"
+          style={{
+            background: 'radial-gradient(ellipse 50% 80% at 100% 50%, rgba(6, 182, 212, 0.06) 0%, transparent 70%)',
+            animation: 'aurora-breathe 10s ease-in-out infinite 2s'
+          }}
+        ></div>
+        
       </div>
-
-      {/* Sophisticated Noise Texture */}
-      <div className="absolute inset-0 opacity-[0.015] dark:opacity-[0.06] mix-blend-overlay">
+      
+      {/* Subtle Radial Highlight - Center Focus */}
+      <div 
+        className="absolute top-[20%] left-[30%] w-[40%] h-[40%]"
+        style={{
+          background: 'radial-gradient(ellipse at center, rgba(255, 255, 255, 0.1) 0%, transparent 50%)',
+          animation: 'center-glow 10s ease-in-out infinite'
+        }}
+      ></div>
+      
+      {/* Premium Vignette - Soft Focus */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_70%_60%_at_50%_40%,transparent_0%,rgba(0,0,0,0.015)_60%,rgba(0,0,0,0.04)_100%)] dark:bg-[radial-gradient(ellipse_70%_60%_at_50%_40%,transparent_0%,rgba(0,0,0,0.15)_50%,rgba(0,0,0,0.4)_100%)]"></div>
+      
+      {/* Ultra-Fine Noise Texture */}
+      <div className="absolute inset-0 opacity-[0.02] dark:opacity-[0.04] mix-blend-overlay pointer-events-none">
         <div className="absolute inset-0" style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='1' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
-          backgroundRepeat: 'repeat',
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
           backgroundSize: '128px 128px'
         }}></div>
       </div>
-
-      {/* Advanced Ripple Effects - Enhanced in light mode */}
-      <div className="absolute inset-0 opacity-20 dark:opacity-15">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 border border-primary/30 rounded-full animate-ping" style={{ animationDuration: '6s', animationDelay: '0s' }}></div>
-        <div className="absolute top-1/2 right-1/3 w-64 h-64 border border-accent/35 rounded-full animate-ping" style={{ animationDuration: '8s', animationDelay: '2s' }}></div>
-        <div className="absolute bottom-1/3 left-1/2 w-80 h-80 border border-primary/25 rounded-full animate-ping" style={{ animationDuration: '10s', animationDelay: '4s' }}></div>
-      </div>
-
-      {/* Sophisticated Hexagonal Pattern */}
-      <div className="absolute inset-0 opacity-[0.03] dark:opacity-[0.12]">
-        <div className="absolute inset-0" style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg stroke='%234F46E5' stroke-width='0.5' stroke-opacity='0.1'%3E%3Cpolygon points='30,5 50,17 50,43 30,55 10,43 10,17'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-          backgroundRepeat: 'repeat',
-          backgroundPosition: '0 0, 30px 30px'
-        }}></div>
-      </div>
-
-      {/* Advanced Lighting Rays - Removed in light mode */}
-      <div className="absolute inset-0 hidden dark:block opacity-20">
-        <div className="absolute top-0 left-1/4 w-px h-full bg-gradient-to-b from-blue-400/20 via-transparent to-indigo-300/15 animate-pulse" style={{ animationDuration: '7s' }}></div>
-        <div className="absolute top-0 right-1/3 w-px h-full bg-gradient-to-b from-indigo-300/18 via-transparent to-blue-400/12 animate-pulse" style={{ animationDuration: '9s', animationDelay: '2s' }}></div>
-        <div className="absolute top-0 left-2/3 w-px h-full bg-gradient-to-b from-slate-300/15 via-transparent to-blue-300/10 animate-pulse" style={{ animationDuration: '11s', animationDelay: '4s' }}></div>
-      </div>
-
-      {/* Sophisticated Mesh Distortion */}
-      <div className="absolute inset-0 opacity-[0.04] dark:opacity-[0.15]">
-        <div className="absolute top-1/3 left-1/4 w-full h-full bg-gradient-conic from-blue-200/30 via-indigo-300/20 via-slate-200/25 to-blue-200/30 dark:from-blue-900/40 dark:via-indigo-950/30 dark:via-slate-900/35 dark:to-blue-900/40 rounded-full blur-3xl transform rotate-45 animate-spin" style={{ animationDuration: '60s' }}></div>
-      </div>
       
-      {/* Premium Accent Orbs - Matching Other Pages */}
-      <div className="absolute -top-40 -right-40 w-[28rem] h-[28rem] bg-gradient-to-br from-primary/25 via-primary/15 to-primary/5 rounded-full blur-3xl animate-pulse opacity-60"></div>
-      <div className="absolute -bottom-40 -left-40 w-[32rem] h-[32rem] bg-gradient-to-tr from-secondary/20 via-accent/10 to-secondary/5 rounded-full blur-3xl animate-pulse opacity-50" style={{animationDelay: '2s'}}></div>
-      <div className="absolute top-1/4 left-1/3 w-72 h-72 bg-gradient-conic from-primary/15 via-accent/10 to-secondary/15 rounded-full blur-2xl animate-pulse opacity-40" style={{animationDelay: '1s'}}></div>
-      <div className="absolute bottom-1/4 right-1/4 w-48 h-48 bg-gradient-radial from-accent/20 via-primary/10 to-transparent rounded-full blur-xl animate-pulse opacity-30" style={{animationDelay: '3s'}}></div>
-
-      {/* Floating Particles - Enhanced visibility in light mode */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-primary/70 rounded-full animate-bounce shadow-lg shadow-primary/20" style={{ animationDuration: '3s', animationDelay: '0s' }}></div>
-        <div className="absolute bottom-1/3 left-1/5 w-3 h-3 bg-primary/60 rounded-full animate-bounce shadow-lg shadow-primary/20" style={{ animationDuration: '5s', animationDelay: '2s' }}></div>
-        <div className="absolute bottom-1/4 right-1/5 w-2 h-2 bg-accent/80 rounded-full animate-bounce shadow-lg shadow-accent/30" style={{ animationDuration: '4.5s', animationDelay: '1.5s' }}></div>
-        
-        {/* Additional Logo Area Particles */}
-        <div className="absolute top-[20%] left-[35%] w-1.5 h-1.5 bg-primary/80 rounded-full animate-pulse shadow-md shadow-primary/30" style={{ animationDuration: '2s', animationDelay: '0.5s' }}></div>
-        <div className="absolute top-[18%] right-[38%] w-2 h-2 bg-accent/70 rounded-full animate-pulse shadow-md shadow-accent/30" style={{ animationDuration: '2.5s', animationDelay: '1s' }}></div>
-        <div className="absolute top-[25%] left-[42%] w-1 h-1 bg-primary/90 rounded-full animate-bounce shadow-sm shadow-primary/40" style={{ animationDuration: '3.5s', animationDelay: '0.8s' }}></div>
-        <div className="absolute top-[22%] right-[45%] w-1.5 h-1.5 bg-accent/80 rounded-full animate-pulse shadow-md shadow-accent/30" style={{ animationDuration: '2.8s', animationDelay: '1.2s' }}></div>
-        <div className="absolute top-[28%] left-[48%] w-1 h-1 bg-primary/70 rounded-full animate-bounce shadow-sm shadow-primary/30" style={{ animationDuration: '4s', animationDelay: '0.3s' }}></div>
-        <div className="absolute top-[16%] right-[32%] w-2 h-2 bg-accent/60 rounded-full animate-pulse shadow-md shadow-accent/20" style={{ animationDuration: '3.2s', animationDelay: '1.5s' }}></div>
-        <div className="absolute top-[30%] left-[55%] w-1.5 h-1.5 bg-primary/80 rounded-full animate-bounce shadow-md shadow-primary/30" style={{ animationDuration: '3.8s', animationDelay: '0.6s' }}></div>
-      </div>
-
-      {/* Neural Connection Lines */}
-      <div className="absolute inset-0 opacity-10 dark:opacity-20">
-        <svg className="w-full h-full" viewBox="0 0 1200 800">
-          <defs>
-            <linearGradient id="connectionGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="rgb(99 102 241)" stopOpacity="0.6" />
-              <stop offset="100%" stopColor="rgb(59 130 246)" stopOpacity="0.2" />
-            </linearGradient>
-            <linearGradient id="connectionGradientDark" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="rgb(148 163 184)" stopOpacity="0.4" />
-              <stop offset="100%" stopColor="rgb(71 85 105)" stopOpacity="0.1" />
-            </linearGradient>
-          </defs>
-          <path
-            d="M100 200 Q300 100 500 250 T900 180"
-            stroke={`url(#${isDark ? 'connectionGradientDark' : 'connectionGradient'})`}
-            strokeWidth="1"
-            fill="none"
-            className="animate-pulse"
-            style={{ animationDuration: '4s' }}
-          />
-          <path
-            d="M200 400 Q600 200 800 450 T1100 350"
-            stroke={`url(#${isDark ? 'connectionGradientDark' : 'connectionGradient'})`}
-            strokeWidth="0.8"
-            fill="none"
-            className="animate-pulse"
-            style={{ animationDuration: '6s', animationDelay: '2s' }}
-          />
-          <path
-            d="M50 600 Q400 500 700 650 T1000 550"
-            stroke={`url(#${isDark ? 'connectionGradientDark' : 'connectionGradient'})`}
-            strokeWidth="0.6"
-            fill="none"
-            className="animate-pulse"
-            style={{ animationDuration: '5s', animationDelay: '1s' }}
-          />
-        </svg>
-      </div>
-
-      {/* Advanced Mesh Gradient Overlay */}
-      <div className="absolute inset-0 opacity-30 dark:opacity-60">
-        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-blue-100/20 via-transparent via-transparent to-indigo-200/30 dark:from-slate-950/70 dark:via-black/90 dark:to-black/95"></div>
-        <div className="absolute top-0 right-0 w-2/3 h-2/3 bg-gradient-to-bl from-slate-200/25 via-transparent to-blue-300/20 dark:from-slate-950/60 dark:via-black/80 dark:to-slate-950/70 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 left-0 w-3/4 h-3/4 bg-gradient-to-tr from-indigo-100/30 via-transparent to-slate-300/25 dark:from-black/85 dark:via-slate-950/75 dark:to-black/90 rounded-full blur-2xl"></div>
-        <div className="absolute top-1/4 left-1/2 w-1/2 h-1/2 bg-gradient-to-br from-blue-900/40 via-indigo-950/30 to-transparent dark:from-slate-950/50 dark:via-black/70 dark:to-transparent rounded-full blur-3xl"></div>
-      </div>
-
-      {/* Dynamic Light Rays */}
-      <div className="absolute inset-0 opacity-15 dark:opacity-25">
-        <div className="absolute top-1/4 -left-32 w-64 h-1 bg-gradient-to-r from-transparent via-blue-300/50 to-transparent dark:via-blue-400/30 rotate-45 animate-pulse" style={{ animationDuration: '3s' }}></div>
-        <div className="absolute top-1/2 -right-32 w-48 h-0.5 bg-gradient-to-r from-transparent via-indigo-400/60 to-transparent dark:via-indigo-300/40 -rotate-45 animate-pulse" style={{ animationDuration: '4s', animationDelay: '1.5s' }}></div>
-        <div className="absolute bottom-1/3 left-1/4 w-56 h-0.5 bg-gradient-to-r from-transparent via-slate-400/50 to-transparent dark:via-slate-300/30 rotate-12 animate-pulse" style={{ animationDuration: '5s', animationDelay: '2.5s' }}></div>
-      </div>
+      {/* Keyframe Animations */}
+      <style>{`
+        /* NOTE: keep hero "alive" but avoid lateral movement that creates edge banding */
+        @keyframes gradient-flow {
+          0%, 100% { opacity: 1; transform: none; }
+          50% { opacity: 0.8; transform: none; }
+        }
+        @keyframes gradient-flow-reverse {
+          0%, 100% { opacity: 1; transform: none; }
+          50% { opacity: 0.7; transform: none; }
+        }
+        @keyframes glow-pulse-1 {
+          0%, 100% { opacity: 1; transform: scale(1); }
+          50% { opacity: 0.7; transform: scale(1.1); }
+        }
+        @keyframes glow-pulse-2 {
+          0%, 100% { opacity: 1; transform: scale(1); }
+          50% { opacity: 0.6; transform: scale(1.15); }
+        }
+        @keyframes glow-pulse-3 {
+          0%, 100% { opacity: 1; transform: scale(1); }
+          50% { opacity: 0.5; transform: scale(1.2); }
+        }
+        @keyframes aurora-breathe {
+          0%, 100% { opacity: 1; transform: scale(1); }
+          50% { opacity: 0.6; transform: scale(1.05); }
+        }
+        @keyframes center-glow {
+          0%, 100% { opacity: 0.8; transform: scale(1); }
+          50% { opacity: 1; transform: scale(1.15); }
+        }
+      `}</style>
       
-      {/* Enhanced Curved Jump Effect */}
-      <div className="absolute bottom-0 left-0 right-0 h-40 opacity-70 dark:opacity-80">
+      {/* Enhanced Curved Bottom Arc - Flowing Wave */}
+      <div className="absolute bottom-0 left-0 right-0 h-48 opacity-80 dark:opacity-90">
         <svg
           className="absolute bottom-0 w-full h-full"
-          viewBox="0 0 1200 150"
+          viewBox="0 0 1440 200"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
+          preserveAspectRatio="none"
         >
-          {/* Main jump curve */}
+          {/* Animated wave paths */}
           <path
-            d="M0 150L80 135C160 120 320 90 480 75C640 60 800 60 960 75C1120 90 1280 120 1360 135L1440 150V150H1360C1280 150 1120 150 960 150C800 150 640 150 480 150C320 150 160 150 80 150H0Z"
-            fill={`url(#${isDark ? 'jumpGradientDark' : 'jumpGradient'})`}
-            className="drop-shadow-lg"
-          />
-          {/* Secondary curve for depth */}
+            d="M0 200L48 185C96 170 192 140 288 125C384 110 480 110 576 120C672 130 768 150 864 155C960 160 1056 150 1152 135C1248 120 1344 100 1392 90L1440 80V200H1392C1344 200 1248 200 1152 200C1056 200 960 200 864 200C768 200 672 200 576 200C480 200 384 200 288 200C192 200 96 200 48 200H0Z"
+            fill={`url(#${isDark ? 'waveGradientDark' : 'waveGradient'})`}
+          >
+            <animate attributeName="d" dur="10s" repeatCount="indefinite" values="
+              M0 200L48 185C96 170 192 140 288 125C384 110 480 110 576 120C672 130 768 150 864 155C960 160 1056 150 1152 135C1248 120 1344 100 1392 90L1440 80V200H1392C1344 200 1248 200 1152 200C1056 200 960 200 864 200C768 200 672 200 576 200C480 200 384 200 288 200C192 200 96 200 48 200H0Z;
+              M0 200L48 175C96 160 192 130 288 120C384 100 480 100 576 115C672 125 768 145 864 150C960 155 1056 145 1152 130C1248 115 1344 95 1392 85L1440 75V200H1392C1344 200 1248 200 1152 200C1056 200 960 200 864 200C768 200 672 200 576 200C480 200 384 200 288 200C192 200 96 200 48 200H0Z;
+              M0 200L48 185C96 170 192 140 288 125C384 110 480 110 576 120C672 130 768 150 864 155C960 160 1056 150 1152 135C1248 120 1344 100 1392 90L1440 80V200H1392C1344 200 1248 200 1152 200C1056 200 960 200 864 200C768 200 672 200 576 200C480 200 384 200 288 200C192 200 96 200 48 200H0Z
+            " />
+          </path>
           <path
-            d="M0 150L100 140C200 130 400 110 600 100C800 90 1000 90 1100 95L1200 100V150H1100C1000 150 800 150 600 150C400 150 200 150 100 150H0Z"
-            fill={`url(#${isDark ? 'jumpGradient2Dark' : 'jumpGradient2'})`}
-            opacity="0.7"
-          />
+            d="M0 200L60 190C120 180 240 160 360 150C480 140 600 140 720 145C840 150 960 160 1080 165C1200 170 1320 170 1380 170L1440 170V200H1380C1320 200 1200 200 1080 200C960 200 840 200 720 200C600 200 480 200 360 200C240 200 120 200 60 200H0Z"
+            fill={`url(#${isDark ? 'waveGradient2Dark' : 'waveGradient2'})`}
+            opacity="0.6"
+          >
+            <animate attributeName="d" dur="8s" repeatCount="indefinite" values="
+              M0 200L60 190C120 180 240 160 360 150C480 140 600 140 720 145C840 150 960 160 1080 165C1200 170 1320 170 1380 170L1440 170V200H1380C1320 200 1200 200 1080 200C960 200 840 200 720 200C600 200 480 200 360 200C240 200 120 200 60 200H0Z;
+              M0 200L60 185C120 170 240 150 360 145C480 135 600 135 720 140C840 145 960 155 1080 160C1200 165 1320 165 1380 165L1440 165V200H1380C1320 200 1200 200 1080 200C960 200 840 200 720 200C600 200 480 200 360 200C240 200 120 200 60 200H0Z;
+              M0 200L60 190C120 180 240 160 360 150C480 140 600 140 720 145C840 150 960 160 1080 165C1200 170 1320 170 1380 170L1440 170V200H1380C1320 200 1200 200 1080 200C960 200 840 200 720 200C600 200 480 200 360 200C240 200 120 200 60 200H0Z
+            " />
+          </path>
           <defs>
-            <linearGradient id="jumpGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="rgb(71 85 105)" stopOpacity="0.65" />
-              <stop offset="30%" stopColor="rgb(100 116 139)" stopOpacity="0.85" />
-              <stop offset="70%" stopColor="rgb(100 116 139)" stopOpacity="0.8" />
-              <stop offset="100%" stopColor="rgb(71 85 105)" stopOpacity="0.6" />
+            <linearGradient id="waveGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="rgb(241 245 249)" stopOpacity="0.9" />
+              <stop offset="50%" stopColor="rgb(248 250 252)" stopOpacity="0.95" />
+              <stop offset="100%" stopColor="rgb(241 245 249)" stopOpacity="0.9" />
             </linearGradient>
-            <linearGradient id="jumpGradientDark" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="rgb(15 23 42)" stopOpacity="0.8" />
+            <linearGradient id="waveGradientDark" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="rgb(15 23 42)" stopOpacity="0.95" />
               <stop offset="30%" stopColor="rgb(30 41 59)" stopOpacity="0.9" />
-              <stop offset="70%" stopColor="rgb(51 65 85)" stopOpacity="0.8" />
-              <stop offset="100%" stopColor="rgb(30 41 59)" stopOpacity="0.6" />
+              <stop offset="70%" stopColor="rgb(30 41 59)" stopOpacity="0.9" />
+              <stop offset="100%" stopColor="rgb(15 23 42)" stopOpacity="0.95" />
             </linearGradient>
-            <linearGradient id="jumpGradient2" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="rgb(100 116 139)" stopOpacity="0.5" />
-              <stop offset="50%" stopColor="rgb(148 163 184)" stopOpacity="0.7" />
-              <stop offset="100%" stopColor="rgb(100 116 139)" stopOpacity="0.45" />
+            <linearGradient id="waveGradient2" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="rgb(226 232 240)" stopOpacity="0.7" />
+              <stop offset="50%" stopColor="rgb(241 245 249)" stopOpacity="0.8" />
+              <stop offset="100%" stopColor="rgb(226 232 240)" stopOpacity="0.7" />
             </linearGradient>
-            <linearGradient id="jumpGradient2Dark" x1="0%" y1="0%" x2="100%" y2="0%">
+            <linearGradient id="waveGradient2Dark" x1="0%" y1="0%" x2="100%" y2="0%">
               <stop offset="0%" stopColor="rgb(51 65 85)" stopOpacity="0.6" />
-              <stop offset="50%" stopColor="rgb(71 85 105)" stopOpacity="0.8" />
-              <stop offset="100%" stopColor="rgb(55 65 81)" stopOpacity="0.5" />
+              <stop offset="50%" stopColor="rgb(71 85 105)" stopOpacity="0.7" />
+              <stop offset="100%" stopColor="rgb(51 65 85)" stopOpacity="0.6" />
             </linearGradient>
           </defs>
         </svg>
       </div>
       
-      {/* Sophisticated Tech Pattern Overlay */}
-      <div className="absolute inset-0 opacity-10 dark:opacity-25 mix-blend-soft-light" style={{
-        backgroundImage: `url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23475569' fill-opacity='0.03'%3E%3Cpath d='M40 40c0 4.42-3.58 8-8 8s-8-3.58-8-8 3.58-8 8-8 8 3.58 8 8zm0-20c0 2.21-1.79 4-4 4s-4-1.79-4-4 1.79-4 4-4 4 1.79 4 4zm20 0c0 2.21-1.79 4-4 4s-4-1.79-4-4 1.79-4 4-4 4 1.79 4 4z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
-      }}></div>
-      
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <div className="animate-fade-in-up">
-          {/* Logo */}
-          <div className="flex items-center justify-center mt-8 sm:mt-12 mb-4 sm:mb-5 overflow-hidden">
-            <img 
-              src={logoTransparent}
-              alt="JumpinAI Logo" 
-              className="w-[140px] sm:w-[200px] md:w-[250px] lg:w-[300px] h-[70px] sm:h-[100px] md:h-[125px] lg:h-[150px] object-cover object-center"
-              style={{ objectPosition: 'center 45%' }}
-            />
-          </div>
-          
-          {/* Main Heading with Professional Typography */}
-          <div className="relative mb-6">
-            <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black mb-3 sm:mb-4 tracking-tight font-display">
-              <span className="block gradient-text-primary">JumpinAI</span>
-            </h1>
-            <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-24 sm:w-32 h-1 bg-gradient-to-r from-transparent via-primary/60 to-transparent rounded-full"></div>
-          </div>
-          
-          {/* Subheading */}
-          <p className="text-xl sm:text-2xl md:text-3xl lg:text-4xl text-muted-foreground mb-4 sm:mb-6 font-light max-w-4xl mx-auto leading-relaxed px-2">
-            Jump into the world of AI with 
-            <span className="text-foreground font-medium"> clarity and precision</span>
-          </p>
-          
-          {/* Description */}
-          <p className="text-base sm:text-lg md:text-xl text-muted-foreground mb-6 sm:mb-8 max-w-3xl mx-auto leading-relaxed font-light px-4">
-            This is your moment. <br className="hidden sm:block" />While others hesitate at the edge of the AI revolution, you're <span className="font-bold">ready to jump</span>. <br className="hidden sm:block" />We'll guide you from curiosity to clarity, from ideas to implementation, transforming the way you work, create, and live. Your AI-powered future begins with one bold step forward.
-          </p>
-          
-          {/* Call to Action Button */}
-          <div className="flex justify-center px-4 mb-16">
-            <Link to="/jumpinai-studio" className="relative group inline-block w-full sm:w-auto">
-              {/* Liquid glass glow effect */}
-              <div className="absolute -inset-0.5 bg-gradient-to-r from-white/50 via-white/40 to-white/50 rounded-[2rem] blur-md opacity-50 group-hover:opacity-80 transition duration-500"></div>
-              
-              {/* Button */}
-              <div className="relative flex items-center justify-center gap-2 px-6 sm:px-8 py-2.5 sm:py-3 bg-gradient-to-br from-white/60 via-white/70 to-white/60 backdrop-blur-xl rounded-[2rem] border border-white/60 group-hover:border-white/80 transition-all duration-300 overflow-hidden shadow-lg">
-                {/* Shimmer effect */}
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center min-h-[calc(100vh-12rem)]">
+          {/* Left Content */}
+          <div className="animate-fade-in-up text-center lg:text-left">
+            {/* Mini-Tagline */}
+            <div className="flex justify-center lg:justify-start mb-6 sm:mb-8 mt-16 sm:mt-18 md:mt-20 lg:mt-14">
+              <div className="relative group inline-block z-10">
+                {/* Liquid glass glow effect */}
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-white/15 via-white/20 to-white/15 rounded-full blur-md opacity-40 group-hover:opacity-60 transition duration-500"></div>
                 
-                {/* Content */}
-                <Sparkles className="relative h-4 w-4 sm:h-5 sm:w-5 text-black group-hover:animate-spin" />
-                <span className="relative text-base sm:text-lg font-bold text-black whitespace-nowrap">
-                  Get Started
-                </span>
-                <ArrowRight className="relative h-4 w-4 sm:h-5 sm:w-5 text-black group-hover:translate-x-1 transition-transform" />
+                {/* Glass casing */}
+                <div className="relative px-5 sm:px-6 py-2 sm:py-2.5 bg-gradient-to-br from-white/[0.03] via-white/[0.02] to-white/[0.03] backdrop-blur-md rounded-full border border-white/10 shadow-lg">
+                  {/* Shine effect */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-full opacity-30"></div>
+                  
+                  {/* Text */}
+                  <p className="relative text-xs sm:text-sm text-slate-700 dark:text-white/80 font-semibold tracking-widest uppercase">
+                    Jump into AI with clarity and precision
+                  </p>
+                </div>
               </div>
-            </Link>
+            </div>
+            
+            {/* Main H1 Title - Premium billion-dollar styling */}
+            <h1 className="text-[2.25rem] sm:text-[2.75rem] md:text-[3.25rem] lg:text-[2.75rem] xl:text-[3.5rem] font-black mb-6 sm:mb-8 tracking-[-0.02em] font-display leading-[1.1] pb-2">
+              <span 
+                className="block gradient-text-primary"
+                style={{ 
+                  textShadow: '0 4px 20px rgba(0, 0, 0, 0.25), 0 8px 40px rgba(251, 191, 36, 0.3), 0 2px 4px rgba(0, 0, 0, 0.15)' 
+                }}
+              >
+                Start Using AI.
+              </span>
+              <span 
+                className="block gradient-text-primary mt-2 pb-1"
+                style={{ 
+                  textShadow: '0 4px 20px rgba(0, 0, 0, 0.25), 0 8px 40px rgba(59, 130, 246, 0.3), 0 2px 4px rgba(0, 0, 0, 0.15)' 
+                }}
+              >
+                In Your Best Way Possible.
+              </span>
+            </h1>
+            
+            {/* Body Text */}
+            <div className="text-sm sm:text-base md:text-lg text-muted-foreground mb-8 sm:mb-10 max-w-4xl mx-auto lg:mx-0 leading-relaxed font-light px-4 lg:px-0 space-y-1.5 sm:space-y-2">
+              <p>Navigate <span className="font-semibold text-foreground/70">AI adoption</span> with confidence.</p>
+              <p>Clarify your <span className="font-semibold text-foreground/70">AI strategy</span> with a <span className="font-semibold text-foreground/70">roadmap</span> tailored to your specific goals - <span className="font-semibold text-foreground/70">adaptable</span> at every stage.</p>
+              <p>You'll receive expertly crafted <span className="font-semibold text-foreground/70">tool-prompt combinations</span>, seamlessly integrated <span className="font-semibold text-foreground/70">workflows</span>, and intelligent <span className="font-semibold text-foreground/70">AI agents</span> - all designed for seamless integration into your daily work.</p>
+              <p>Your competitive advantage in the <span className="font-semibold text-foreground/70">AI era</span> starts here.</p>
+            </div>
+            
+            {/* Call to Action Button */}
+            <div className="flex justify-center lg:justify-start px-4 lg:px-0 mb-16 lg:mb-0">
+              <button 
+                onClick={() => scrollToSection('inline-studio')} 
+                className="relative group inline-block w-full sm:w-auto"
+              >
+                {/* Liquid glass glow effect */}
+                <div className="absolute -inset-0.5 bg-gradient-to-r from-white/50 via-white/40 to-white/50 rounded-[2rem] blur-md opacity-50 group-hover:opacity-80 transition duration-500"></div>
+                
+                {/* Button */}
+                <div className="relative flex items-center justify-center gap-2 px-6 sm:px-8 py-2.5 sm:py-3 bg-gradient-to-br from-white/60 via-white/70 to-white/60 backdrop-blur-xl rounded-[2rem] border border-white/60 group-hover:border-white/80 transition-all duration-300 overflow-hidden shadow-lg">
+                  {/* Shimmer effect */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                  
+                  {/* Content */}
+                  <Sparkles className="relative h-4 w-4 sm:h-5 sm:w-5 text-black" />
+                  <span className="relative text-base sm:text-lg font-bold text-black whitespace-nowrap">
+                    Get Started
+                  </span>
+                  <ArrowRight className="relative h-4 w-4 sm:h-5 sm:w-5 text-black group-hover:translate-x-1 transition-transform" />
+                </div>
+              </button>
+            </div>
+          </div>
+
+          {/* Right Mockups - Dynamic Professional Composition */}
+          <div ref={mockupsRef} className="relative lg:mt-20">
+            <div className="flex flex-col items-center gap-4 sm:gap-6 lg:gap-8">
+              {/* Desktop - Main focal point */}
+              <div 
+                className="w-full max-w-[92%] sm:max-w-[88%] lg:max-w-[90%] group transition-all ease-out lg:opacity-0 lg:animate-fade-in"
+                style={{
+                  transitionDuration: window.innerWidth < 1024 ? '1000ms' : '0ms',
+                  opacity: window.innerWidth < 1024 ? Math.min(1, mockupsProgress * 1.5) : undefined,
+                  transform: window.innerWidth < 1024 ? `scale(${0.95 + Math.min(1, mockupsProgress * 1.5) * 0.05}) translateY(${(1 - Math.min(1, mockupsProgress * 1.5)) * 40}px)` : undefined,
+                  animationDelay: window.innerWidth >= 1024 ? '0.25s' : undefined,
+                  animationFillMode: window.innerWidth >= 1024 ? 'forwards' : undefined
+                }}
+              >
+                <div className="relative rounded-xl overflow-hidden border border-white/10 shadow-2xl bg-gradient-to-br from-white/[0.03] via-white/[0.02] to-white/[0.03] backdrop-blur-sm p-1 hover:scale-[1.02] transition-transform duration-300">
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent rounded-xl opacity-30"></div>
+                  <img 
+                    src={heroDesktopNew} 
+                    alt="JumpinAI Studio Dashboard" 
+                    className="relative w-full rounded-lg shadow-lg"
+                    loading="eager"
+                    fetchPriority="high"
+                    decoding="async"
+                  />
+                </div>
+              </div>
+
+              {/* Mobile Screenshots - Dynamic staggered layout */}
+              <div ref={mobilesMockupsRef} className="relative w-full flex justify-center items-center px-4 h-36 sm:h-48 lg:h-60">
+                {/* Jump Generation - Left, slightly raised */}
+                <div 
+                  className="absolute left-[5%] sm:left-[8%] lg:left-[10%] top-0 w-20 sm:w-28 lg:w-36 group transition-all ease-out lg:opacity-0 lg:animate-fade-in"
+                  style={{
+                    transitionDuration: window.innerWidth < 1024 ? '600ms' : '0ms',
+                    opacity: window.innerWidth < 1024 ? Math.max(0, Math.min(1, mobilesProgress * 2.5)) : undefined,
+                    transform: window.innerWidth < 1024 ? `translateY(${(1 - Math.max(0, Math.min(1, mobilesProgress * 2.5))) * 40}px)` : undefined,
+                    animationDelay: window.innerWidth >= 1024 ? '0.4s' : undefined,
+                    animationFillMode: window.innerWidth >= 1024 ? 'forwards' : undefined
+                  }}
+                >
+                  <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-xl bg-gradient-to-br from-white/[0.05] via-white/[0.03] to-white/[0.05] backdrop-blur-sm p-1 transform rotate-[-4deg] hover:rotate-[-2deg] hover:scale-105 transition-all duration-300">
+                    <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-2xl opacity-40"></div>
+                    <img 
+                      src={heroMobileGeneration} 
+                      alt="AI Jump Generation" 
+                      className="relative w-full rounded-xl shadow-lg"
+                      loading="eager"
+                      decoding="async"
+                    />
+                  </div>
+                </div>
+
+                {/* Dashboard Analytics - Center left, lower */}
+                <div 
+                  className="absolute left-[27%] sm:left-[29%] lg:left-[30%] top-5 sm:top-8 lg:top-10 w-20 sm:w-28 lg:w-36 group transition-all ease-out lg:opacity-0 lg:animate-fade-in"
+                  style={{
+                    transitionDuration: window.innerWidth < 1024 ? '600ms' : '0ms',
+                    opacity: window.innerWidth < 1024 ? Math.max(0, Math.min(1, (mobilesProgress - 0.15) * 2.5)) : undefined,
+                    transform: window.innerWidth < 1024 ? `translateY(${(1 - Math.max(0, Math.min(1, (mobilesProgress - 0.15) * 2.5))) * 40}px)` : undefined,
+                    animationDelay: window.innerWidth >= 1024 ? '0.55s' : undefined,
+                    animationFillMode: window.innerWidth >= 1024 ? 'forwards' : undefined
+                  }}
+                >
+                  <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-xl bg-gradient-to-br from-white/[0.05] via-white/[0.03] to-white/[0.05] backdrop-blur-sm p-1 transform rotate-[2deg] hover:rotate-[1deg] hover:scale-105 transition-all duration-300">
+                    <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-2xl opacity-40"></div>
+                    <img 
+                      src={heroMobileDashboardGraph} 
+                      alt="Dashboard Analytics" 
+                      className="relative w-full rounded-xl shadow-lg"
+                      loading="eager"
+                      decoding="async"
+                    />
+                  </div>
+                </div>
+
+                {/* Colorful Combos - Center right, higher */}
+                <div 
+                  className="absolute right-[27%] sm:right-[29%] lg:right-[30%] top-1 sm:top-2 lg:top-3 w-20 sm:w-28 lg:w-36 group transition-all ease-out lg:opacity-0 lg:animate-fade-in"
+                  style={{
+                    transitionDuration: window.innerWidth < 1024 ? '600ms' : '0ms',
+                    opacity: window.innerWidth < 1024 ? Math.max(0, Math.min(1, (mobilesProgress - 0.30) * 2.5)) : undefined,
+                    transform: window.innerWidth < 1024 ? `translateY(${(1 - Math.max(0, Math.min(1, (mobilesProgress - 0.30) * 2.5))) * 40}px)` : undefined,
+                    animationDelay: window.innerWidth >= 1024 ? '0.7s' : undefined,
+                    animationFillMode: window.innerWidth >= 1024 ? 'forwards' : undefined
+                  }}
+                >
+                  <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-xl bg-gradient-to-br from-white/[0.05] via-white/[0.03] to-white/[0.05] backdrop-blur-sm p-1 transform rotate-[-3deg] hover:rotate-[-1deg] hover:scale-105 transition-all duration-300">
+                    <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-2xl opacity-40"></div>
+                    <img 
+                      src={heroMobileComboDetail} 
+                      alt="Colorful Tool & Prompt Combos" 
+                      className="relative w-full rounded-xl shadow-lg"
+                      loading="eager"
+                      decoding="async"
+                    />
+                  </div>
+                </div>
+
+                {/* Clarify Features - Right, slightly raised */}
+                <div 
+                  className="absolute right-[5%] sm:right-[8%] lg:right-[10%] top-3 sm:top-4 lg:top-6 w-20 sm:w-28 lg:w-36 group transition-all ease-out lg:opacity-0 lg:animate-fade-in"
+                  style={{
+                    transitionDuration: window.innerWidth < 1024 ? '600ms' : '0ms',
+                    opacity: window.innerWidth < 1024 ? Math.max(0, Math.min(1, (mobilesProgress - 0.45) * 2.5)) : undefined,
+                    transform: window.innerWidth < 1024 ? `translateY(${(1 - Math.max(0, Math.min(1, (mobilesProgress - 0.45) * 2.5))) * 40}px)` : undefined,
+                    animationDelay: window.innerWidth >= 1024 ? '0.85s' : undefined,
+                    animationFillMode: window.innerWidth >= 1024 ? 'forwards' : undefined
+                  }}
+                >
+                  <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-xl bg-gradient-to-br from-white/[0.05] via-white/[0.03] to-white/[0.05] backdrop-blur-sm p-1 transform rotate-[5deg] hover:rotate-[3deg] hover:scale-105 transition-all duration-300">
+                    <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent rounded-2xl opacity-40"></div>
+                    <img 
+                      src={heroMobileClarify} 
+                      alt="Clarify & Reroute" 
+                      className="relative w-full rounded-xl shadow-lg"
+                      loading="eager"
+                      decoding="async"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-        
-        {/* Floating Elements - Positioned away from center text on mobile */}
-        <div className="absolute top-[15%] left-4 sm:left-8 w-2 h-2 bg-gray-400 rounded-full animate-pulse dark:bg-gray-600"></div>
-        <div className="absolute top-[20%] right-8 sm:right-12 w-3 h-3 bg-gray-500 rounded-full animate-pulse animation-delay-1000 dark:bg-gray-500"></div>
-        <div className="absolute top-[70%] left-2 sm:left-4 w-1 h-1 bg-gray-600 rounded-full animate-pulse animation-delay-2000 dark:bg-gray-400"></div>
-        <div className="absolute bottom-[15%] right-6 sm:right-8 w-2 h-2 bg-gray-700 rounded-full animate-pulse animation-delay-3000 dark:bg-gray-300"></div>
-        <div className="absolute top-[80%] left-8 sm:left-12 w-1.5 h-1.5 bg-gray-500 rounded-full animate-pulse animation-delay-4000 dark:bg-gray-500"></div>
-        <div className="absolute bottom-[25%] right-2 sm:right-4 w-1 h-1 bg-gray-600 rounded-full animate-pulse animation-delay-1500 dark:bg-gray-400"></div>
       </div>
       
       {/* Bottom Gradient Fade */}
